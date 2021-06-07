@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Icono Torneo Información Inscribirse.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Cancha Background (50% Transparency).png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "zona-torneo.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
