@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@color/colorMint"
@@ -29,21 +30,22 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/helveticaregular"
             android:text="Buenos Aires Tennis Tour"
             android:textColor="@color/colorWhite"
             android:textSize="16dp"
-            android:fontFamily="@font/helveticaregular"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/helveticabold"
             android:text="TORNEOS"
             android:textColor="@color/colorWhite"
             android:textSize="16dp"
-            android:fontFamily="@font/helveticabold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -60,7 +62,7 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1">
 
                 <Button
                     android:id="@+id/buttonInitSession"
@@ -73,24 +75,26 @@
                     android:fontFamily="@font/helveticaregular"
                     android:text="INICIAR SESION"
                     android:textColor="@color/colorPop"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    />
 
                 <LinearLayout
                     android:id="@+id/lineInitSession"
                     android:layout_width="150dp"
                     android:layout_height="2dp"
-                    android:orientation="vertical"
-                    android:layout_centerHorizontal="true"
                     android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="0dp"
-                    android:background="@color/colorPop" />
+                    android:background="@color/colorPop"
+                    android:orientation="vertical"
+                    />
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1">
 
                 <Button
                     android:id="@+id/buttonCreateAccount"
@@ -103,25 +107,237 @@
                     android:fontFamily="@font/helveticaregular"
                     android:text="CREAR CUENTA"
                     android:textColor="@color/colorWhite"
-                    android:textSize="11dp" />
+                    android:textSize="11dp"
+                    />
 
                 <LinearLayout
                     android:id="@+id/lineCreateAccount"
                     android:layout_width="150dp"
                     android:layout_height="2dp"
-                    android:orientation="vertical"
-                    android:layout_centerHorizontal="true"
                     android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="0dp"
-                    android:background="@color/colorWhite" />
+                    android:background="@color/colorWhite"
+                    android:orientation="vertical"
+                    />
 
 
             </RelativeLayout>
-
         </LinearLayout>
 
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/titleMainActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/helveticabold"
+                android:text="INICIAR SESION"
+                android:textColor="@color/colorCoal"
+                android:textSize="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/helveticaregular"
+                android:text="Correo Electronico"
+                android:textSize="14dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titleMainActivity" />
+
+            <EditText
+                android:id="@+id/emailText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginEnd="48dp"
+                android:ems="10"
+                android:fontFamily="@font/helveticaregular"
+                android:textSize="11dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/helveticaregular"
+                android:text="Contraseña"
+                android:textSize="14dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/emailText" />
+
+            <EditText
+                android:id="@+id/passwordText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginEnd="48dp"
+                android:fontFamily="@font/helveticaregular"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:textSize="11dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            <Button
+                android:id="@+id/initSession"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="45dp"
+                android:layout_marginEnd="70dp"
+                android:background="@drawable/button_rounded"
+                android:elevation="2dp"
+                android:fontFamily="@font/helveticaregular"
+                android:text="INICIAR SESIÓN"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="11dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/passwordText" />
+
+            <Button
+                android:id="@+id/createAccount"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="45dp"
+                android:layout_marginEnd="70dp"
+                android:background="@drawable/button_rounded"
+                android:elevation="2dp"
+                android:fontFamily="@font/helveticaregular"
+                android:text="CREAR CUENTA"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="11dp"
+                android:visibility="invisible"
+                android:enabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/passwordText" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/viewSocialMediaLogin"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/initSession">
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="32dp"
+                    android:fontFamily="@font/helveticaregular"
+                    android:text="o Iniciar Sesión con"
+                    android:textColor="@color/colorGray"
+                    android:textSize="11dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView5">
+
+                    <ImageButton
+                        android:id="@+id/loginGoogle"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="30dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/circular_button"
+                        android:src="@drawable/googleimage" />
+
+                    <ImageButton
+                        android:id="@+id/loginFacebook"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_gravity="center"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/circular_button"
+                        android:src="@drawable/facebbokimage" />
+
+                </LinearLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/helveticaregular"
+            android:layout_gravity="center"
+            android:text="Al registrarse, acepta nuestros"
+            android:textColor="@color/colorCoal"
+            android:textSize="12dp"
+            />
+        <TextView
+            android:id="@+id/btn_some_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textSize="12dp"
+            android:fontFamily="@font/helveticaregular"
+            android:text="@string/btn_terms_condition"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPop"/>
+
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

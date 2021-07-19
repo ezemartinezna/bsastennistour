@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_main"
+        android:icon="@drawable/main_menu"
+        android:title="Inicio" />
+
+    <item
+        android:id="@+id/navigation_tour"
+        android:icon="@drawable/torneo_menu"
+        android:title="Torneos" />
+
+    <item
+        android:id="@+id/navigation_match"
+        android:icon="@drawable/partidos_menu"
+        android:title="Partidos" />
+
+    <item
+        android:id="@+id/navigation_player"
+        android:icon="@drawable/player_menu"
+        android:title="Jugador" />
+
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/settings_menu"
+        android:title="Config." />
+
+</menu>

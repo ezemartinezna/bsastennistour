@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BsAsTennisTour</string>
+    <string name="btn_terms_condition"><u>Terminos y Condiciones</u></string>
 </resources>
