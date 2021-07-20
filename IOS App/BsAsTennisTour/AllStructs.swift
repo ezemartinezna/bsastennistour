@@ -44,6 +44,7 @@ public struct MatchParticipant {
     var lastName : String
     var profilePicture : String
     var points : [String]
+    var win : Bool
     
 }
 

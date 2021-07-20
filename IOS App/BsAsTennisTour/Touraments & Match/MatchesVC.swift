@@ -314,8 +314,8 @@ class MatchesVC: UIViewController {
     
     func loadMatchesNext() {
         
-        let participant1 = MatchParticipant(firstName: "Mariano", lastName: "Balarino", profilePicture: "person1", points: ["-","-","-"])
-        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["-","-","-"])
+        let participant1 = MatchParticipant(firstName: "Mariano", lastName: "Balarino", profilePicture: "person1", points: ["-","-","-"],win: false)
+        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["-","-","-"],win: false)
         
         matchesNext.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "21-09-2021", detailTour: "Zona de Grupos - Grupo A - Jornada 1 de 3", participant: [participant1,participant2]))
         
@@ -325,11 +325,11 @@ class MatchesVC: UIViewController {
     
     func loadMatchesPrev() {
         
-        let participant1 = MatchParticipant(firstName: "Javier", lastName: "Belvedere", profilePicture: "person3", points: ["3","6","4"])
+        let participant1 = MatchParticipant(firstName: "Javier", lastName: "Belvedere", profilePicture: "person3", points: ["3","6","4"],win: false)
         
-        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["6","2","6"])
+        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["6","2","6"],win: true)
         
-        let participant3 = MatchParticipant(firstName: "Jonatan", lastName: "Dalinger", profilePicture: "person4", points: ["8","6","8"])
+        let participant3 = MatchParticipant(firstName: "Jonatan", lastName: "Dalinger", profilePicture: "person4", points: ["3","6","3"],win: false)
         
         matchesPrev.append(AllMatches(nameTour: "Torneo Club Devoto", dateTour: "20-05-2021", detailTour: "Zona de Grupos - Grupo B - Jornada 1 de 3", participant: [participant1,participant2]))
         
@@ -418,6 +418,18 @@ extension MatchesVC : UITableViewDataSource, UITableViewDelegate {
             myCell.labelLastname1.text = matchesPrev[indexPath.row].participant[1].lastName
             myCell.imagePhotoHeader.image = UIImage(named: matchesPrev[indexPath.row].participant[0].profilePicture)
             myCell.imagePhotoHeader1.image = UIImage(named: matchesPrev[indexPath.row].participant[1].profilePicture)
+            
+            if matchesPrev[indexPath.row].participant[0].win {
+                myCell.imageBallPlayer1.isHidden = false
+            }else{
+                myCell.imageBallPlayer1.isHidden = true
+            }
+            
+            if matchesPrev[indexPath.row].participant[1].win {
+                myCell.imageBallPlayer2.isHidden = false
+            }else{
+                myCell.imageBallPlayer2.isHidden = true
+            }
             
             let dataArray = matchesPrev[indexPath.row].participant[0].points
             myCell.updateCellWith(row: dataArray)

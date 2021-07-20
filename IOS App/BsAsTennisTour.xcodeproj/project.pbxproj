@@ -36,6 +36,7 @@
 		A5B4F24025700A1E008D0095 /* InscriptionsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4F23F25700A1E008D0095 /* InscriptionsCell.swift */; };
 		A5B4F24825700CF4008D0095 /* AllStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4F24725700CF4008D0095 /* AllStructs.swift */; };
 		A5B4F24D25702028008D0095 /* TorneoInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4F24C25702028008D0095 /* TorneoInfoCell.swift */; };
+		A5EE08AE26A770970055BEFD /* LiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5EE08AD26A770970055BEFD /* LiveTableViewCell.swift */; };
 		A5EFF600265B248C00C89BDA /* RankCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5EFF5FF265B248C00C89BDA /* RankCollectionCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -94,6 +95,7 @@
 		A5B4F23F25700A1E008D0095 /* InscriptionsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionsCell.swift; sourceTree = "<group>"; };
 		A5B4F24725700CF4008D0095 /* AllStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllStructs.swift; sourceTree = "<group>"; };
 		A5B4F24C25702028008D0095 /* TorneoInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TorneoInfoCell.swift; sourceTree = "<group>"; };
+		A5EE08AD26A770970055BEFD /* LiveTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTableViewCell.swift; sourceTree = "<group>"; };
 		A5EFF5FF265B248C00C89BDA /* RankCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankCollectionCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -232,6 +234,7 @@
 				A5B4F233256F2384008D0095 /* TorneosTableCell.swift */,
 				A55280852573FFF900C35BFD /* RankingTableCell.swift */,
 				A550152F260EB39600E3040F /* MyTorneosTableCell.swift */,
+				A5EE08AD26A770970055BEFD /* LiveTableViewCell.swift */,
 			);
 			name = UserMain;
 			sourceTree = "<group>";
@@ -439,6 +442,7 @@
 				A5535F4D25716B0000C68F16 /* NewsCollectionCell.swift in Sources */,
 				A5501536260EB99F00E3040F /* TouramentVC.swift in Sources */,
 				A5B4F22A256EB23D008D0095 /* UserMainVC.swift in Sources */,
+				A5EE08AE26A770970055BEFD /* LiveTableViewCell.swift in Sources */,
 				A5EFF600265B248C00C89BDA /* RankCollectionCell.swift in Sources */,
 				A5535F5225731E1E00C68F16 /* UserMainTabBar.swift in Sources */,
 				A58BBAA1266DBD0100BF89D8 /* MatchesCVCell.swift in Sources */,

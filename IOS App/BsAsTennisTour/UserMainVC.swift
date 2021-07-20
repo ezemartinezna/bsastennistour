@@ -21,6 +21,8 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
     var rankWins = ["86","76","70","65","55"]
     var rankTours = ["5","4","4","4","3"]
     var rankImages = ["person1","person2","person3","person4","person1"]
+    var isLive : Bool = true
+    var matchesLive : [AllMatches] = []
   
    
     var co : Int = 0
@@ -173,6 +175,59 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
         return view
     }()
     
+    private let labelLive: UILabel = {
+          let label = UILabel()
+            label.text = "PARTIDOS EN VIVO"
+            label.font = UIFont(name: "Helvetica Bold", size: 15)!
+            label.textColor = .colorCoal
+            label.translatesAutoresizingMaskIntoConstraints = false
+          return label
+      }()
+    
+    let uViewLive : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .colorSage
+        return view
+    }()
+    
+    private let liveTableView: UITableView = {
+       let table = UITableView()
+        table.backgroundColor = .colorSage
+        table.separatorColor = .lightGray
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.register(LiveTableViewCell.self, forCellReuseIdentifier: "MyCell")
+        table.rowHeight = 200
+        table.separatorStyle = UITableViewCell.SeparatorStyle.none
+        table.allowsSelection = true
+       return table
+    }()
+    
+    let imageNet : UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = #imageLiteral(resourceName: "red-tennis")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleToFill
+        return imageView
+    }()
+    
+    private let buttonShowMore : UIButton = {
+        let button = UIButton()
+        button.setTitle("VER MÁS", for: .normal)
+        button.setTitleColor(.black, for: .selected)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont(name: "Helvetica", size: 14)
+        button.layer.backgroundColor = UIColor.colorPop.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
+        button.layer.shadowColor = UIColor.black.withAlphaComponent(0.6).cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 0)
+        button.layer.shadowOpacity = 0.9
+        button.isUserInteractionEnabled = true
+    //    button.addTarget(self, action: #selector(showMore), for: .touchUpInside)
+        return button
+    }()
+    
     lazy var snapCollectionView: UICollectionView = {
            let layout = UICollectionViewFlowLayout()
            let collectionView = UICollectionView(frame: CGRect.zero,
@@ -296,6 +351,7 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
 
         navBarItemLoad()
         setupScrollView()
+        loadMatchLive()
         
         
     }
@@ -329,6 +385,12 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
         scrollView1.addSubview(contentView1)
         
         //SCROLLVIEW NOVEDADES
+        
+        contentView.addSubview(labelLive)
+        contentView.addSubview(uViewLive)
+        uViewLive.addSubview(liveTableView)
+        uViewLive.addSubview(imageNet)
+        uViewLive.addSubview(buttonShowMore)
         
         contentView.addSubview(labelTitle)
         contentView.addSubview(uView2)
@@ -404,7 +466,31 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
-            labelTitle.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 20),
+            labelLive.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 20),
+            labelLive.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 20),
+            
+            uViewLive.topAnchor.constraint(equalTo: labelLive.bottomAnchor, constant: 20),
+            uViewLive.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 25),
+            uViewLive.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -25),
+            uViewLive.heightAnchor.constraint(equalToConstant: 300),
+            
+            imageNet.leadingAnchor.constraint(equalTo: uViewLive.leadingAnchor),
+            imageNet.trailingAnchor.constraint(equalTo: uViewLive.trailingAnchor),
+            imageNet.topAnchor.constraint(equalTo: liveTableView.bottomAnchor,constant: 5),
+            imageNet.bottomAnchor.constraint(equalTo: uViewLive.bottomAnchor),
+            imageNet.heightAnchor.constraint(equalToConstant: 140),
+            
+            liveTableView.topAnchor.constraint(equalTo: uViewLive.topAnchor),
+            liveTableView.leadingAnchor.constraint(equalTo: uViewLive.leadingAnchor),
+            liveTableView.trailingAnchor.constraint(equalTo: uViewLive.trailingAnchor),
+            liveTableView.bottomAnchor.constraint(equalTo: imageNet.topAnchor),
+
+            buttonShowMore.centerYAnchor.constraint(equalTo: imageNet.centerYAnchor),
+            buttonShowMore.centerXAnchor.constraint(equalTo: imageNet.centerXAnchor),
+            buttonShowMore.heightAnchor.constraint(equalToConstant: 40),
+            buttonShowMore.widthAnchor.constraint(equalToConstant: 200),
+            
+            labelTitle.topAnchor.constraint(equalTo: uViewLive.bottomAnchor,constant: 20),
             labelTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 20),
             
             uView2.topAnchor.constraint(equalTo: labelTitle.bottomAnchor),
@@ -496,6 +582,8 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
         scrollView1.delegate = self
         allRankingTable.dataSource = self
         allRankingTable.delegate = self
+        liveTableView.dataSource = self
+        liveTableView.delegate = self
     
     }
     
@@ -569,12 +657,26 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
         
     }
     
+    func loadMatchLive() {
+        
+        let participant1 = MatchParticipant(firstName: "Mariano", lastName: "Balarino", profilePicture: "person1", points: ["4","-","-"], win: false)
+        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["2","-","-"],win: false)
+        
+        matchesLive.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "En vivo", detailTour: "Zona de Grupos - Grupo A - Jornada 1 de 3", participant: [participant1,participant2]))
+        
+        liveTableView.reloadData()
+        
+    }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var countTable = 0
 
         if tableView == allRankingTable {
             countTable = rankPlayersLastName.count
+        }
+        if tableView == liveTableView {
+            countTable = matchesLive.count
         }
 
         return countTable
@@ -615,6 +717,41 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
             
             returnCell = myCell
         }
+        
+        if tableView == liveTableView {
+            let myCell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as! LiveTableViewCell
+
+            myCell.labelTorneo.text = matchesLive[indexPath.row].nameTour
+            myCell.labelDate.text = matchesLive[indexPath.row].dateTour
+            myCell.labelDatails.text = matchesLive[indexPath.row].detailTour
+            myCell.labelName.text = matchesLive[indexPath.row].participant[0].firstName
+            myCell.labelLastname.text = matchesLive[indexPath.row].participant[0].lastName
+            myCell.labelName1.text = matchesLive[indexPath.row].participant[1].firstName
+            myCell.labelLastname1.text = matchesLive[indexPath.row].participant[1].lastName
+            myCell.imagePhotoHeader.image = UIImage(named: matchesLive[indexPath.row].participant[0].profilePicture)
+            myCell.imagePhotoHeader1.image = UIImage(named: matchesLive[indexPath.row].participant[1].profilePicture)
+            
+            if matchesLive[indexPath.row].participant[0].win {
+                myCell.imageBallPlayer1.isHidden = false
+            }else{
+                myCell.imageBallPlayer1.isHidden = true
+            }
+            
+            if matchesLive[indexPath.row].participant[1].win {
+                myCell.imageBallPlayer2.isHidden = false
+            }else{
+                myCell.imageBallPlayer2.isHidden = true
+            }
+            
+            let dataArray = matchesLive[indexPath.row].participant[0].points
+            myCell.updateCellWith(row: dataArray)
+            
+            let dataArray1 = matchesLive[indexPath.row].participant[1].points
+            myCell.updateCellWith1(row: dataArray1)
+            
+            returnCell = myCell
+        }
+        
         return returnCell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -1,8 +1,8 @@
 //
-//  MatchesTableCell.swift
+//  LiveTableViewCell.swift
 //  BsAsTennisTour
 //
-//  Created by Ezequiel Martinez on 06/06/2021.
+//  Created by Ezequiel Martinez on 20/07/2021.
 //
 
 import UIKit
@@ -11,7 +11,7 @@ import UIKit
 //    func showAlert(_: UITableViewCell)
 //}
 
-class MatchesTableCell: UITableViewCell {
+class LiveTableViewCell: UITableViewCell {
     
     var dataArray: [String] = []
     var dataArray1: [String] = []
@@ -242,10 +242,10 @@ class MatchesTableCell: UITableViewCell {
 
         NSLayoutConstraint.activate([
             
-            viewContainer.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 15),
-            viewContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 15),
-            viewContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -15),
-            viewContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -15),
+            viewContainer.topAnchor.constraint(equalTo: contentView.topAnchor),
+            viewContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            viewContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            viewContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
 
             labelTorneo.topAnchor.constraint(equalTo: viewContainer.topAnchor, constant: 15),
             labelTorneo.leadingAnchor.constraint(equalTo: viewContainer.leadingAnchor, constant: 15),
@@ -330,7 +330,7 @@ class MatchesTableCell: UITableViewCell {
 
 }
 
-extension MatchesTableCell {
+extension LiveTableViewCell {
     func updateCellWith(row: [String]) {
         self.dataArray = row
         self.scorePlayer1CV.reloadData()
@@ -347,7 +347,7 @@ extension MatchesTableCell {
 }
 
 
-extension MatchesTableCell : UICollectionViewDataSource {
+extension LiveTableViewCell : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataArray.count
@@ -378,7 +378,7 @@ extension MatchesTableCell : UICollectionViewDataSource {
     
 }
 
-extension MatchesTableCell : UICollectionViewDelegateFlowLayout {
+extension LiveTableViewCell : UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -403,4 +403,5 @@ extension MatchesTableCell : UICollectionViewDelegateFlowLayout {
     }
     
 }
+
 
