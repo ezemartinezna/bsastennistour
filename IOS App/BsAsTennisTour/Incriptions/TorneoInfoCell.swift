@@ -44,7 +44,7 @@ class TorneoInfoCell: UITableViewCell {
     
     func setupLayout() {
         
-        contentView.backgroundColor = .colorPaper
+        contentView.backgroundColor = .white
         addSubview(labelTitle1)
         addSubview(labelTitle2)
 

@@ -12,10 +12,10 @@ public struct Users {
     var lastname : String
     var imageProfile : String
     var score : String
-    var position : String
-    var points : String
+    var position : Int
+    var points : Int
     
-    public init(name : String, lastname : String, imageprofile : String, score : String, position : String, points : String) {
+    public init(name : String, lastname : String, imageprofile : String, score : String, position : Int, points : Int) {
         self.name = name
         self.lastname = lastname
         self.imageProfile = imageprofile

@@ -242,11 +242,11 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     private let allUsersTable: UITableView = {
        let table = UITableView()
         table.backgroundColor = .white
-        table.separatorColor = .white
+        table.separatorColor = .colorGray
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(InscriptionsCell.self, forCellReuseIdentifier: "firstCell")
-        table.rowHeight = 120
-//        table.sectionHeaderHeight = 30
+        table.rowHeight = 60
+        table.sectionHeaderHeight = 60
         table.allowsSelection = true
         table.isHidden = true
        return table
@@ -259,7 +259,6 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(TorneoInfoCell.self, forCellReuseIdentifier: "thirdCell")
         table.rowHeight = 50
-//        table.sectionHeaderHeight = 30
         table.allowsSelection = false
         table.isHidden = true
        return table
@@ -385,6 +384,42 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         return button
     }()
     
+    private let buttonFilterName : UIButton = {
+        let button = UIButton()
+        button.setTitle("NOMBRE", for: .normal)
+        button.setTitleColor(.black, for: .selected)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont(name: "Helvetica", size: 11)
+        button.layer.backgroundColor = UIColor.black.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
+        button.layer.shadowColor = UIColor.black.withAlphaComponent(0.6).cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 0)
+        button.layer.shadowOpacity = 0.9
+        button.isUserInteractionEnabled = true
+        button.addTarget(self, action: #selector(registerTour), for: .touchUpInside)
+        return button
+    }()
+    
+    private let buttonFilterRank : UIButton = {
+        let button = UIButton()
+        button.setTitle("RANKING", for: .normal)
+        button.setTitleColor(.black, for: .selected)
+        button.setTitleColor(.colorPop, for: .normal)
+        button.titleLabel?.font = UIFont(name: "Helvetica", size: 11)
+        button.layer.backgroundColor = UIColor.white.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor.colorPop.cgColor
+        button.layer.shadowColor = UIColor.black.withAlphaComponent(0.6).cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 0)
+        button.layer.shadowOpacity = 0.9
+        button.isUserInteractionEnabled = true
+        button.addTarget(self, action: #selector(registerTour), for: .touchUpInside)
+        return button
+    }()
+    
     var topAnchorView : NSLayoutConstraint?
     var topAnchorTable : NSLayoutConstraint?
     
@@ -397,40 +432,23 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
 
-         allNames.append(Users(name: "Mariano",lastname: "BALARINO",imageprofile: "person1",score: "12 - 4 - 0",position: "1ER LUGAR",points: "2081 PTS"))
-         allNames.append(Users(name: "Martin",lastname: "RIOSECO",imageprofile: "person2",score: "11 - 5 - 0",position: "2DO LUGAR",points: "1834 PTS"))
-         allNames.append(Users(name: "Javier",lastname: "BELVEDERE",imageprofile: "person3",score: "9 - 7 - 0",position: "3ER LUGAR",points: "1788 PTS"))
-         allNames.append(Users(name: "Ezequiel",lastname: "MARTINEZ",imageprofile: "person4",score: "8 - 8 - 0",position: "4TO LUGAR",points: "1549 PTS"))
-
-         allData = [AllParticipants(allUsers: allNames, collapsed : false, maxParticipants: 16)]
+         allNames.append(Users(name: "Mariano",lastname: "BALARINO",imageprofile: "person1",score: "12 - 4 - 0",position: 2,points: 2081))
+         allNames.append(Users(name: "Martin",lastname: "RIOSECO",imageprofile: "person2",score: "11 - 5 - 0",position: 7,points: 1834))
+         allNames.append(Users(name: "Javier",lastname: "BELVEDERE",imageprofile: "person3",score: "9 - 7 - 0",position: 13,points: 1788))
+         allNames.append(Users(name: "Ezequiel",lastname: "MARTINEZ",imageprofile: "person4",score: "8 - 8 - 0",position: 4,points: 1549))
+         allNames.append(Users(name: "Gonzalo",lastname: "Alonso",imageprofile: "perfilIcon",score: "8 - 8 - 0",position: 9,points: 1249))
         
-        let data1 = UserDefaults.standard.string(forKey: "dateTour")!
-        allInfo.append(data1)
-        allInfo.append("12:00PM")
-        allInfo.append("Club Mitre")
-        allInfo.append("Ver Ubicacion")
-        allInfo.append("Single Mixto")
-        allInfo.append("1200")
-        allInfo.append("4")
+        sortByPosition()
         setupBarItem()
         setupLayout()
     }
     
     func setupBarItem() {
-        
-//        self.tabBarController?.tabBar.items?[1].title = "Torneo"
-//        let imageName = "tournament"
-//        let image = UIImage(named: imageName)
-//        let image2 = image?.imageResized(to: CGSize(width: 35, height: 35))
-//        image2?.withTintColor(.white)
-//        self.tabBarController?.tabBar.items?[0].selectedImage = image2?.withRenderingMode(.alwaysOriginal)
  
         let menuBarItem = UIBarButtonItem(customView: buttonMenu)
         menuBarItem.customView?.heightAnchor.constraint(equalToConstant: 40).isActive = true
         menuBarItem.customView?.widthAnchor.constraint(equalToConstant: 40).isActive = true
         self.navigationItem.leftBarButtonItem = menuBarItem
-      //  self.navigationController?.navigationBar.barTintColor = .colorCoal
-      //  self.navigationController?.navigationBar.isTranslucent = false
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for:.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -719,12 +737,10 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         var returnCell = UITableViewCell()
         if tableView == allUsersTable {
             let myCell = tableView.dequeueReusableCell(withIdentifier: "firstCell", for: indexPath) as! InscriptionsCell
-            myCell.labelName.text = allNames[indexPath.row].name
-            myCell.labelLastname.text = allNames[indexPath.row].lastname
-            myCell.labelPoints.text = allNames[indexPath.row].points
-            myCell.labelPosition.text = allNames[indexPath.row].position
-            myCell.labelScore.text = allNames[indexPath.row].score
-            myCell.imagePhotoHeader.image = UIImage(named: allNames[indexPath.row].imageProfile)
+            myCell.labelName.text = allData[0].allUsers[indexPath.row].name
+            myCell.labelLastname.text = allData[0].allUsers[indexPath.row].lastname
+            myCell.labelPosition.text = "\(allData[0].allUsers[indexPath.row].position)"
+            myCell.imagePhotoHeader.image = UIImage(named: allData[0].allUsers[indexPath.row].imageProfile)
 
 
             returnCell = myCell
@@ -749,6 +765,28 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         
         return returnCell
 
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        let containerVw = UIView()
+        containerVw.backgroundColor = .white
+        if tableView == allUsersTable {
+
+        containerVw.addSubview(buttonFilterName)
+        containerVw.addSubview(buttonFilterRank)
+        
+        buttonFilterName.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        buttonFilterName.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        buttonFilterRank.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        buttonFilterRank.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        buttonFilterRank.centerYAnchor.constraint(equalTo: containerVw.centerYAnchor).isActive = true
+        buttonFilterName.centerYAnchor.constraint(equalTo: containerVw.centerYAnchor).isActive = true
+        buttonFilterRank.centerXAnchor.constraint(equalTo: containerVw.centerXAnchor, constant: 80).isActive = true
+        buttonFilterName.centerXAnchor.constraint(equalTo: containerVw.centerXAnchor ,constant: -80).isActive = true
+       
+        }
+        return containerVw
     }
     
 
@@ -850,6 +888,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     
     @objc func registerTour() {
         
+        print("INSCRIPTO")
         
     }
     
@@ -883,8 +922,52 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         
     }
     
+    @objc func sortByName() {
+        
+        allInfo.removeAll()
+        allData.removeAll()
+       
+        let sortedUsers = allNames.sorted(by: {
+            $0.lastname < $1.lastname
+        })
+         allData = [AllParticipants(allUsers: sortedUsers, collapsed : false, maxParticipants: 16)]
+        
+        let data1 = UserDefaults.standard.string(forKey: "dateTour")!
+        allInfo.append(data1)
+        allInfo.append("12:00PM")
+        allInfo.append("Club Mitre")
+        allInfo.append("Ver Ubicacion")
+        allInfo.append("Single Mixto")
+        allInfo.append("1200")
+        allInfo.append("4")
+        
+        allUsersTable.reloadData()
+        
+        
+    }
 
-   
+    @objc func sortByPosition() {
+        
+        allInfo.removeAll()
+        allData.removeAll()
+       
+        let sortedUsers = allNames.sorted(by: {
+            $0.position < $1.position
+        })
+         allData = [AllParticipants(allUsers: sortedUsers, collapsed : false, maxParticipants: 16)]
+        
+        let data1 = UserDefaults.standard.string(forKey: "dateTour")!
+        allInfo.append(data1)
+        allInfo.append("12:00PM")
+        allInfo.append("Club Mitre")
+        allInfo.append("Ver Ubicacion")
+        allInfo.append("Single Mixto")
+        allInfo.append("1200")
+        allInfo.append("4")
+        
+        allUsersTable.reloadData()
+        
+    }
     
 
 

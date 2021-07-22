@@ -226,6 +226,7 @@
 		A5B4F23D257009C2008D0095 /* UserMain */ = {
 			isa = PBXGroup;
 			children = (
+				A5B4F1F0256DB3A4008D0095 /* SceneDelegate.swift */,
 				A5B4F229256EB23D008D0095 /* UserMainVC.swift */,
 				A5EFF5FF265B248C00C89BDA /* RankCollectionCell.swift */,
 				A5535F5125731E1E00C68F16 /* UserMainTabBar.swift */,
@@ -242,7 +243,6 @@
 		A5B4F23E257009D3008D0095 /* Incriptions */ = {
 			isa = PBXGroup;
 			children = (
-				A5B4F1F0256DB3A4008D0095 /* SceneDelegate.swift */,
 				A5B4F238256F506A008D0095 /* InscriptionsVC.swift */,
 				A5B4F24C25702028008D0095 /* TorneoInfoCell.swift */,
 				A5B4F23F25700A1E008D0095 /* InscriptionsCell.swift */,

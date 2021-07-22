@@ -179,6 +179,49 @@ class MatchesVC: UIViewController {
        return table
     }()
     
+    private let buttonShowMorePrev : UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "arrow-down.png"), for: .normal)
+        button.semanticContentAttribute = UIApplication.shared
+            .userInterfaceLayoutDirection == .rightToLeft ? .forceLeftToRight : .forceRightToLeft
+        button.setTitle("VER MAS PARTIDOS", for: .normal)
+        button.setTitleColor(.black, for: .selected)
+        button.setTitleColor(.colorGray, for: .normal)
+        button.titleLabel?.font = UIFont(name: "Helvetica", size: 12)
+        button.layer.backgroundColor = UIColor.white.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
+        button.layer.shadowColor = UIColor.black.withAlphaComponent(0.6).cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 0)
+        button.layer.shadowOpacity = 0.9
+        button.isUserInteractionEnabled = true
+        button.addTarget(self, action: #selector(moreGamesPrev), for: .touchUpInside)
+        return button
+    }()
+    
+    
+    private let buttonShowMoreNext : UIButton = {
+        let button = UIButton()
+        let image = UIImage(named: "arrow-down.png")
+    
+        button.setImage(UIImage(named: "arrow-down.png"), for: .normal)
+        button.semanticContentAttribute = UIApplication.shared
+            .userInterfaceLayoutDirection == .rightToLeft ? .forceLeftToRight : .forceRightToLeft
+        button.setTitle("VER MAS PARTIDOS", for: .normal)
+        button.setTitleColor(.black, for: .selected)
+        button.setTitleColor(.colorGray, for: .normal)
+        button.titleLabel?.font = UIFont(name: "Helvetica", size: 12)
+        button.layer.backgroundColor = UIColor.white.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
+        button.layer.shadowColor = UIColor.black.withAlphaComponent(0.6).cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 0)
+        button.layer.shadowOpacity = 0.9
+        button.isUserInteractionEnabled = true
+        button.addTarget(self, action: #selector(moreGamesNext), for: .touchUpInside)
+        return button
+    }()
+    
     
 
     override func viewDidLoad() {
@@ -213,6 +256,8 @@ class MatchesVC: UIViewController {
         uViewScrollView.addSubview(imageBackground)
         uViewScrollView.addSubview(labelTitle)
         uViewScrollView.addSubview(allMatchesNextTB)
+        uViewScrollView.addSubview(buttonShowMoreNext)
+        buttonShowMoreNext.imageEdgeInsets = UIEdgeInsets(top: 0, left: 35, bottom: 0, right: 0)
         allMatchesNextTB.dataSource = self
         allMatchesNextTB.delegate = self
  
@@ -220,6 +265,8 @@ class MatchesVC: UIViewController {
         uViewScrollView1.addSubview(imageBackground1)
         uViewScrollView1.addSubview(labelTitle2)
         uViewScrollView1.addSubview(allMatchesPrevTB)
+        uViewScrollView1.addSubview(buttonShowMorePrev)
+        buttonShowMorePrev.imageEdgeInsets = UIEdgeInsets(top: 0, left: 35, bottom: 0, right: 0)
         allMatchesPrevTB.dataSource = self
         allMatchesPrevTB.delegate = self
 
@@ -284,7 +331,12 @@ class MatchesVC: UIViewController {
             allMatchesNextTB.topAnchor.constraint(equalTo: labelTitle.bottomAnchor, constant: 15),
             allMatchesNextTB.leadingAnchor.constraint(equalTo: uViewScrollView.leadingAnchor),
             allMatchesNextTB.trailingAnchor.constraint(equalTo: uViewScrollView.trailingAnchor),
-            allMatchesNextTB.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            allMatchesNextTB.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -70),
+            
+            buttonShowMorePrev.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -25),
+            buttonShowMorePrev.leadingAnchor.constraint(equalTo: uViewScrollView.leadingAnchor, constant: 20),
+            buttonShowMorePrev.trailingAnchor.constraint(equalTo: uViewScrollView.trailingAnchor, constant: -20),
+            buttonShowMorePrev.heightAnchor.constraint(equalToConstant: 40),
 
             
             //PARTIDOS JUGADOS
@@ -303,7 +355,12 @@ class MatchesVC: UIViewController {
             allMatchesPrevTB.topAnchor.constraint(equalTo: labelTitle2.bottomAnchor, constant: 15),
             allMatchesPrevTB.leadingAnchor.constraint(equalTo: uViewScrollView1.leadingAnchor),
             allMatchesPrevTB.trailingAnchor.constraint(equalTo: uViewScrollView1.trailingAnchor),
-            allMatchesPrevTB.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            allMatchesPrevTB.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -70),
+            
+            buttonShowMoreNext.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -25),
+            buttonShowMoreNext.leadingAnchor.constraint(equalTo: uViewScrollView1.leadingAnchor, constant: 20),
+            buttonShowMoreNext.trailingAnchor.constraint(equalTo: uViewScrollView1.trailingAnchor, constant: -20),
+            buttonShowMoreNext.heightAnchor.constraint(equalToConstant: 40),
 
     
         ])
@@ -317,7 +374,7 @@ class MatchesVC: UIViewController {
         let participant1 = MatchParticipant(firstName: "Mariano", lastName: "Balarino", profilePicture: "person1", points: ["-","-","-"],win: false)
         let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["-","-","-"],win: false)
         
-        matchesNext.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "21-09-2021", detailTour: "Zona de Grupos - Grupo A - Jornada 1 de 3", participant: [participant1,participant2]))
+        matchesNext.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "21-09-2021", detailTour: "Zona de Grupos - Grupo A - Jornada 1 de 5", participant: [participant2,participant1]))
         
         allMatchesNextTB.reloadData()
         
@@ -362,6 +419,37 @@ class MatchesVC: UIViewController {
         uViewScrollView.isHidden = true
         uViewScrollView1.isHidden = false
         
+    }
+    
+    @objc func moreGamesPrev() {
+        
+        buttonShowMorePrev.isHidden = true
+        
+    }
+    
+    @objc func moreGamesNext() {
+        
+        buttonShowMoreNext.isHidden = true
+        
+        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["-","-","-"],win: false)
+        
+        let participant3 = MatchParticipant(firstName: "Gonzalo Alonso", lastName: "Balarino", profilePicture: "perfilIcon", points: ["-","-","-"],win: false)
+        let participant4 = MatchParticipant(firstName: "Jonatan", lastName: "Dalinger", profilePicture: "person3", points: ["-","-","-"],win: false)
+        
+        
+        let participant5 = MatchParticipant(firstName: "Javier", lastName: "Belvedere", profilePicture: "person4", points: ["-","-","-"],win: false)
+        let participant6 = MatchParticipant(firstName: "Martin", lastName: "Rioseco", profilePicture: "perfilIcon", points: ["-","-","-"],win: false)
+        
+        matchesNext.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "21-09-2021", detailTour: "Zona de Grupos - Grupo A - Jornada 2 de 5", participant: [participant2,participant3]))
+        
+        matchesNext.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "21-09-2021", detailTour: "Zona de Grupos - Grupo A - Jornada 3 de 5", participant: [participant2,participant4]))
+        
+        matchesNext.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "21-09-2021", detailTour: "Zona de Grupos - Grupo A - Jornada 4 de 5", participant: [participant2,participant5]))
+        
+        matchesNext.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "21-09-2021", detailTour: "Zona de Grupos - Grupo A - Jornada 5 de 5", participant: [participant2,participant6]))
+        
+        
+        allMatchesNextTB.reloadData()
     }
 
 }
