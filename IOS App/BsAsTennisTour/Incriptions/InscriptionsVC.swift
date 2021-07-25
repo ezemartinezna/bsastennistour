@@ -9,15 +9,21 @@ import UIKit
 
 class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
- 
-    var allNames = [Users]()
-    var allData = [AllParticipants]()
-    var allInfo = [String]()
-    var allTitles = ["FECHA","HORARIO INICIO","SEDE","UBICACION","MODALIDAD","PRECIO","PARTIDOS ASEGURADOS"]
-    var allPointsName = ["Campeon","SubCampeon","Semifinales","Cuartos","Partido Ganado","Inscripcion"]
-    var allPoints = ["120","60","30","15","10","5"]
-    var collapsedPoints : Bool = false
+//
+//    var allNames = [Users]()
+//    var allData = [AllParticipants]()
+//    var allInfo = [String]()
+//    var allTitles = ["FECHA","HORARIO INICIO","SEDE","UBICACION","MODALIDAD","PRECIO","PARTIDOS ASEGURADOS"]
+//    var allPointsName = ["Campeon","SubCampeon","Semifinales","Cuartos","Partido Ganado","Inscripcion"]
+//    var allPoints = ["120","60","30","15","10","5"]
+    var collapsedPoints : Bool = true
     var collapsedInfo : Bool = true
+    var collapsedPlayers : Bool = true
+    
+//    let llavesNames : [String] = ["CUARTOS DE FINAL", "SEMIFINAL", "FINAL"]
+//    var matches : [AllMatches] = []
+    
+    var tourament = [Tourament]()
     
     let buttonMenu : UIButton = {
          let button = UIButton(type: .custom)
@@ -132,20 +138,6 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         return view
     }()
     
-    private let scrollView1: UIScrollView = {
-        let view = UIScrollView()
-        view.backgroundColor = .white
-        view.autoresizingMask = .flexibleHeight
-        view.showsVerticalScrollIndicator = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.bounces = true
-        view.isHidden = true
-        view.isExclusiveTouch = true
-        view.canCancelContentTouches = true
-        view.isUserInteractionEnabled = true
-        return view
-    }()
-    
     private let uViewScrollView : UIView = {
         let uView = UIView()
         uView.layer.backgroundColor = UIColor.clear.cgColor
@@ -157,6 +149,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     
     private let uViewScrollView1 : UIView = {
         let uView = UIView()
+        uView.isHidden = true
         uView.layer.backgroundColor = UIColor.clear.cgColor
         uView.layer.masksToBounds = false
         uView.translatesAutoresizingMaskIntoConstraints = false
@@ -208,19 +201,10 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         uView.isUserInteractionEnabled = true
         return uView
     }()
-    
-    private let uView5 : UIView = {
-        let uView = UIView()
-        uView.layer.backgroundColor = UIColor.colorCoal.cgColor
-        uView.layer.masksToBounds = false
-        uView.translatesAutoresizingMaskIntoConstraints = false
-        uView.isUserInteractionEnabled = true
-        return uView
-    }()
  
     private let trophyImage: UIImageView = {
         let image = UIImageView()
-        image.image = #imageLiteral(resourceName: "trophy")
+        image.image = #imageLiteral(resourceName: "Icono Torneo Información Inscribirse")
         image.contentMode = .scaleAspectFit
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
@@ -310,15 +294,6 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
           return label
       }()
     
-    let labelFinal: UILabel = {
-          let label = UILabel()
-          label.text = "FINAL"
-          label.font = UIFont(name: "Helvetica Bold", size: 15)!
-          label.textColor = .colorPaper
-          label.translatesAutoresizingMaskIntoConstraints = false
-          return label
-      }()
-    
     let buttonPlusMinus : UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
@@ -359,14 +334,6 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         return button
     }()
     
-    let buttonFinal : UIButton = {
-        let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-  //      button.addTarget(self, action: #selector(handleExpandClose2), for: .touchUpInside)
-        return button
-    }()
-    
     private let buttonRegister : UIButton = {
         let button = UIButton()
         button.setTitle("INSCRIBIRSE", for: .normal)
@@ -393,11 +360,13 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         button.layer.backgroundColor = UIColor.black.cgColor
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 10
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor.black.cgColor
         button.layer.shadowColor = UIColor.black.withAlphaComponent(0.6).cgColor
         button.layer.shadowOffset = CGSize(width: 0, height: 0)
         button.layer.shadowOpacity = 0.9
         button.isUserInteractionEnabled = true
-        button.addTarget(self, action: #selector(registerTour), for: .touchUpInside)
+        button.addTarget(self, action: #selector(sortByName), for: .touchUpInside)
         return button
     }()
     
@@ -416,9 +385,40 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         button.layer.shadowOffset = CGSize(width: 0, height: 0)
         button.layer.shadowOpacity = 0.9
         button.isUserInteractionEnabled = true
-        button.addTarget(self, action: #selector(registerTour), for: .touchUpInside)
+        button.addTarget(self, action: #selector(sortByPosition), for: .touchUpInside)
         return button
     }()
+    
+    let uViewContainerLlaves : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    lazy var allLlaves: UICollectionView = {
+           let layout = UICollectionViewFlowLayout()
+           let collectionView = UICollectionView(frame: CGRect.zero,
+           collectionViewLayout: layout)
+           layout.scrollDirection = .horizontal
+           collectionView.delegate = self
+           collectionView.dataSource = self
+           collectionView.backgroundColor = .white
+           collectionView.register(LlavesCell.self, forCellWithReuseIdentifier: "MyCell")
+           collectionView.translatesAutoresizingMaskIntoConstraints = false
+           collectionView.isPagingEnabled = true
+           return collectionView
+       }()
+    
+    private lazy var pageControl: UIPageControl = {
+         let pc = UIPageControl()
+         pc.currentPage = 0
+         pc.numberOfPages = tourament[0].llave.count
+         pc.currentPageIndicatorTintColor = .black
+         pc.pageIndicatorTintColor = .colorGray
+         pc.translatesAutoresizingMaskIntoConstraints = false
+         return pc
+     }()
     
     var topAnchorView : NSLayoutConstraint?
     var topAnchorTable : NSLayoutConstraint?
@@ -431,12 +431,75 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
 
     override func viewDidLoad() {
         super.viewDidLoad()
+//
+//         allNames.append(Users(name: "Mariano",lastname: "BALARINO",imageprofile: "person1",score: "12 - 4 - 0",position: 2,points: 2081))
+//         allNames.append(Users(name: "Martin",lastname: "RIOSECO",imageprofile: "person2",score: "11 - 5 - 0",position: 7,points: 1834))
+//         allNames.append(Users(name: "Javier",lastname: "BELVEDERE",imageprofile: "person3",score: "9 - 7 - 0",position: 13,points: 1788))
+//         allNames.append(Users(name: "Ezequiel",lastname: "MARTINEZ",imageprofile: "person4",score: "8 - 8 - 0",position: 4,points: 1549))
+//         allNames.append(Users(name: "Gonzalo",lastname: "Alonso",imageprofile: "perfilIcon",score: "8 - 8 - 0",position: 9,points: 1249))
+        
+        let allPlayers = [
+                    PlayerStat(id: "1q2w3e4r", fullName: "Ezequiel Martinez", points: 100, rank: 9, picture: "person3"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Jonatan Dalinger", points: 180, rank: 3, picture: "person2"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Mariano Balarino", points: 180, rank: 2, picture: "person1"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Javier Belvedere", points: 180, rank: 4, picture: "person4"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Leo Flores", points: 180, rank: 25, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Gonzalo Alonso", points: 180, rank: 7, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Martin Rioseco", points: 180, rank: 6, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Lucas Barrantes", points: 180, rank: 14, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Gianluca Manograsso", points: 180, rank: 12, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Fernando Caraballo", points: 180, rank: 16, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Martin Saccon", points: 180, rank: 1, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Pepe Luis", points: 180, rank: 20, picture: "perfilIcon"),
+        ]
+        
+        let winPoints = [Points(title: "Campeon", number: 100),
+                         Points(title: "SubCampeon", number: 80),
+                         Points(title: "Semifinal", number: 40),
+                         Points(title: "Cuartos", number: 25),
+                         Points(title: "Partido Ganado", number: 10),
+                         Points(title: "Inscripcion", number: 5)]
 
-         allNames.append(Users(name: "Mariano",lastname: "BALARINO",imageprofile: "person1",score: "12 - 4 - 0",position: 2,points: 2081))
-         allNames.append(Users(name: "Martin",lastname: "RIOSECO",imageprofile: "person2",score: "11 - 5 - 0",position: 7,points: 1834))
-         allNames.append(Users(name: "Javier",lastname: "BELVEDERE",imageprofile: "person3",score: "9 - 7 - 0",position: 13,points: 1788))
-         allNames.append(Users(name: "Ezequiel",lastname: "MARTINEZ",imageprofile: "person4",score: "8 - 8 - 0",position: 4,points: 1549))
-         allNames.append(Users(name: "Gonzalo",lastname: "Alonso",imageprofile: "perfilIcon",score: "8 - 8 - 0",position: 9,points: 1249))
+        
+        
+        let player1 = PlayerLlave(match: "C1", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
+        let player2 = PlayerLlave(match: "C2", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
+        let player3 = PlayerLlave(match: "C3", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
+        let player4 = PlayerLlave(match: "C4", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
+        let player5 = PlayerLlave(match: "C5", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
+        let player6 = PlayerLlave(match: "C6", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
+        let player7 = PlayerLlave(match: "C7", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
+        let player8 = PlayerLlave(match: "C8", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
+        
+        let llaves = [Llaves(name: "CUARTOS", types: [player1,player2,player3,player4,player5,player6,player7,player8]),
+                        Llaves(name: "SEMIFINAL", types: [player1,player1,player1,player1]),
+                        Llaves(name: "FINAL", types: [player1,player1])
+        ]
+        
+        let player10 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
+        let zonas = Zonas(types: ["Zona1": [player10,player10,player10,player10],
+                                  "Zona2": [player10,player10,player10,player10],
+                                  "Zona3": [player10,player10,player10,player10],
+                                  "Zona4": [player10,player10,player10,player10],
+        ])
+        
+        let stats = [TourStats(title: "FECHA", value: UserDefaults.standard.string(forKey: "dayTour") ?? "Sin Fecha"),
+                     TourStats(title: "HORARIO INICIO", value: "12:00PM"),
+                     TourStats(title: "SEDE", value: "Club Mitre"),
+                     TourStats(title: "MODALIDAD    ", value: "Single Mixto"),
+                     TourStats(title: "PRECIO", value: 1200),
+                     TourStats(title: "PARTIDOS ASEGURADOS", value: 4)]
+        
+        tourament.append(Tourament(name: "Torneo Apertura",
+                                   day: "09-09-2021",
+                                   model: "Single Mixto",
+                                   max: 16,
+                                   stats : stats,
+                                   players: allPlayers,
+                                   winPoints: winPoints,
+                                   llave: llaves,
+                                   zone: [zonas]))
+    
         
         sortByPosition()
         setupBarItem()
@@ -474,20 +537,21 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         view.addSubview(scrollView)
         scrollView.delegate = self
         scrollView.addSubview(uViewScrollView)
-        view.addSubview(scrollView1)
-        scrollView1.delegate = self
-        scrollView1.addSubview(uViewScrollView1)
+        view.addSubview(uViewScrollView1)
         
+        //DATOS
         uViewScrollView.addSubview(uView0)
         uView0.addSubview(labelDatos)
         uViewScrollView.addSubview(buttonPlusMinus2)
         uViewScrollView.addSubview(torneoInfoTable)
         
+        //PARTICIPANTES
         uViewScrollView.addSubview(uView1)
         uView1.addSubview(labelParticipants)
         uViewScrollView.addSubview(buttonPlusMinus)
         uViewScrollView.addSubview(allUsersTable)
         
+        //PUNTUACION
         uViewScrollView.addSubview(uView2)
         uView2.addSubview(labelPuntuacion)
         uViewScrollView.addSubview(buttonPlusMinus1)
@@ -498,13 +562,16 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         
         uViewScrollView1.addSubview(uView3)
         uViewScrollView1.addSubview(uView4)
-        uViewScrollView1.addSubview(uView5)
+    
         uView3.addSubview(labelZonas)
         uView4.addSubview(labelLlaves)
-        uView5.addSubview(labelFinal)
+
         uViewScrollView1.addSubview(buttonZonas)
         uViewScrollView1.addSubview(buttonLlaves)
-        uViewScrollView1.addSubview(buttonFinal)
+        
+        uViewScrollView1.addSubview(uViewContainerLlaves)
+        uViewContainerLlaves.addSubview(allLlaves)
+        uViewContainerLlaves.addSubview(pageControl)
 
         //CONSTRAINTS
         
@@ -555,10 +622,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            scrollView1.topAnchor.constraint(equalTo: viewContainer.bottomAnchor),
-            scrollView1.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView1.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView1.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
             
             uViewScrollView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             uViewScrollView.topAnchor.constraint(equalTo: scrollView.topAnchor),
@@ -584,11 +648,10 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             torneoInfoTable.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             torneoInfoTable.heightAnchor.constraint(equalToConstant: 300),
             
-            uViewScrollView1.centerXAnchor.constraint(equalTo: scrollView1.centerXAnchor),
-            uViewScrollView1.topAnchor.constraint(equalTo: scrollView1.topAnchor),
-            uViewScrollView1.leadingAnchor.constraint(equalTo: scrollView1.leadingAnchor),
-            uViewScrollView1.trailingAnchor.constraint(equalTo: scrollView1.trailingAnchor),
-            uViewScrollView1.bottomAnchor.constraint(equalTo: scrollView1.bottomAnchor),
+            uViewScrollView1.topAnchor.constraint(equalTo: viewContainer.bottomAnchor),
+            uViewScrollView1.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            uViewScrollView1.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            uViewScrollView1.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             uView3.topAnchor.constraint(equalTo: uViewScrollView1.topAnchor,constant: 20),
             uView3.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -600,20 +663,11 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             uView4.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             uView4.heightAnchor.constraint(equalToConstant: 60),
             
-            uView5.topAnchor.constraint(equalTo: uView4.bottomAnchor,constant: 20),
-            uView5.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            uView5.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            uView5.bottomAnchor.constraint(equalTo: uViewScrollView1.bottomAnchor,constant: -50),
-            uView5.heightAnchor.constraint(equalToConstant: 60),
-            
             labelZonas.centerYAnchor.constraint(equalTo: uView3.centerYAnchor),
             labelZonas.leadingAnchor.constraint(equalTo: uView3.leadingAnchor, constant: 30),
             
             labelLlaves.centerYAnchor.constraint(equalTo: uView4.centerYAnchor),
             labelLlaves.leadingAnchor.constraint(equalTo: uView4.leadingAnchor, constant: 30),
-            
-            labelFinal.centerYAnchor.constraint(equalTo: uView5.centerYAnchor),
-            labelFinal.leadingAnchor.constraint(equalTo: uView5.leadingAnchor, constant: 30),
             
             buttonZonas.heightAnchor.constraint(equalToConstant: 25),
             buttonZonas.widthAnchor.constraint(equalToConstant: 25),
@@ -625,10 +679,18 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             buttonLlaves.centerYAnchor.constraint(equalTo: uView4.centerYAnchor),
             buttonLlaves.trailingAnchor.constraint(equalTo: uView4.trailingAnchor, constant: -25),
             
-            buttonFinal.heightAnchor.constraint(equalToConstant: 25),
-            buttonFinal.widthAnchor.constraint(equalToConstant: 25),
-            buttonFinal.centerYAnchor.constraint(equalTo: uView5.centerYAnchor),
-            buttonFinal.trailingAnchor.constraint(equalTo: uView5.trailingAnchor, constant: -25),
+            uViewContainerLlaves.topAnchor.constraint(equalTo: uView4.bottomAnchor),
+            uViewContainerLlaves.leadingAnchor.constraint(equalTo: uViewScrollView1.leadingAnchor),
+            uViewContainerLlaves.trailingAnchor.constraint(equalTo: uViewScrollView1.trailingAnchor),
+            uViewContainerLlaves.bottomAnchor.constraint(equalTo: uViewScrollView1.bottomAnchor),
+            
+            allLlaves.topAnchor.constraint(equalTo: uViewContainerLlaves.topAnchor),
+            allLlaves.leadingAnchor.constraint(equalTo: uViewContainerLlaves.leadingAnchor),
+            allLlaves.trailingAnchor.constraint(equalTo: uViewContainerLlaves.trailingAnchor),
+            allLlaves.bottomAnchor.constraint(equalTo: uViewContainerLlaves.bottomAnchor),
+            
+            pageControl.centerXAnchor.constraint(equalTo: uViewContainerLlaves.centerXAnchor),
+            pageControl.topAnchor.constraint(equalTo: uViewContainerLlaves.topAnchor,constant: 35)
             
         ])
         
@@ -691,8 +753,8 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         topAnchorView3?.isActive = false
         
         trophyImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        trophyImage.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        trophyImage.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        trophyImage.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        trophyImage.heightAnchor.constraint(equalToConstant: 60).isActive = true
 
         buttonRegister.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         buttonRegister.topAnchor.constraint(equalTo: trophyImage.bottomAnchor,constant: 20).isActive = true
@@ -709,25 +771,14 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var countData = 0 as Int
         if tableView == allUsersTable {
-            if allData[section].collapsed {
-                countData = 0
-            }else{
-                countData = allData[section].allUsers.count
-            }
-
+            countData = tourament[0].players.count
         }
         if tableView == torneoInfoTable{
-            if collapsedInfo {
-                countData = 0
-            }else {
-                countData = allTitles.count
-            }
+            countData = tourament[0].stats.count
         }
         
         if tableView == allPointsTable {
-
-                countData = allPointsName.count
-            
+            countData = tourament[0].winPoints.count
         }
       return countData
         
@@ -737,10 +788,13 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         var returnCell = UITableViewCell()
         if tableView == allUsersTable {
             let myCell = tableView.dequeueReusableCell(withIdentifier: "firstCell", for: indexPath) as! InscriptionsCell
-            myCell.labelName.text = allData[0].allUsers[indexPath.row].name
-            myCell.labelLastname.text = allData[0].allUsers[indexPath.row].lastname
-            myCell.labelPosition.text = "\(allData[0].allUsers[indexPath.row].position)"
-            myCell.imagePhotoHeader.image = UIImage(named: allData[0].allUsers[indexPath.row].imageProfile)
+            
+            let (firstname,lastname) = NameDivisor(fullName: tourament[0].players[indexPath.row].fullName)
+            
+            myCell.labelName.text = firstname
+            myCell.labelLastname.text = lastname
+            myCell.labelPosition.text = "\(tourament[0].players[indexPath.row].rank)"
+            myCell.imagePhotoHeader.image = UIImage(named: tourament[0].players[indexPath.row].picture)
 
 
             returnCell = myCell
@@ -749,15 +803,15 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         if tableView == torneoInfoTable{
             let myCell = tableView.dequeueReusableCell(withIdentifier: "secondCell", for: indexPath) as! TorneoInfoCell
 
-            myCell.labelTitle1.text = allTitles[indexPath.row].uppercased()
-            myCell.labelTitle2.text = allInfo[indexPath.row]
+            myCell.labelTitle1.text = tourament[0].stats[indexPath.row].title
+            myCell.labelTitle2.text = "\(tourament[0].stats[indexPath.row].value)"
             returnCell = myCell
         }
         
         if tableView == allPointsTable{
             let myCell = tableView.dequeueReusableCell(withIdentifier: "thirdCell", for: indexPath) as! TorneoInfoCell
-            myCell.labelTitle1.text = allPointsName[indexPath.row].uppercased()
-            myCell.labelTitle2.text = allPoints[indexPath.row] + "pts"
+            myCell.labelTitle1.text = tourament[0].winPoints[indexPath.row].title
+            myCell.labelTitle2.text = "\(tourament[0].winPoints[indexPath.row].number) pts"
     
  
             returnCell = myCell
@@ -791,32 +845,20 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     
 
     @objc func handleExpandClose() {
-
- 
-        var indexPaths = [IndexPath]()
-           
-        for row in allData[0].allUsers.indices {
-            let indexPath = IndexPath(row: row, section: 0)
-            indexPaths.append(indexPath)
-        }
    
-        let isExpanded = allData[0].collapsed
-        allData[0].collapsed = !isExpanded
-             
-        if !isExpanded {
+        if !collapsedPlayers{
             buttonPlusMinus.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
             allUsersTable.isHidden = true
-            allUsersTable.deleteRows(at: indexPaths, with: .fade)
             topAnchorView?.isActive = true
             topAnchorTable?.isActive = false
         } else {
             buttonPlusMinus.setImage(#imageLiteral(resourceName: "upArrowWhite"), for: .normal)
             allUsersTable.isHidden = false
-            allUsersTable.insertRows(at: indexPaths, with: .fade)
             topAnchorView?.isActive = false
             topAnchorTable?.isActive = true
         }
         
+        collapsedPlayers = !collapsedPlayers
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             
             self.view.layoutIfNeeded()
@@ -827,32 +869,20 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     }
     
     @objc func handleExpandClose2() {
-
- 
-        var indexPaths = [IndexPath]()
-           
-        for row in allInfo.indices {
-            let indexPath = IndexPath(row: row, section: 0)
-            indexPaths.append(indexPath)
-        }
-   
-        let isExpanded = collapsedInfo
-        collapsedInfo = !isExpanded
              
-        if !isExpanded {
+        if !collapsedInfo {
             buttonPlusMinus2.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
             torneoInfoTable.isHidden = true
-            torneoInfoTable.deleteRows(at: indexPaths, with: .fade)
             topAnchorView1?.isActive = true
             topAnchorTable1?.isActive = false
         } else {
             buttonPlusMinus2.setImage(#imageLiteral(resourceName: "upArrowWhite"), for: .normal)
             torneoInfoTable.isHidden = false
-            torneoInfoTable.insertRows(at: indexPaths, with: .fade)
             topAnchorView1?.isActive = false
             topAnchorTable1?.isActive = true
         }
         
+        collapsedInfo = !collapsedInfo
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
 
             self.view.layoutIfNeeded()
@@ -866,22 +896,25 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
 
       
         if !collapsedPoints {
-            
-            buttonPlusMinus1.setImage(#imageLiteral(resourceName: "upArrowWhite"), for: .normal)
-            allPointsTable.isHidden = false
-            topAnchorView3?.isActive = true
-            topAnchorView2?.isActive = false
-            
-        } else {
-            
             buttonPlusMinus1.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
             allPointsTable.isHidden = true
             topAnchorView3?.isActive = false
             topAnchorView2?.isActive = true
+            
+        } else {
+            buttonPlusMinus1.setImage(#imageLiteral(resourceName: "upArrowWhite"), for: .normal)
+            allPointsTable.isHidden = false
+            topAnchorView3?.isActive = true
+            topAnchorView2?.isActive = false
       
         }
 
         collapsedPoints = !collapsedPoints
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            
+            self.view.layoutIfNeeded()
+            
+        }, completion: nil)
         allPointsTable.reloadData()
         
     }
@@ -906,7 +939,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         lineButton2.backgroundColor = .colorPaper
         
         scrollView.isHidden = false
-        scrollView1.isHidden = true
+        uViewScrollView1.isHidden = true
         
     }
     
@@ -918,28 +951,25 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         lineButton2.backgroundColor = .colorPop
         
         scrollView.isHidden = true
-        scrollView1.isHidden = false
+        uViewScrollView1.isHidden = false
         
     }
     
     @objc func sortByName() {
         
-        allInfo.removeAll()
-        allData.removeAll()
-       
-        let sortedUsers = allNames.sorted(by: {
-            $0.lastname < $1.lastname
-        })
-         allData = [AllParticipants(allUsers: sortedUsers, collapsed : false, maxParticipants: 16)]
+        buttonFilterName.layer.borderColor = UIColor.black.cgColor
+        buttonFilterName.setTitleColor(.white, for: .normal)
+        buttonFilterName.layer.backgroundColor = UIColor.black.cgColor
+
+        buttonFilterRank.layer.borderColor = UIColor.colorPop.cgColor
+        buttonFilterRank.layer.backgroundColor = UIColor.white.cgColor
+        buttonFilterRank.setTitleColor(.colorPop, for: .normal)
         
-        let data1 = UserDefaults.standard.string(forKey: "dateTour")!
-        allInfo.append(data1)
-        allInfo.append("12:00PM")
-        allInfo.append("Club Mitre")
-        allInfo.append("Ver Ubicacion")
-        allInfo.append("Single Mixto")
-        allInfo.append("1200")
-        allInfo.append("4")
+        let sortedUsers2 = tourament[0].players.sorted(by: {
+            $0.fullName < $1.fullName
+        })
+        tourament[0].players.removeAll()
+        tourament[0].players.append(contentsOf: sortedUsers2)
         
         allUsersTable.reloadData()
         
@@ -948,22 +978,19 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
 
     @objc func sortByPosition() {
         
-        allInfo.removeAll()
-        allData.removeAll()
-       
-        let sortedUsers = allNames.sorted(by: {
-            $0.position < $1.position
-        })
-         allData = [AllParticipants(allUsers: sortedUsers, collapsed : false, maxParticipants: 16)]
+        buttonFilterRank.layer.borderColor = UIColor.black.cgColor
+        buttonFilterRank.setTitleColor(.white, for: .normal)
+        buttonFilterRank.layer.backgroundColor = UIColor.black.cgColor
+
+        buttonFilterName.layer.borderColor = UIColor.colorPop.cgColor
+        buttonFilterName.layer.backgroundColor = UIColor.white.cgColor
+        buttonFilterName.setTitleColor(.colorPop, for: .normal)
         
-        let data1 = UserDefaults.standard.string(forKey: "dateTour")!
-        allInfo.append(data1)
-        allInfo.append("12:00PM")
-        allInfo.append("Club Mitre")
-        allInfo.append("Ver Ubicacion")
-        allInfo.append("Single Mixto")
-        allInfo.append("1200")
-        allInfo.append("4")
+        let sortedUsers2 = tourament[0].players.sorted(by: {
+            $0.rank < $1.rank
+        })
+        tourament[0].players.removeAll()
+        tourament[0].players.append(contentsOf: sortedUsers2)
         
         allUsersTable.reloadData()
         
@@ -973,5 +1000,71 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
 
 }
 
+extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        
+        if scrollView == allLlaves {
+   
+         let x = targetContentOffset.pointee.x
+         pageControl.currentPage = Int(x / uViewContainerLlaves.bounds.width)
 
+        }
 
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let sizeCollection = CGSize(width: uViewContainerLlaves.bounds.width, height: uViewContainerLlaves.bounds.height)
+        return sizeCollection
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return tourament[0].llave.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! LlavesCell
+        
+        cell.labelTitle.text = "\(tourament[0].llave[indexPath.row].name)"
+        cell.updateCellWith(row: tourament[0].llave[indexPath.row])
+
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    
+    
+}
+
+extension InscriptionsVC {
+    
+    func NameDivisor(fullName : String) -> (firstName: String,lastname : String) {
+        
+        var firstname = ""
+        var lastname = ""
+        
+        var components = fullName.components(separatedBy: " ")
+        if components.count > 0 {
+            firstname = components.removeFirst()
+            lastname = components.joined(separator: " ")
+        }
+    return(firstname,lastname)
+    }
+    
+}

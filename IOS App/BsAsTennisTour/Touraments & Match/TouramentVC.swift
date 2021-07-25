@@ -9,12 +9,12 @@ import UIKit
 
 class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     
-    var allTorneosNames = ["Torneo Apertura","Torneo Relampago II","Torneo Verano"]
-    var allTorneosDates = ["21-09-2021","25-09-2021","02-10-2021"]
-    var allTorneosTypes = ["Single","Single","Doubles"]
-    var allTorneosPlaces = ["Club Mitre","Club Mitre","Club Devoto"]
-    var allTorneosMaxPlayers = ["16","8","24"]
+    //HISTORICO
     var myTorneos = ["Torneo Relampago","Torneo Invierno","Torneo Roger","Torneo Fin de Año"]
+    
+    //PROXIMOS
+    var allTorneos : [Tourament] = []
+    
     var co : Int = 0
     
     
@@ -216,7 +216,7 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     private lazy var pageControl: UIPageControl = {
          let pc = UIPageControl()
          pc.currentPage = 0
-         pc.numberOfPages = allTorneosNames.count
+         pc.numberOfPages = allTorneos.count
          pc.currentPageIndicatorTintColor = .black
          pc.pageIndicatorTintColor = .white
          pc.translatesAutoresizingMaskIntoConstraints = false
@@ -243,6 +243,78 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let allPlayers = [
+                    PlayerStat(id: "1q2w3e4r", fullName: "Ezequiel Martinez", points: 100, rank: 9, picture: "person3"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Jonatan Dalinger", points: 180, rank: 2, picture: "person2"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Mariano Balarino", points: 180, rank: 2, picture: "person1"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Javier Belvedere", points: 180, rank: 2, picture: "person4"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Leo Flores", points: 180, rank: 2, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Gonzalo Alonso", points: 180, rank: 2, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Martin Rioseco", points: 180, rank: 2, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Lucas Barrantes", points: 180, rank: 2, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Gianluca Manograsso", points: 180, rank: 2, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Fernando Caraballo", points: 180, rank: 2, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Martin Saccon", points: 180, rank: 2, picture: "perfilIcon"),
+                    PlayerStat(id: "azsxdcfv", fullName: "Pepe Luis", points: 180, rank: 2, picture: "perfilIcon"),
+        ]
+        
+        let winPoints = [Points(title: "Campeon", number: 100),
+                         Points(title: "SubCampeon", number: 80),
+                         Points(title: "Semifinal", number: 40),
+                         Points(title: "Cuartos", number: 25),
+                         Points(title: "Partido Ganado", number: 10),
+                         Points(title: "Inscripcion", number: 5)]
+        
+        
+        let player1 = PlayerLlave(match: "Match1", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
+        
+        let llaves = [Llaves(name: "CUARTOS", types: [player1,player1,player1,player1,player1,player1,player1,player1]),
+                        Llaves(name: "SEMIFINAL", types: [player1,player1,player1,player1]),
+                        Llaves(name: "FINAL", types: [player1,player1])
+        ]
+        
+        let player2 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
+        let zonas = Zonas(types: ["Zona1": [player2,player2,player2,player2],
+                                  "Zona2": [player2,player2,player2,player2],
+                                  "Zona3": [player2,player2,player2,player2],
+                                  "Zona4": [player2,player2,player2,player2],
+        ])
+        
+        let stats1 = [TourStats(title: "FECHA", value: UserDefaults.standard.string(forKey: "dayTour") ?? "Sin Fecha"),
+                     TourStats(title: "HORARIO INICIO", value: "12:00PM"),
+                     TourStats(title: "SEDE", value: "Club Mitre"),
+                     TourStats(title: "MODALIDAD    ", value: "Single Mixto"),
+                     TourStats(title: "PRECIO", value: 1200),
+                     TourStats(title: "PARTIDOS ASEGURADOS", value: 4)]
+        
+        let stats2 = [TourStats(title: "FECHA", value: UserDefaults.standard.string(forKey: "dayTour") ?? "Sin Fecha"),
+                     TourStats(title: "HORARIO INICIO", value: "12:00PM"),
+                     TourStats(title: "SEDE", value: "Club Mitre"),
+                     TourStats(title: "MODALIDAD    ", value: "Single Mixto"),
+                     TourStats(title: "PRECIO", value: 1200),
+                     TourStats(title: "PARTIDOS ASEGURADOS", value: 4)]
+        
+        allTorneos.append(Tourament(name: "Torneo Apertura",
+                                    day: "09-09-2021",
+                                    model: "Single Mixto",
+                                    max: 16,
+                                    stats: stats1,
+                                    players: allPlayers,
+                                    winPoints: winPoints,
+                                    llave: llaves,
+                                    zone: [zonas]))
+        
+        allTorneos.append(Tourament(name: "Torneo Primavera",
+                                    day: "21-09-2021",
+                                    model: "Single Mixto",
+                                    max: 16,
+                                    stats: stats2,
+                                    players: allPlayers,
+                                    winPoints: winPoints,
+                                    llave: llaves,
+                                    zone: [zonas]))
+        
         navBarItemLoad()
         setupLayout()
     }
@@ -438,9 +510,8 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
         
         let index = pageControl.currentPage
         
-        UserDefaults.standard.set(allTorneosDates[index], forKey: "dateTour")
-        UserDefaults.standard.set(allTorneosNames[index], forKey: "nameTour")
-        UserDefaults.standard.set(allTorneosPlaces[index], forKey: "placeTour")
+        UserDefaults.standard.set(allTorneos[index].name, forKey: "nameTour")
+        UserDefaults.standard.set(allTorneos[index].day, forKey: "dayTour")
         UserDefaults.standard.synchronize()
         
         let vc = InscriptionsVC()
@@ -513,7 +584,7 @@ extension TouramentVC : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         var returnInt = 0
         if collectionView == toursCollectionView {
-            returnInt = allTorneosNames.count
+            returnInt = allTorneos.count
         }
         return returnInt
     }
@@ -524,10 +595,10 @@ extension TouramentVC : UICollectionViewDataSource {
         if collectionView == toursCollectionView {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! ToursCollectionViewCell
           
-            cell.labelDate.text = allTorneosDates[indexPath.row]
-            cell.labelNameTour.text = allTorneosNames[indexPath.row].uppercased()
-            cell.labelType.text = allTorneosTypes[indexPath.row].uppercased()
-            cell.labelMaxPlayers.text = "\(allTorneosMaxPlayers[indexPath.row]) JUGADORES"
+            cell.labelDate.text = allTorneos[indexPath.row].day
+            cell.labelNameTour.text = allTorneos[indexPath.row].name.uppercased()
+            cell.labelType.text = allTorneos[indexPath.row].model
+            cell.labelMaxPlayers.text = "\(allTorneos[indexPath.row].max) JUGADORES"
 
         returnCell = cell
         }
@@ -538,9 +609,8 @@ extension TouramentVC : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == toursCollectionView {
 
-                UserDefaults.standard.set(allTorneosDates[indexPath.row], forKey: "dateTour")
-                UserDefaults.standard.set(allTorneosNames[indexPath.row], forKey: "nameTour")
-                UserDefaults.standard.set(allTorneosPlaces[indexPath.row], forKey: "placeTour")
+                UserDefaults.standard.set(allTorneos[indexPath.row].name, forKey: "nameTour")
+                UserDefaults.standard.set(allTorneos[indexPath.row].day, forKey: "dayTour")
                 UserDefaults.standard.synchronize()
 
                 let vc = InscriptionsVC()

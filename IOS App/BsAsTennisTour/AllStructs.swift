@@ -56,3 +56,135 @@ public struct AllMatches {
     var participant : [MatchParticipant]
     
 }
+
+public struct Tourament {
+    var name : String
+    var day : String
+    var model : String
+    var max : Int
+    var stats : [TourStats]
+    var players : [PlayerStat]
+    var winPoints : [Points]
+    var llave : [Llaves]
+    var zone : [Zonas]
+    
+    public init(name : String,
+                day : String,
+                model : String,
+                max : Int,
+                stats : [TourStats],
+                players : [PlayerStat],
+                winPoints : [Points],
+                llave : [Llaves],
+                zone : [Zonas]) {
+        
+        self.name = name
+        self.day = day
+        self.model = model
+        self.max = max
+        self.stats = stats
+        self.players = players
+        self.winPoints = winPoints
+        self.llave = llave
+        self.zone = zone
+    
+    }
+}
+
+public struct TourStats {
+    var title : String
+    var value : Any
+    
+    public init(title : String,
+                value : Any) {
+        
+        self.title = title
+        self.value = value
+        
+    }
+    
+    
+}
+
+public struct Points {
+    var title : String
+    var number : Int
+    
+    public init(title : String, number : Int) {
+        self.title = title
+        self.number = number
+    }
+}
+
+public struct PlayerStat {
+    
+    var id : String
+    var fullName : String
+    var points : Int
+    var rank : Int
+    var picture : String
+    
+    public init(id : String,fullName : String,points : Int,rank : Int,picture : String) {
+        self.id = id
+        self.fullName = fullName
+        self.points = points
+        self.rank = rank
+        self.picture = picture
+    }
+}
+
+public struct PlayerLlave {
+    
+    var match : String
+    var id : String
+    var fullName : String
+    var picture : String
+    var win : Bool
+    var set : [Int : Any]
+    
+    public init(match:String,id : String, fullName : String,picture:String,win:Bool,set:[Int : Any]) {
+        self.match = match
+        self.id = id
+        self.fullName = fullName
+        self.picture = picture
+        self.win = win
+        self.set = set
+    }
+    
+}
+
+public struct PlayerZona {
+    
+    var id : String
+    var fullName : String
+    var picture : String
+    var win : Int
+    var lose : Int
+    var points : Int
+    
+    public init(id : String,fullName : String,picture:String,win:Int,lose:Int,points:Int) {
+        self.id = id
+        self.fullName = fullName
+        self.picture = picture
+        self.win = win
+        self.lose = lose
+        self.points = points
+    }
+}
+
+public struct Llaves {
+    var name : String
+    var types : [PlayerLlave]
+    
+    public init(name:String,types:[PlayerLlave]) {
+        self.name = name
+        self.types = types
+    }
+}
+public struct Zonas {
+    var types : [String : [PlayerZona]]
+    
+    public init(types:[String:[PlayerZona]]) {
+        self.types = types
+    }
+}

@@ -18,6 +18,9 @@
 		A5535F5A257321AA00C68F16 /* UserRankingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5535F59257321AA00C68F16 /* UserRankingVC.swift */; };
 		A55F475B257BEE7900F80B82 /* MyTrophysCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55F475A257BEE7900F80B82 /* MyTrophysCell.swift */; };
 		A55F4760257E917C00F80B82 /* MyExpCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55F475F257E917C00F80B82 /* MyExpCell.swift */; };
+		A56A224526AA6A39003017A1 /* ZonesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56A224426AA6A39003017A1 /* ZonesCell.swift */; };
+		A56A224726AA6C85003017A1 /* LlavesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56A224626AA6C85003017A1 /* LlavesCell.swift */; };
+		A56A224926AA75D3003017A1 /* LlavesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56A224826AA75D3003017A1 /* LlavesTableViewCell.swift */; };
 		A57D40D9265DF20600C3738D /* ToursCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57D40D8265DF20600C3738D /* ToursCollectionViewCell.swift */; };
 		A58BBA9F266D7C5D00BF89D8 /* MatchesTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58BBA9E266D7C5D00BF89D8 /* MatchesTableCell.swift */; };
 		A58BBAA1266DBD0100BF89D8 /* MatchesCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58BBAA0266DBD0100BF89D8 /* MatchesCVCell.swift */; };
@@ -71,6 +74,9 @@
 		A5535F59257321AA00C68F16 /* UserRankingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRankingVC.swift; sourceTree = "<group>"; };
 		A55F475A257BEE7900F80B82 /* MyTrophysCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTrophysCell.swift; sourceTree = "<group>"; };
 		A55F475F257E917C00F80B82 /* MyExpCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyExpCell.swift; sourceTree = "<group>"; };
+		A56A224426AA6A39003017A1 /* ZonesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZonesCell.swift; sourceTree = "<group>"; };
+		A56A224626AA6C85003017A1 /* LlavesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlavesCell.swift; sourceTree = "<group>"; };
+		A56A224826AA75D3003017A1 /* LlavesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlavesTableViewCell.swift; sourceTree = "<group>"; };
 		A57D40D8265DF20600C3738D /* ToursCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToursCollectionViewCell.swift; sourceTree = "<group>"; };
 		A58BBA9E266D7C5D00BF89D8 /* MatchesTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesTableCell.swift; sourceTree = "<group>"; };
 		A58BBAA0266DBD0100BF89D8 /* MatchesCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesCVCell.swift; sourceTree = "<group>"; };
@@ -194,6 +200,7 @@
 				A5B4F23E257009D3008D0095 /* Incriptions */,
 				A5B4F23D257009C2008D0095 /* UserMain */,
 				A5B4F1EE256DB3A4008D0095 /* AppDelegate.swift */,
+				A5B4F1F0256DB3A4008D0095 /* SceneDelegate.swift */,
 				A5B4F1F2256DB3A4008D0095 /* ViewController.swift */,
 				A5B4F1F7256DB3A5008D0095 /* Assets.xcassets */,
 				A5B4F1F9256DB3A5008D0095 /* LaunchScreen.storyboard */,
@@ -226,7 +233,6 @@
 		A5B4F23D257009C2008D0095 /* UserMain */ = {
 			isa = PBXGroup;
 			children = (
-				A5B4F1F0256DB3A4008D0095 /* SceneDelegate.swift */,
 				A5B4F229256EB23D008D0095 /* UserMainVC.swift */,
 				A5EFF5FF265B248C00C89BDA /* RankCollectionCell.swift */,
 				A5535F5125731E1E00C68F16 /* UserMainTabBar.swift */,
@@ -246,6 +252,9 @@
 				A5B4F238256F506A008D0095 /* InscriptionsVC.swift */,
 				A5B4F24C25702028008D0095 /* TorneoInfoCell.swift */,
 				A5B4F23F25700A1E008D0095 /* InscriptionsCell.swift */,
+				A56A224426AA6A39003017A1 /* ZonesCell.swift */,
+				A56A224626AA6C85003017A1 /* LlavesCell.swift */,
+				A56A224826AA75D3003017A1 /* LlavesTableViewCell.swift */,
 			);
 			path = Incriptions;
 			sourceTree = "<group>";
@@ -424,6 +433,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5B4F1F3256DB3A4008D0095 /* ViewController.swift in Sources */,
+				A56A224926AA75D3003017A1 /* LlavesTableViewCell.swift in Sources */,
 				A58BBA9F266D7C5D00BF89D8 /* MatchesTableCell.swift in Sources */,
 				A55F475B257BEE7900F80B82 /* MyTrophysCell.swift in Sources */,
 				A55273332650953D0024486C /* MatchesVC.swift in Sources */,
@@ -449,6 +459,8 @@
 				A5B4F24D25702028008D0095 /* TorneoInfoCell.swift in Sources */,
 				A5B4F24025700A1E008D0095 /* InscriptionsCell.swift in Sources */,
 				A5501530260EB39600E3040F /* MyTorneosTableCell.swift in Sources */,
+				A56A224726AA6C85003017A1 /* LlavesCell.swift in Sources */,
+				A56A224526AA6A39003017A1 /* ZonesCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
