@@ -9,6 +9,9 @@ import UIKit
 
 class LlavesTableViewCell: UITableViewCell {
     
+    var setPlayer1: [String] = []
+    var setPlayer2: [String] = []
+    
     let viewContainer : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -33,7 +36,6 @@ class LlavesTableViewCell: UITableViewCell {
            imageView.translatesAutoresizingMaskIntoConstraints = false
            imageView.layer.cornerRadius = 28 / 2
            imageView.layer.masksToBounds = true
-           imageView.image = #imageLiteral(resourceName: "perfilIcon")
            imageView.contentMode = .scaleAspectFill
            imageView.isUserInteractionEnabled = true
            return imageView
@@ -43,7 +45,6 @@ class LlavesTableViewCell: UITableViewCell {
           let label = UILabel()
           label.font = UIFont(name: "Helvetica", size: 12)!
           label.textColor = .colorPaper
-          label.text = "Mariano BALARINO"
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
@@ -52,7 +53,6 @@ class LlavesTableViewCell: UITableViewCell {
           let label = UILabel()
           label.font = UIFont(name: "Helvetica Bold", size: 13)!
           label.textColor = .colorPaper
-          label.text = "C1"
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
@@ -74,7 +74,6 @@ class LlavesTableViewCell: UITableViewCell {
            imageView.translatesAutoresizingMaskIntoConstraints = false
            imageView.layer.cornerRadius = 28 / 2
            imageView.layer.masksToBounds = true
-           imageView.image = #imageLiteral(resourceName: "perfilIcon")
            imageView.contentMode = .scaleAspectFill
            imageView.isUserInteractionEnabled = true
            return imageView
@@ -84,7 +83,6 @@ class LlavesTableViewCell: UITableViewCell {
           let label = UILabel()
           label.font = UIFont(name: "Helvetica", size: 12)!
           label.textColor = .colorPaper
-          label.text = "Ezequiel MARTINEZ"
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
@@ -93,7 +91,6 @@ class LlavesTableViewCell: UITableViewCell {
           let label = UILabel()
           label.font = UIFont(name: "Helvetica Bold", size: 13)!
           label.textColor = .colorPaper
-          label.text = "C2"
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
@@ -102,7 +99,6 @@ class LlavesTableViewCell: UITableViewCell {
           let label = UILabel()
           label.font = UIFont(name: "Helvetica", size: 12)!
           label.textColor = .colorRust
-          label.text = "F1 - Semifinales - Partido 1 - Finalista 1"
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
@@ -116,6 +112,27 @@ class LlavesTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    let container1CV: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }()
+
+    lazy var scorePlayer1CV: UICollectionView = {
+           let layout = UICollectionViewFlowLayout()
+           let collectionView = UICollectionView(frame: CGRect.zero,
+           collectionViewLayout: layout)
+           layout.scrollDirection = .horizontal
+           collectionView.delegate = self
+           collectionView.dataSource = self
+           collectionView.backgroundColor = .clear
+           collectionView.register(MatchesCVCell.self, forCellWithReuseIdentifier: "MyCell")
+           collectionView.translatesAutoresizingMaskIntoConstraints = false
+           collectionView.isPagingEnabled = true
+           return collectionView
+       }()
+    
     let imageBallPlayer2: UIImageView  = {
        let imageView = UIImageView()
         imageView.image = #imageLiteral(resourceName: "Pelota Top Ten")
@@ -124,6 +141,27 @@ class LlavesTableViewCell: UITableViewCell {
         imageView.isHidden = true
         return imageView
     }()
+    
+    let container2CV: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }()
+
+    lazy var scorePlayer2CV: UICollectionView = {
+           let layout = UICollectionViewFlowLayout()
+           let collectionView = UICollectionView(frame: CGRect.zero,
+           collectionViewLayout: layout)
+           layout.scrollDirection = .horizontal
+           collectionView.delegate = self
+           collectionView.dataSource = self
+           collectionView.backgroundColor = .clear
+           collectionView.register(MatchesCVCell.self, forCellWithReuseIdentifier: "MyCell")
+           collectionView.translatesAutoresizingMaskIntoConstraints = false
+           collectionView.isPagingEnabled = true
+           return collectionView
+       }()
     
     let viewDivisor : UIView = {
         let view = UIView()
@@ -166,14 +204,18 @@ class LlavesTableViewCell: UITableViewCell {
         containerPhotoHeader.addSubview(imagePhotoHeader)
         viewContainer.addSubview(labelFullName)
         viewContainer.addSubview(labelPosition)
-       // viewContainer.addSubview(imageBallPlayer1)
+        viewContainer.addSubview(imageBallPlayer1)
+        viewContainer.addSubview(container1CV)
+        container1CV.addSubview(scorePlayer1CV)
         
         //PLAYER 2
         viewContainer.addSubview(containerPhotoHeader1)
         containerPhotoHeader1.addSubview(imagePhotoHeader1)
         viewContainer.addSubview(labelFullName1)
         viewContainer.addSubview(labelPosition1)
-        //viewContainer.addSubview(imageBallPlayer2)
+        viewContainer.addSubview(imageBallPlayer2)
+        viewContainer.addSubview(container2CV)
+        container2CV.addSubview(scorePlayer2CV)
         
         
         viewContainer.addSubview(viewDivisor)
@@ -204,10 +246,20 @@ class LlavesTableViewCell: UITableViewCell {
             labelPosition.topAnchor.constraint(equalTo: labelFullName.bottomAnchor, constant: 5),
             labelPosition.leadingAnchor.constraint(equalTo: labelFullName.leadingAnchor),
             
-//            imageBallPlayer1.centerYAnchor.constraint(equalTo: containerPhotoHeader.centerYAnchor),
-//            imageBallPlayer1.trailingAnchor.constraint(equalTo: container1CV.leadingAnchor, constant: -15),
-//            imageBallPlayer1.widthAnchor.constraint(equalToConstant: 30),
-//            imageBallPlayer1.heightAnchor.constraint(equalToConstant: 30),
+            imageBallPlayer1.centerYAnchor.constraint(equalTo: containerPhotoHeader.centerYAnchor),
+            imageBallPlayer1.trailingAnchor.constraint(equalTo: container1CV.leadingAnchor, constant: -15),
+            imageBallPlayer1.widthAnchor.constraint(equalToConstant: 30),
+            imageBallPlayer1.heightAnchor.constraint(equalToConstant: 30),
+            
+            container1CV.centerYAnchor.constraint(equalTo: containerPhotoHeader.centerYAnchor),
+            container1CV.trailingAnchor.constraint(equalTo: viewContainer.trailingAnchor, constant: -10),
+            container1CV.widthAnchor.constraint(equalToConstant: 80),
+            container1CV.heightAnchor.constraint(equalToConstant: 30),
+            
+            scorePlayer1CV.topAnchor.constraint(equalTo: container1CV.topAnchor),
+            scorePlayer1CV.leadingAnchor.constraint(equalTo: container1CV.leadingAnchor),
+            scorePlayer1CV.trailingAnchor.constraint(equalTo: container1CV.trailingAnchor),
+            scorePlayer1CV.bottomAnchor.constraint(equalTo: container1CV.bottomAnchor),
             
             viewDivisor.leadingAnchor.constraint(equalTo: viewContainer.leadingAnchor),
             viewDivisor.trailingAnchor.constraint(equalTo: viewContainer.trailingAnchor),
@@ -230,11 +282,20 @@ class LlavesTableViewCell: UITableViewCell {
             labelPosition1.topAnchor.constraint(equalTo: labelFullName1.bottomAnchor, constant: 5),
             labelPosition1.leadingAnchor.constraint(equalTo: labelFullName1.leadingAnchor),
 
-//            imageBallPlayer2.centerYAnchor.constraint(equalTo: containerPhotoHeader1.centerYAnchor),
-//            imageBallPlayer2.trailingAnchor.constraint(equalTo: container2CV.leadingAnchor, constant: -15),
-//            imageBallPlayer2.widthAnchor.constraint(equalToConstant: 30),
-//            imageBallPlayer2.heightAnchor.constraint(equalToConstant: 30),
+            imageBallPlayer2.centerYAnchor.constraint(equalTo: containerPhotoHeader1.centerYAnchor),
+            imageBallPlayer2.trailingAnchor.constraint(equalTo: container2CV.leadingAnchor, constant: -15),
+            imageBallPlayer2.widthAnchor.constraint(equalToConstant: 30),
+            imageBallPlayer2.heightAnchor.constraint(equalToConstant: 30),
             
+            container2CV.centerYAnchor.constraint(equalTo: containerPhotoHeader1.centerYAnchor),
+            container2CV.trailingAnchor.constraint(equalTo: viewContainer.trailingAnchor, constant: -10),
+            container2CV.widthAnchor.constraint(equalToConstant: 80),
+            container2CV.heightAnchor.constraint(equalToConstant: 30),
+            
+            scorePlayer2CV.topAnchor.constraint(equalTo: container2CV.topAnchor),
+            scorePlayer2CV.leadingAnchor.constraint(equalTo: container2CV.leadingAnchor),
+            scorePlayer2CV.trailingAnchor.constraint(equalTo: container2CV.trailingAnchor),
+            scorePlayer2CV.bottomAnchor.constraint(equalTo: container2CV.bottomAnchor),
             
             imageLlave.leadingAnchor.constraint(equalTo: viewContainer.trailingAnchor),
             imageLlave.centerYAnchor.constraint(equalTo: viewContainer.centerYAnchor),
@@ -246,5 +307,82 @@ class LlavesTableViewCell: UITableViewCell {
         
         
     }
+    
+    func updatePlayer1(row: [String]) {
+        self.setPlayer1 = row
+        self.scorePlayer1CV.reloadData()
+  
+       
+    }
+    
+    func updatePlayer2(row: [String]) {
+        self.setPlayer2 = row
+        self.scorePlayer2CV.reloadData()
+  
+    }
 
+}
+
+extension LlavesTableViewCell : UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        var sizeCollection = CGSize(width: 10, height: 10)
+        if collectionView == scorePlayer1CV || collectionView == scorePlayer2CV {
+            sizeCollection = CGSize(width: container1CV.bounds.width / 3, height: container1CV.bounds.height)
+        }
+        return sizeCollection
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        var countTable = 0
+
+        if collectionView == scorePlayer1CV {
+            countTable = setPlayer1.count
+        }
+        if collectionView == scorePlayer2CV {
+            countTable = setPlayer2.count
+        }
+
+        return countTable
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        var returnCell = UICollectionViewCell()
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! MatchesCVCell
+        
+        if collectionView == scorePlayer1CV {
+       
+        let number = self.setPlayer1[indexPath.item]
+        cell.labelTitle.text = String(number)
+        returnCell = cell
+        }
+        
+        if collectionView == scorePlayer2CV {
+
+        let number = self.setPlayer2[indexPath.item]
+        cell.labelTitle.text = String(number)
+        returnCell = cell
+        }
+
+
+        return returnCell
+    }
+    
+    
+    
 }

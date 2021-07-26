@@ -267,19 +267,24 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
                          Points(title: "Inscripcion", number: 5)]
         
         
-        let player1 = PlayerLlave(match: "Match1", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
+        let player1 = PlayerLlave(match: "Match1", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: ["-","-","-"])
         
-        let llaves = [Llaves(name: "CUARTOS", types: [player1,player1,player1,player1,player1,player1,player1,player1]),
-                        Llaves(name: "SEMIFINAL", types: [player1,player1,player1,player1]),
-                        Llaves(name: "FINAL", types: [player1,player1])
-        ]
+//        let llaves = [Llaves(name: "CUARTOS", types: [player1,player1,player1,player1,player1,player1,player1,player1]),
+//                        Llaves(name: "SEMIFINAL", types: [player1,player1,player1,player1]),
+//                        Llaves(name: "FINAL", types: [player1,player1])
+//        ]
+        
+        let llaves = [Llaves(name: "CUARTOS", types: [Match(name: "Match1", player1: player1, player2: player1),
+                                                      Match(name: "Match2", player1: player1, player2: player1),
+                                                      Match(name: "Match3", player1: player1, player2: player1),
+                                                      Match(name: "Match4", player1: player1, player2: player1),]),
+                      Llaves(name: "SEMIFINAL", types: [Match(name: "Match1", player1: player1, player2: player1),
+                                                        Match(name: "Match2", player1: player1, player2: player1)]),
+                      Llaves(name: "FINAL", types: [Match(name: "Match1", player1: player1, player2: player1)])]
         
         let player2 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
-        let zonas = Zonas(types: ["Zona1": [player2,player2,player2,player2],
-                                  "Zona2": [player2,player2,player2,player2],
-                                  "Zona3": [player2,player2,player2,player2],
-                                  "Zona4": [player2,player2,player2,player2],
-        ])
+        let zonas = [Zonas(name: "ZONA 1", types: [player2,player2,player2,player2]),
+                     Zonas(name: "ZONA 2", types: [player2,player2,player2,player2])]
         
         let stats1 = [TourStats(title: "FECHA", value: UserDefaults.standard.string(forKey: "dayTour") ?? "Sin Fecha"),
                      TourStats(title: "HORARIO INICIO", value: "12:00PM"),
@@ -303,7 +308,7 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
                                     players: allPlayers,
                                     winPoints: winPoints,
                                     llave: llaves,
-                                    zone: [zonas]))
+                                    zone: zonas))
         
         allTorneos.append(Tourament(name: "Torneo Primavera",
                                     day: "21-09-2021",
@@ -313,7 +318,7 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
                                     players: allPlayers,
                                     winPoints: winPoints,
                                     llave: llaves,
-                                    zone: [zonas]))
+                                    zone: zonas))
         
         navBarItemLoad()
         setupLayout()

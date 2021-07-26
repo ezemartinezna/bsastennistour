@@ -140,9 +140,9 @@ public struct PlayerLlave {
     var fullName : String
     var picture : String
     var win : Bool
-    var set : [Int : Any]
+    var set : [String]
     
-    public init(match:String,id : String, fullName : String,picture:String,win:Bool,set:[Int : Any]) {
+    public init(match:String,id : String, fullName : String,picture:String,win:Bool,set:[String]) {
         self.match = match
         self.id = id
         self.fullName = fullName
@@ -151,6 +151,19 @@ public struct PlayerLlave {
         self.set = set
     }
     
+}
+
+public struct Match {
+    
+    var name : String
+    var player1 : PlayerLlave
+    var player2 : PlayerLlave
+    
+    public init(name : String, player1 : PlayerLlave, player2: PlayerLlave) {
+        self.name = name
+        self.player1 = player1
+        self.player2 = player2
+    }
 }
 
 public struct PlayerZona {
@@ -174,17 +187,19 @@ public struct PlayerZona {
 
 public struct Llaves {
     var name : String
-    var types : [PlayerLlave]
+    var types : [Match]
     
-    public init(name:String,types:[PlayerLlave]) {
+    public init(name:String,types:[Match]) {
         self.name = name
         self.types = types
     }
 }
 public struct Zonas {
-    var types : [String : [PlayerZona]]
+    var name : String
+    var types : [PlayerZona]
     
-    public init(types:[String:[PlayerZona]]) {
+    public init(name:String,types:[PlayerZona]) {
+        self.name = name
         self.types = types
     }
 }

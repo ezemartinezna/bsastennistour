@@ -9,20 +9,10 @@ import UIKit
 
 class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
-//
-//    var allNames = [Users]()
-//    var allData = [AllParticipants]()
-//    var allInfo = [String]()
-//    var allTitles = ["FECHA","HORARIO INICIO","SEDE","UBICACION","MODALIDAD","PRECIO","PARTIDOS ASEGURADOS"]
-//    var allPointsName = ["Campeon","SubCampeon","Semifinales","Cuartos","Partido Ganado","Inscripcion"]
-//    var allPoints = ["120","60","30","15","10","5"]
     var collapsedPoints : Bool = true
     var collapsedInfo : Bool = true
     var collapsedPlayers : Bool = true
-    
-//    let llavesNames : [String] = ["CUARTOS DE FINAL", "SEMIFINAL", "FINAL"]
-//    var matches : [AllMatches] = []
-    
+
     var tourament = [Tourament]()
     
     let buttonMenu : UIButton = {
@@ -212,7 +202,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     
     private let torneoInfoTable: UITableView = {
        let table = UITableView()
-        table.backgroundColor = .darkGray
+        table.backgroundColor = .white
         table.separatorColor = .lightGray
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(TorneoInfoCell.self, forCellReuseIdentifier: "secondCell")
@@ -238,7 +228,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     
     private let allPointsTable: UITableView = {
        let table = UITableView()
-        table.backgroundColor = .darkGray
+        table.backgroundColor = .white
         table.separatorColor = .lightGray
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(TorneoInfoCell.self, forCellReuseIdentifier: "thirdCell")
@@ -420,6 +410,37 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
          return pc
      }()
     
+    let uViewContainerZones : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    lazy var allZones: UICollectionView = {
+           let layout = UICollectionViewFlowLayout()
+           let collectionView = UICollectionView(frame: CGRect.zero,
+           collectionViewLayout: layout)
+           layout.scrollDirection = .horizontal
+           collectionView.delegate = self
+           collectionView.dataSource = self
+           collectionView.backgroundColor = .white
+           collectionView.register(ZonesCVCell.self, forCellWithReuseIdentifier: "MyCell")
+           collectionView.translatesAutoresizingMaskIntoConstraints = false
+           collectionView.isPagingEnabled = true
+           return collectionView
+       }()
+    
+    private lazy var pageControlZones: UIPageControl = {
+         let pc = UIPageControl()
+         pc.currentPage = 0
+         pc.numberOfPages = tourament[0].zone.count
+         pc.currentPageIndicatorTintColor = .black
+         pc.pageIndicatorTintColor = .colorGray
+         pc.translatesAutoresizingMaskIntoConstraints = false
+         return pc
+     }()
+    
     var topAnchorView : NSLayoutConstraint?
     var topAnchorTable : NSLayoutConstraint?
     
@@ -431,12 +452,6 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//
-//         allNames.append(Users(name: "Mariano",lastname: "BALARINO",imageprofile: "person1",score: "12 - 4 - 0",position: 2,points: 2081))
-//         allNames.append(Users(name: "Martin",lastname: "RIOSECO",imageprofile: "person2",score: "11 - 5 - 0",position: 7,points: 1834))
-//         allNames.append(Users(name: "Javier",lastname: "BELVEDERE",imageprofile: "person3",score: "9 - 7 - 0",position: 13,points: 1788))
-//         allNames.append(Users(name: "Ezequiel",lastname: "MARTINEZ",imageprofile: "person4",score: "8 - 8 - 0",position: 4,points: 1549))
-//         allNames.append(Users(name: "Gonzalo",lastname: "Alonso",imageprofile: "perfilIcon",score: "8 - 8 - 0",position: 9,points: 1249))
         
         let allPlayers = [
                     PlayerStat(id: "1q2w3e4r", fullName: "Ezequiel Martinez", points: 100, rank: 9, picture: "person3"),
@@ -462,26 +477,30 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
 
         
         
-        let player1 = PlayerLlave(match: "C1", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
-        let player2 = PlayerLlave(match: "C2", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
-        let player3 = PlayerLlave(match: "C3", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
-        let player4 = PlayerLlave(match: "C4", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
-        let player5 = PlayerLlave(match: "C5", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
-        let player6 = PlayerLlave(match: "C6", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
-        let player7 = PlayerLlave(match: "C7", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
-        let player8 = PlayerLlave(match: "C8", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: [1:"-",2:"-",3:"-"])
+        let player1 = PlayerLlave(match: "C1", id: "1q2w3e4r", fullName: "Ezequiel Martinez", picture: "person2", win: false, set: ["1","2","3"])
+        let player2 = PlayerLlave(match: "C2", id: "1q2w3e4r", fullName: "Jonatan Dalinger", picture: "person3", win: false, set: ["4","5","6"])
+        let player3 = PlayerLlave(match: "C3", id: "1q2w3e4r", fullName: "Martin Rioseco", picture: "person1", win: false, set: ["7","8","9"])
+        let player4 = PlayerLlave(match: "C4", id: "1q2w3e4r", fullName: "Javier Belvedere", picture: "person4", win: false, set: ["6","6","6"])
+        let player5 = PlayerLlave(match: "C5", id: "1q2w3e4r", fullName: "Gonzalo Alonso", picture: "perfilIcon", win: false, set: ["-","-","-"])
+        let player6 = PlayerLlave(match: "C6", id: "1q2w3e4r", fullName: "Leo Flores", picture: "perfilIcon", win: false, set: ["7","7","7"])
+        let player7 = PlayerLlave(match: "C7", id: "1q2w3e4r", fullName: "Gianluca Manograsso", picture: "perfilIcon", win: false, set: ["-","-","-"])
+        let player8 = PlayerLlave(match: "C8", id: "1q2w3e4r", fullName: "Mariano Balarino", picture: "perfilIcon", win: false, set: ["-","-","-"])
         
-        let llaves = [Llaves(name: "CUARTOS", types: [player1,player2,player3,player4,player5,player6,player7,player8]),
-                        Llaves(name: "SEMIFINAL", types: [player1,player1,player1,player1]),
-                        Llaves(name: "FINAL", types: [player1,player1])
-        ]
+        let llaves = [Llaves(name: "CUARTOS", types: [Match(name: "Match1", player1: player1, player2: player2),
+                                                      Match(name: "Match2", player1: player3, player2: player4),
+                                                      Match(name: "Match3", player1: player5, player2: player6),
+                                                      Match(name: "Match4", player1: player7, player2: player8),]),
+                      Llaves(name: "SEMIFINAL", types: [Match(name: "Match1", player1: player1, player2: player2),
+                                                        Match(name: "Match2", player1: player3, player2: player4)]),
+                      Llaves(name: "FINAL", types: [Match(name: "Match1", player1: player1, player2: player2)])]
         
         let player10 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
-        let zonas = Zonas(types: ["Zona1": [player10,player10,player10,player10],
-                                  "Zona2": [player10,player10,player10,player10],
-                                  "Zona3": [player10,player10,player10,player10],
-                                  "Zona4": [player10,player10,player10,player10],
-        ])
+        let player11 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
+        let player12 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
+        let player13 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
+
+        let zonas = [Zonas(name: "ZONA 1", types: [player10,player11,player12,player13]),
+                     Zonas(name: "ZONA 2", types: [player10,player11,player12,player13])]
         
         let stats = [TourStats(title: "FECHA", value: UserDefaults.standard.string(forKey: "dayTour") ?? "Sin Fecha"),
                      TourStats(title: "HORARIO INICIO", value: "12:00PM"),
@@ -498,7 +517,8 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                                    players: allPlayers,
                                    winPoints: winPoints,
                                    llave: llaves,
-                                   zone: [zonas]))
+                                   zone: zonas))
+        
     
         
         sortByPosition()
@@ -567,6 +587,11 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         uView4.addSubview(labelLlaves)
 
         uViewScrollView1.addSubview(buttonZonas)
+        uViewScrollView1.addSubview(uViewContainerZones)
+        uViewContainerLlaves.addSubview(allZones)
+        uViewContainerLlaves.addSubview(pageControlZones)
+        
+        
         uViewScrollView1.addSubview(buttonLlaves)
         
         uViewScrollView1.addSubview(uViewContainerLlaves)
@@ -658,22 +683,35 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             uView3.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             uView3.heightAnchor.constraint(equalToConstant: 60),
             
-            uView4.topAnchor.constraint(equalTo: uView3.bottomAnchor,constant: 20),
-            uView4.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            uView4.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            uView4.heightAnchor.constraint(equalToConstant: 60),
-            
             labelZonas.centerYAnchor.constraint(equalTo: uView3.centerYAnchor),
             labelZonas.leadingAnchor.constraint(equalTo: uView3.leadingAnchor, constant: 30),
-            
-            labelLlaves.centerYAnchor.constraint(equalTo: uView4.centerYAnchor),
-            labelLlaves.leadingAnchor.constraint(equalTo: uView4.leadingAnchor, constant: 30),
             
             buttonZonas.heightAnchor.constraint(equalToConstant: 25),
             buttonZonas.widthAnchor.constraint(equalToConstant: 25),
             buttonZonas.centerYAnchor.constraint(equalTo: uView3.centerYAnchor),
             buttonZonas.trailingAnchor.constraint(equalTo: uView3.trailingAnchor, constant: -25),
             
+            uViewContainerZones.topAnchor.constraint(equalTo: uView3.bottomAnchor),
+            uViewContainerZones.leadingAnchor.constraint(equalTo: uViewScrollView1.leadingAnchor),
+            uViewContainerZones.trailingAnchor.constraint(equalTo: uViewScrollView1.trailingAnchor),
+            uViewContainerZones.heightAnchor.constraint(equalToConstant: 300),
+            
+            allZones.topAnchor.constraint(equalTo: uViewContainerZones.topAnchor),
+            allZones.leadingAnchor.constraint(equalTo: uViewContainerZones.leadingAnchor),
+            allZones.trailingAnchor.constraint(equalTo: uViewContainerZones.trailingAnchor),
+            allZones.bottomAnchor.constraint(equalTo: uViewContainerZones.bottomAnchor),
+            
+            pageControlZones.centerXAnchor.constraint(equalTo: uViewContainerZones.centerXAnchor),
+            pageControlZones.topAnchor.constraint(equalTo: uViewContainerZones.topAnchor,constant: 35),
+            
+            uView4.topAnchor.constraint(equalTo: uViewContainerZones.bottomAnchor,constant: 20),
+            uView4.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            uView4.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            uView4.heightAnchor.constraint(equalToConstant: 60),
+            
+            labelLlaves.centerYAnchor.constraint(equalTo: uView4.centerYAnchor),
+            labelLlaves.leadingAnchor.constraint(equalTo: uView4.leadingAnchor, constant: 30),
+
             buttonLlaves.heightAnchor.constraint(equalToConstant: 25),
             buttonLlaves.widthAnchor.constraint(equalToConstant: 25),
             buttonLlaves.centerYAnchor.constraint(equalTo: uView4.centerYAnchor),
@@ -761,8 +799,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         buttonRegister.bottomAnchor.constraint(equalTo: uViewScrollView.bottomAnchor,constant: -20).isActive = true
         buttonRegister.heightAnchor.constraint(equalToConstant: 40).isActive = true
         buttonRegister.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        
-
+    
         
     }
 
@@ -1010,6 +1047,13 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
          pageControl.currentPage = Int(x / uViewContainerLlaves.bounds.width)
 
         }
+        
+        if scrollView == allZones {
+   
+         let x = targetContentOffset.pointee.x
+         pageControlZones.currentPage = Int(x / uViewContainerZones.bounds.width)
+
+        }
 
     }
     
@@ -1018,22 +1062,54 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let sizeCollection = CGSize(width: uViewContainerLlaves.bounds.width, height: uViewContainerLlaves.bounds.height)
+        var sizeCollection = CGSize(width: 10, height: 10)
+        if collectionView == allLlaves {
+            sizeCollection = CGSize(width: uViewContainerLlaves.bounds.width, height: uViewContainerLlaves.bounds.height)
+        }
+        if collectionView == allZones {
+            sizeCollection = CGSize(width: uViewContainerZones.bounds.width, height: uViewContainerZones.bounds.height)
+        }
         return sizeCollection
     }
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tourament[0].llave.count
+        
+        var returnInt = 0
+        if collectionView == allLlaves {
+            returnInt = tourament[0].llave.count
+        }
+        if collectionView == allZones {
+            returnInt = tourament[0].zone.count
+        }
+        
+        return returnInt
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! LlavesCell
         
-        cell.labelTitle.text = "\(tourament[0].llave[indexPath.row].name)"
-        cell.updateCellWith(row: tourament[0].llave[indexPath.row])
+        var returnCell = UICollectionViewCell()
+        
+        if collectionView == allLlaves {
+          
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! LlavesCell
+            
+            cell.labelTitle.text = "\(tourament[0].llave[indexPath.row].name)"
+            cell.updateCellWith(row: tourament[0].llave[indexPath.row])
+            
+            returnCell = cell
+        }
+        
+        if collectionView == allZones {
+            
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! ZonesCVCell
 
-        return cell
+            cell.labelTitle.text = tourament[0].zone[indexPath.row].name
+            cell.updateCellWith(row: tourament[0].zone[indexPath.row].types)
+            returnCell = cell
+        }
+        
+        return returnCell
     }
     
     func collectionView(_ collectionView: UICollectionView,
