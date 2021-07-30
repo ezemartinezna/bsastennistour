@@ -118,13 +118,13 @@ class ZonesTVCell: UITableViewCell {
             labelLastname.leadingAnchor.constraint(equalTo: labelName.leadingAnchor),
             
             labelPositionPoints.centerYAnchor.constraint(equalTo: imagePhotoHeader.centerYAnchor),
-            labelPositionPoints.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -40),
+            labelPositionPoints.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -45),
             
             labelLosts.centerYAnchor.constraint(equalTo: imagePhotoHeader.centerYAnchor),
-            labelLosts.trailingAnchor.constraint(equalTo: labelPositionPoints.leadingAnchor,constant: -40),
+            labelLosts.trailingAnchor.constraint(equalTo: labelPositionPoints.leadingAnchor,constant: -50),
             
             labelWins.centerYAnchor.constraint(equalTo: imagePhotoHeader.centerYAnchor),
-            labelWins.trailingAnchor.constraint(equalTo: labelLosts.leadingAnchor,constant: -40),
+            labelWins.trailingAnchor.constraint(equalTo: labelLosts.leadingAnchor,constant: -50),
             
 
         ])

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseDatabase
 
 class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     
@@ -16,7 +17,7 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     var allTorneos : [Tourament] = []
     
     var co : Int = 0
-    
+    var ref: DatabaseReference!
     
     let titleTorneo : UILabel = {
         let label = UILabel()
@@ -216,7 +217,6 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     private lazy var pageControl: UIPageControl = {
          let pc = UIPageControl()
          pc.currentPage = 0
-         pc.numberOfPages = allTorneos.count
          pc.currentPageIndicatorTintColor = .black
          pc.pageIndicatorTintColor = .white
          pc.translatesAutoresizingMaskIntoConstraints = false
@@ -244,81 +244,82 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let allPlayers = [
-                    PlayerStat(id: "1q2w3e4r", fullName: "Ezequiel Martinez", points: 100, rank: 9, picture: "person3"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Jonatan Dalinger", points: 180, rank: 2, picture: "person2"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Mariano Balarino", points: 180, rank: 2, picture: "person1"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Javier Belvedere", points: 180, rank: 2, picture: "person4"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Leo Flores", points: 180, rank: 2, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Gonzalo Alonso", points: 180, rank: 2, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Martin Rioseco", points: 180, rank: 2, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Lucas Barrantes", points: 180, rank: 2, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Gianluca Manograsso", points: 180, rank: 2, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Fernando Caraballo", points: 180, rank: 2, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Martin Saccon", points: 180, rank: 2, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Pepe Luis", points: 180, rank: 2, picture: "perfilIcon"),
-        ]
-        
-        let winPoints = [Points(title: "Campeon", number: 100),
-                         Points(title: "SubCampeon", number: 80),
-                         Points(title: "Semifinal", number: 40),
-                         Points(title: "Cuartos", number: 25),
-                         Points(title: "Partido Ganado", number: 10),
-                         Points(title: "Inscripcion", number: 5)]
-        
-        
-        let player1 = PlayerLlave(match: "Match1", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: ["-","-","-"])
-        
-//        let llaves = [Llaves(name: "CUARTOS", types: [player1,player1,player1,player1,player1,player1,player1,player1]),
-//                        Llaves(name: "SEMIFINAL", types: [player1,player1,player1,player1]),
-//                        Llaves(name: "FINAL", types: [player1,player1])
-//        ]
-        
-        let llaves = [Llaves(name: "CUARTOS", types: [Match(name: "Match1", player1: player1, player2: player1),
-                                                      Match(name: "Match2", player1: player1, player2: player1),
-                                                      Match(name: "Match3", player1: player1, player2: player1),
-                                                      Match(name: "Match4", player1: player1, player2: player1),]),
-                      Llaves(name: "SEMIFINAL", types: [Match(name: "Match1", player1: player1, player2: player1),
-                                                        Match(name: "Match2", player1: player1, player2: player1)]),
-                      Llaves(name: "FINAL", types: [Match(name: "Match1", player1: player1, player2: player1)])]
-        
-        let player2 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
-        let zonas = [Zonas(name: "ZONA 1", types: [player2,player2,player2,player2]),
-                     Zonas(name: "ZONA 2", types: [player2,player2,player2,player2])]
-        
-        let stats1 = [TourStats(title: "FECHA", value: UserDefaults.standard.string(forKey: "dayTour") ?? "Sin Fecha"),
-                     TourStats(title: "HORARIO INICIO", value: "12:00PM"),
-                     TourStats(title: "SEDE", value: "Club Mitre"),
-                     TourStats(title: "MODALIDAD    ", value: "Single Mixto"),
-                     TourStats(title: "PRECIO", value: 1200),
-                     TourStats(title: "PARTIDOS ASEGURADOS", value: 4)]
-        
-        let stats2 = [TourStats(title: "FECHA", value: UserDefaults.standard.string(forKey: "dayTour") ?? "Sin Fecha"),
-                     TourStats(title: "HORARIO INICIO", value: "12:00PM"),
-                     TourStats(title: "SEDE", value: "Club Mitre"),
-                     TourStats(title: "MODALIDAD    ", value: "Single Mixto"),
-                     TourStats(title: "PRECIO", value: 1200),
-                     TourStats(title: "PARTIDOS ASEGURADOS", value: 4)]
-        
-        allTorneos.append(Tourament(name: "Torneo Apertura",
-                                    day: "09-09-2021",
-                                    model: "Single Mixto",
-                                    max: 16,
-                                    stats: stats1,
-                                    players: allPlayers,
-                                    winPoints: winPoints,
-                                    llave: llaves,
-                                    zone: zonas))
-        
-        allTorneos.append(Tourament(name: "Torneo Primavera",
-                                    day: "21-09-2021",
-                                    model: "Single Mixto",
-                                    max: 16,
-                                    stats: stats2,
-                                    players: allPlayers,
-                                    winPoints: winPoints,
-                                    llave: llaves,
-                                    zone: zonas))
+
+        ref = Database.database().reference().child("Torneos")
+               ref.observeSingleEvent(of: .value, with: { (snapshot) in
+
+                   if snapshot.exists() {
+                    
+                    let today = Date()
+                    var stats : [TourStats] = []
+                    
+                    if let allDates = snapshot.children.allObjects as? [DataSnapshot] {
+                        for tourDay in allDates {
+                            
+                            let dateTour = self.convertStringToDate(dateString: tourDay.key)
+                            if dateTour >= today {
+                                
+                                if let allTours = tourDay.children.allObjects as? [DataSnapshot] {
+                                    for tour in allTours {
+                                        
+                                        stats.removeAll()
+                                        
+                                        if let allData = tour.children.allObjects as? [DataSnapshot] {
+                                            for data in allData {
+                                                
+                                                if data.key == "Info" {
+                                                    stats.append(TourStats(title: "Fecha", value: tourDay.key))
+                                                    if let allInfo = data.children.allObjects as? [DataSnapshot] {
+                                                        for info in allInfo {
+                                                            stats.append(TourStats(title: info.key, value: info.value!))
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        
+                                        let allPlayers = [
+                                                    PlayerStat(id: "1q2w3e4r", fullName: "Ezequiel Martinez", points: 100, rank: 9, picture: "person3"),
+                                                    PlayerStat(id: "azsxdcfv", fullName: "Jonatan Dalinger", points: 180, rank: 2, picture: "person2"),
+                                                    PlayerStat(id: "azsxdcfv", fullName: "Mariano Balarino", points: 180, rank: 2, picture: "person1"),
+                                                    PlayerStat(id: "azsxdcfv", fullName: "Javier Belvedere", points: 180, rank: 2, picture: "person4"),
+                                                    PlayerStat(id: "azsxdcfv", fullName: "Leo Flores", points: 180, rank: 2, picture: "perfilIcon"),
+                                                    PlayerStat(id: "azsxdcfv", fullName: "Gonzalo Alonso", points: 180, rank: 2, picture: "perfilIcon"),
+                                                    PlayerStat(id: "azsxdcfv", fullName: "Martin Rioseco", points: 180, rank: 2, picture: "perfilIcon"),
+                                                    PlayerStat(id: "azsxdcfv", fullName: "Lucas Barrantes", points: 180, rank: 2, picture: "perfilIcon"),
+                                                    PlayerStat(id: "azsxdcfv", fullName: "Gianluca Manograsso", points: 180, rank: 2, picture: "perfilIcon"),
+                                                    PlayerStat(id: "azsxdcfv", fullName: "Fernando Caraballo", points: 180, rank: 2, picture: "perfilIcon"),
+                                                    PlayerStat(id: "azsxdcfv", fullName: "Martin Saccon", points: 180, rank: 2, picture: "perfilIcon"),
+                                                    PlayerStat(id: "azsxdcfv", fullName: "Pepe Luis", points: 180, rank: 2, picture: "perfilIcon"),
+                                        ]
+                                        
+                                        let winPoints = [Points(title: "Campeon", number: 100),
+                                                         Points(title: "SubCampeon", number: 80),
+                                                         Points(title: "Semifinal", number: 40),
+                                                         Points(title: "Cuartos", number: 25),
+                                                         Points(title: "Partido Ganado", number: 10),
+                                                         Points(title: "Inscripcion", number: 5)]
+                                        
+                                        
+                                        let player1 = PlayerLlave(match: "Match1", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: ["-","-","-"])
+                                        
+                                        let llaves = [Llaves(name: "CUARTOS", types: [Match(name: "Match1", player1: player1, player2: player1)])]
+                                        
+                                        let player2 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
+                                        let zonas = [Zonas(name: "ZONA 1", types: [player2,player2,player2,player2])]
+                                        
+                                        self.allTorneos.append( Tourament(name: tour.key, stats: stats, players: allPlayers, winPoints: winPoints, llave: llaves, zone: zonas) )
+                                    }
+                                }
+                                
+                            }
+                        }
+                    }
+
+                   }
+                self.pageControl.numberOfPages = self.allTorneos.count
+                self.toursCollectionView.reloadData()
+               })
         
         navBarItemLoad()
         setupLayout()
@@ -516,7 +517,7 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
         let index = pageControl.currentPage
         
         UserDefaults.standard.set(allTorneos[index].name, forKey: "nameTour")
-        UserDefaults.standard.set(allTorneos[index].day, forKey: "dayTour")
+        UserDefaults.standard.set(allTorneos[index].stats[0].value, forKey: "dayTour")
         UserDefaults.standard.synchronize()
         
         let vc = InscriptionsVC()
@@ -600,10 +601,10 @@ extension TouramentVC : UICollectionViewDataSource {
         if collectionView == toursCollectionView {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! ToursCollectionViewCell
           
-            cell.labelDate.text = allTorneos[indexPath.row].day
+            cell.labelDate.text = "\(allTorneos[indexPath.row].stats[0].value)"
             cell.labelNameTour.text = allTorneos[indexPath.row].name.uppercased()
-            cell.labelType.text = allTorneos[indexPath.row].model
-            cell.labelMaxPlayers.text = "\(allTorneos[indexPath.row].max) JUGADORES"
+            cell.labelType.text = "\(allTorneos[indexPath.row].stats[5].value)"
+            cell.labelMaxPlayers.text = "\(allTorneos[indexPath.row].stats[4].value) JUGADORES"
 
         returnCell = cell
         }
@@ -615,7 +616,7 @@ extension TouramentVC : UICollectionViewDataSource {
         if collectionView == toursCollectionView {
 
                 UserDefaults.standard.set(allTorneos[indexPath.row].name, forKey: "nameTour")
-                UserDefaults.standard.set(allTorneos[indexPath.row].day, forKey: "dayTour")
+                UserDefaults.standard.set(allTorneos[indexPath.row].stats[0].value, forKey: "dayTour")
                 UserDefaults.standard.synchronize()
 
                 let vc = InscriptionsVC()

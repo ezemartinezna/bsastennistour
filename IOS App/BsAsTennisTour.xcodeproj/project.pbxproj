@@ -22,6 +22,8 @@
 		A56A224726AA6C85003017A1 /* LlavesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56A224626AA6C85003017A1 /* LlavesCell.swift */; };
 		A56A224926AA75D3003017A1 /* LlavesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56A224826AA75D3003017A1 /* LlavesTableViewCell.swift */; };
 		A5703D7926AE6C5500EFB502 /* ZonesCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5703D7826AE6C5500EFB502 /* ZonesCVCell.swift */; };
+		A5703D7B26AFB02400EFB502 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A5703D7A26AFB02400EFB502 /* GoogleService-Info.plist */; };
+		A5703D7D26B3A09500EFB502 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5703D7C26B3A09500EFB502 /* Extensions.swift */; };
 		A57D40D9265DF20600C3738D /* ToursCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57D40D8265DF20600C3738D /* ToursCollectionViewCell.swift */; };
 		A58BBA9F266D7C5D00BF89D8 /* MatchesTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58BBA9E266D7C5D00BF89D8 /* MatchesTableCell.swift */; };
 		A58BBAA1266DBD0100BF89D8 /* MatchesCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58BBAA0266DBD0100BF89D8 /* MatchesCVCell.swift */; };
@@ -79,6 +81,8 @@
 		A56A224626AA6C85003017A1 /* LlavesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlavesCell.swift; sourceTree = "<group>"; };
 		A56A224826AA75D3003017A1 /* LlavesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlavesTableViewCell.swift; sourceTree = "<group>"; };
 		A5703D7826AE6C5500EFB502 /* ZonesCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZonesCVCell.swift; sourceTree = "<group>"; };
+		A5703D7A26AFB02400EFB502 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A5703D7C26B3A09500EFB502 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		A57D40D8265DF20600C3738D /* ToursCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToursCollectionViewCell.swift; sourceTree = "<group>"; };
 		A58BBA9E266D7C5D00BF89D8 /* MatchesTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesTableCell.swift; sourceTree = "<group>"; };
 		A58BBAA0266DBD0100BF89D8 /* MatchesCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesCVCell.swift; sourceTree = "<group>"; };
@@ -207,9 +211,11 @@
 				A5B4F1F7256DB3A5008D0095 /* Assets.xcassets */,
 				A5B4F1F9256DB3A5008D0095 /* LaunchScreen.storyboard */,
 				A5B4F1FC256DB3A5008D0095 /* Info.plist */,
+				A5703D7A26AFB02400EFB502 /* GoogleService-Info.plist */,
 				A5B4F224256DDBCE008D0095 /* Colors.swift */,
 				A5B4F24725700CF4008D0095 /* AllStructs.swift */,
 				A5527337265095D70024486C /* ConfigVC.swift */,
+				A5703D7C26B3A09500EFB502 /* Extensions.swift */,
 			);
 			path = BsAsTennisTour;
 			sourceTree = "<group>";
@@ -369,6 +375,7 @@
 			files = (
 				A5B4F1FB256DB3A5008D0095 /* LaunchScreen.storyboard in Resources */,
 				A5B4F1F8256DB3A5008D0095 /* Assets.xcassets in Resources */,
+				A5703D7B26AFB02400EFB502 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,6 +461,7 @@
 				A57D40D9265DF20600C3738D /* ToursCollectionViewCell.swift in Sources */,
 				A5B4F234256F2384008D0095 /* TorneosTableCell.swift in Sources */,
 				A5535F4D25716B0000C68F16 /* NewsCollectionCell.swift in Sources */,
+				A5703D7D26B3A09500EFB502 /* Extensions.swift in Sources */,
 				A5501536260EB99F00E3040F /* TouramentVC.swift in Sources */,
 				A5B4F22A256EB23D008D0095 /* UserMainVC.swift in Sources */,
 				A5EE08AE26A770970055BEFD /* LiveTableViewCell.swift in Sources */,
@@ -640,7 +648,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.emdev.BsAsTennisAcademy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emdev.BsAsTennisTour;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -660,7 +668,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.emdev.BsAsTennisAcademy;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emdev.BsAsTennisTour;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -59,9 +59,6 @@ public struct AllMatches {
 
 public struct Tourament {
     var name : String
-    var day : String
-    var model : String
-    var max : Int
     var stats : [TourStats]
     var players : [PlayerStat]
     var winPoints : [Points]
@@ -69,9 +66,6 @@ public struct Tourament {
     var zone : [Zonas]
     
     public init(name : String,
-                day : String,
-                model : String,
-                max : Int,
                 stats : [TourStats],
                 players : [PlayerStat],
                 winPoints : [Points],
@@ -79,9 +73,6 @@ public struct Tourament {
                 zone : [Zonas]) {
         
         self.name = name
-        self.day = day
-        self.model = model
-        self.max = max
         self.stats = stats
         self.players = players
         self.winPoints = winPoints

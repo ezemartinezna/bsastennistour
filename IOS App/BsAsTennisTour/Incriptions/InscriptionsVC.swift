@@ -12,6 +12,9 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     var collapsedPoints : Bool = true
     var collapsedInfo : Bool = true
     var collapsedPlayers : Bool = true
+    
+    var collapsedZonas : Bool = true
+    var collapsedLlaves : Bool = true
 
     var tourament = [Tourament]()
     
@@ -137,7 +140,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         return uView
     }()
     
-    private let uViewScrollView1 : UIView = {
+    private let containerViewCuadro : UIView = {
         let uView = UIView()
         uView.isHidden = true
         uView.layer.backgroundColor = UIColor.clear.cgColor
@@ -312,7 +315,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-    //    button.addTarget(self, action: #selector(handleExpandClose), for: .touchUpInside)
+        button.addTarget(self, action: #selector(openCloseZonas), for: .touchUpInside)
         return button
     }()
     
@@ -320,7 +323,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-   //     button.addTarget(self, action: #selector(handleExpandClose1), for: .touchUpInside)
+        button.addTarget(self, action: #selector(openCloseLlaves), for: .touchUpInside)
         return button
     }()
     
@@ -381,6 +384,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     
     let uViewContainerLlaves : UIView = {
         let view = UIView()
+        view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         return view
@@ -400,7 +404,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
            return collectionView
        }()
     
-    private lazy var pageControl: UIPageControl = {
+    private lazy var pageControlLlaves: UIPageControl = {
          let pc = UIPageControl()
          pc.currentPage = 0
          pc.numberOfPages = tourament[0].llave.count
@@ -410,8 +414,9 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
          return pc
      }()
     
-    let uViewContainerZones : UIView = {
+    let containerZonesView : UIView = {
         let view = UIView()
+        view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         return view
@@ -449,6 +454,10 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     
     var topAnchorView2 : NSLayoutConstraint?
     var topAnchorView3 : NSLayoutConstraint?
+    
+    var topView4Llaves : NSLayoutConstraint?
+    var topView4BottomTable : NSLayoutConstraint?
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -510,9 +519,6 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                      TourStats(title: "PARTIDOS ASEGURADOS", value: 4)]
         
         tourament.append(Tourament(name: "Torneo Apertura",
-                                   day: "09-09-2021",
-                                   model: "Single Mixto",
-                                   max: 16,
                                    stats : stats,
                                    players: allPlayers,
                                    winPoints: winPoints,
@@ -557,7 +563,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         view.addSubview(scrollView)
         scrollView.delegate = self
         scrollView.addSubview(uViewScrollView)
-        view.addSubview(uViewScrollView1)
+        view.addSubview(containerViewCuadro)
         
         //DATOS
         uViewScrollView.addSubview(uView0)
@@ -580,23 +586,25 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         uViewScrollView.addSubview(trophyImage)
         uViewScrollView.addSubview(buttonRegister)
         
-        uViewScrollView1.addSubview(uView3)
-        uViewScrollView1.addSubview(uView4)
+        //CUADRO
+        containerViewCuadro.addSubview(uView3)
+        containerViewCuadro.addSubview(uView4)
     
+        
         uView3.addSubview(labelZonas)
         uView4.addSubview(labelLlaves)
 
-        uViewScrollView1.addSubview(buttonZonas)
-        uViewScrollView1.addSubview(uViewContainerZones)
-        uViewContainerLlaves.addSubview(allZones)
-        uViewContainerLlaves.addSubview(pageControlZones)
+        containerViewCuadro.addSubview(buttonZonas)
+        containerViewCuadro.addSubview(containerZonesView)
+        containerZonesView.addSubview(allZones)
+        containerZonesView.addSubview(pageControlZones)
         
         
-        uViewScrollView1.addSubview(buttonLlaves)
+        containerViewCuadro.addSubview(buttonLlaves)
         
-        uViewScrollView1.addSubview(uViewContainerLlaves)
+        containerViewCuadro.addSubview(uViewContainerLlaves)
         uViewContainerLlaves.addSubview(allLlaves)
-        uViewContainerLlaves.addSubview(pageControl)
+        uViewContainerLlaves.addSubview(pageControlLlaves)
 
         //CONSTRAINTS
         
@@ -673,12 +681,12 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             torneoInfoTable.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             torneoInfoTable.heightAnchor.constraint(equalToConstant: 300),
             
-            uViewScrollView1.topAnchor.constraint(equalTo: viewContainer.bottomAnchor),
-            uViewScrollView1.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            uViewScrollView1.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            uViewScrollView1.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            containerViewCuadro.topAnchor.constraint(equalTo: viewContainer.bottomAnchor),
+            containerViewCuadro.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            containerViewCuadro.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            containerViewCuadro.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            uView3.topAnchor.constraint(equalTo: uViewScrollView1.topAnchor,constant: 20),
+            uView3.topAnchor.constraint(equalTo: containerViewCuadro.topAnchor,constant: 20),
             uView3.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             uView3.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             uView3.heightAnchor.constraint(equalToConstant: 60),
@@ -691,20 +699,19 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             buttonZonas.centerYAnchor.constraint(equalTo: uView3.centerYAnchor),
             buttonZonas.trailingAnchor.constraint(equalTo: uView3.trailingAnchor, constant: -25),
             
-            uViewContainerZones.topAnchor.constraint(equalTo: uView3.bottomAnchor),
-            uViewContainerZones.leadingAnchor.constraint(equalTo: uViewScrollView1.leadingAnchor),
-            uViewContainerZones.trailingAnchor.constraint(equalTo: uViewScrollView1.trailingAnchor),
-            uViewContainerZones.heightAnchor.constraint(equalToConstant: 300),
+            containerZonesView.topAnchor.constraint(equalTo: uView3.bottomAnchor),
+            containerZonesView.leadingAnchor.constraint(equalTo: containerViewCuadro.leadingAnchor),
+            containerZonesView.trailingAnchor.constraint(equalTo: containerViewCuadro.trailingAnchor),
+            containerZonesView.heightAnchor.constraint(equalToConstant: 300),
             
-            allZones.topAnchor.constraint(equalTo: uViewContainerZones.topAnchor),
-            allZones.leadingAnchor.constraint(equalTo: uViewContainerZones.leadingAnchor),
-            allZones.trailingAnchor.constraint(equalTo: uViewContainerZones.trailingAnchor),
-            allZones.bottomAnchor.constraint(equalTo: uViewContainerZones.bottomAnchor),
+            allZones.topAnchor.constraint(equalTo: containerZonesView.topAnchor),
+            allZones.leadingAnchor.constraint(equalTo: containerZonesView.leadingAnchor),
+            allZones.trailingAnchor.constraint(equalTo: containerZonesView.trailingAnchor),
+            allZones.bottomAnchor.constraint(equalTo: containerZonesView.bottomAnchor),
             
-            pageControlZones.centerXAnchor.constraint(equalTo: uViewContainerZones.centerXAnchor),
-            pageControlZones.topAnchor.constraint(equalTo: uViewContainerZones.topAnchor,constant: 35),
+            pageControlZones.centerXAnchor.constraint(equalTo: containerZonesView.centerXAnchor),
+            pageControlZones.topAnchor.constraint(equalTo: containerZonesView.bottomAnchor,constant: -25),
             
-            uView4.topAnchor.constraint(equalTo: uViewContainerZones.bottomAnchor,constant: 20),
             uView4.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             uView4.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             uView4.heightAnchor.constraint(equalToConstant: 60),
@@ -718,17 +725,17 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             buttonLlaves.trailingAnchor.constraint(equalTo: uView4.trailingAnchor, constant: -25),
             
             uViewContainerLlaves.topAnchor.constraint(equalTo: uView4.bottomAnchor),
-            uViewContainerLlaves.leadingAnchor.constraint(equalTo: uViewScrollView1.leadingAnchor),
-            uViewContainerLlaves.trailingAnchor.constraint(equalTo: uViewScrollView1.trailingAnchor),
-            uViewContainerLlaves.bottomAnchor.constraint(equalTo: uViewScrollView1.bottomAnchor),
-            
+            uViewContainerLlaves.leadingAnchor.constraint(equalTo: containerViewCuadro.leadingAnchor),
+            uViewContainerLlaves.trailingAnchor.constraint(equalTo: containerViewCuadro.trailingAnchor),
+            uViewContainerLlaves.bottomAnchor.constraint(equalTo: containerViewCuadro.bottomAnchor),
+
             allLlaves.topAnchor.constraint(equalTo: uViewContainerLlaves.topAnchor),
             allLlaves.leadingAnchor.constraint(equalTo: uViewContainerLlaves.leadingAnchor),
             allLlaves.trailingAnchor.constraint(equalTo: uViewContainerLlaves.trailingAnchor),
             allLlaves.bottomAnchor.constraint(equalTo: uViewContainerLlaves.bottomAnchor),
-            
-            pageControl.centerXAnchor.constraint(equalTo: uViewContainerLlaves.centerXAnchor),
-            pageControl.topAnchor.constraint(equalTo: uViewContainerLlaves.topAnchor,constant: 35)
+
+            pageControlLlaves.centerXAnchor.constraint(equalTo: uViewContainerLlaves.centerXAnchor),
+            pageControlLlaves.topAnchor.constraint(equalTo: uViewContainerLlaves.topAnchor,constant: 35)
             
         ])
         
@@ -799,6 +806,13 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         buttonRegister.bottomAnchor.constraint(equalTo: uViewScrollView.bottomAnchor,constant: -20).isActive = true
         buttonRegister.heightAnchor.constraint(equalToConstant: 40).isActive = true
         buttonRegister.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        
+        //CUADRO
+        topView4Llaves = uView4.topAnchor.constraint(equalTo: uView3.bottomAnchor,constant: 20)
+        topView4Llaves?.isActive = true
+        
+        topView4BottomTable = uView4.topAnchor.constraint(equalTo: containerZonesView.bottomAnchor,constant: 20)
+        topView4BottomTable?.isActive = false
     
         
     }
@@ -902,7 +916,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             
         }, completion: nil)
 
-        allUsersTable.reloadData()
+//        allUsersTable.reloadData()
     }
     
     @objc func handleExpandClose2() {
@@ -926,7 +940,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
 
         }, completion: nil)
 
-        torneoInfoTable.reloadData()
+//        torneoInfoTable.reloadData()
     }
     
     @objc func handleExpandClose1() {
@@ -952,7 +966,46 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             self.view.layoutIfNeeded()
             
         }, completion: nil)
-        allPointsTable.reloadData()
+//        allPointsTable.reloadData()
+        
+    }
+    
+    @objc func openCloseZonas() {
+        
+        if !collapsedZonas {
+            buttonZonas.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
+            containerZonesView.isHidden = true
+            topView4Llaves?.isActive = true
+            topView4BottomTable?.isActive = false
+            
+        } else {
+            buttonZonas.setImage(#imageLiteral(resourceName: "upArrowWhite"), for: .normal)
+            containerZonesView.isHidden = false
+            topView4Llaves?.isActive = false
+            topView4BottomTable?.isActive = true
+      
+        }
+
+        collapsedZonas = !collapsedZonas
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            
+            self.view.layoutIfNeeded()
+            
+        }, completion: nil)
+//        allZones.reloadData()
+        
+    }
+    
+    @objc func openCloseLlaves() {
+        
+        if !collapsedLlaves {
+            buttonLlaves.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
+            uViewContainerLlaves.isHidden = true
+        }else{
+            buttonLlaves.setImage(#imageLiteral(resourceName: "upArrowWhite"), for: .normal)
+            uViewContainerLlaves.isHidden = false
+        }
+        collapsedLlaves = !collapsedLlaves
         
     }
     
@@ -976,7 +1029,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         lineButton2.backgroundColor = .colorPaper
         
         scrollView.isHidden = false
-        uViewScrollView1.isHidden = true
+        containerViewCuadro.isHidden = true
         
     }
     
@@ -988,7 +1041,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         lineButton2.backgroundColor = .colorPop
         
         scrollView.isHidden = true
-        uViewScrollView1.isHidden = false
+        containerViewCuadro.isHidden = false
         
     }
     
@@ -1044,14 +1097,14 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
         if scrollView == allLlaves {
    
          let x = targetContentOffset.pointee.x
-         pageControl.currentPage = Int(x / uViewContainerLlaves.bounds.width)
+         pageControlLlaves.currentPage = Int(x / uViewContainerLlaves.bounds.width)
 
         }
         
         if scrollView == allZones {
    
          let x = targetContentOffset.pointee.x
-         pageControlZones.currentPage = Int(x / uViewContainerZones.bounds.width)
+         pageControlZones.currentPage = Int(x / containerZonesView.bounds.width)
 
         }
 
@@ -1067,7 +1120,7 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
             sizeCollection = CGSize(width: uViewContainerLlaves.bounds.width, height: uViewContainerLlaves.bounds.height)
         }
         if collectionView == allZones {
-            sizeCollection = CGSize(width: uViewContainerZones.bounds.width, height: uViewContainerZones.bounds.height)
+            sizeCollection = CGSize(width: containerZonesView.bounds.width, height: containerZonesView.bounds.height)
         }
         return sizeCollection
     }

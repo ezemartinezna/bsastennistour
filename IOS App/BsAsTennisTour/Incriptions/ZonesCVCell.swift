@@ -20,7 +20,8 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
     let labelWin: UILabel = {
           let label = UILabel()
           label.textColor = .colorCoal
-          label.text = "Ganados"
+          label.text = "Gan."
+          label.textAlignment = .center
           label.font = UIFont(name: "Helvetica Bold", size: 14)
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
@@ -28,8 +29,9 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
     
     let labelLost: UILabel = {
           let label = UILabel()
-          label.text = "Perdidos"
+          label.text = "Per."
           label.textColor = .colorCoal
+          label.textAlignment = .center
           label.font = UIFont(name: "Helvetica Bold", size: 14)
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
@@ -37,8 +39,9 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
     
     let labelPoints: UILabel = {
           let label = UILabel()
-          label.text = "Puntos"
+          label.text = "Pts"
           label.textColor = .colorCoal
+          label.textAlignment = .center
           label.font = UIFont(name: "Helvetica Bold", size: 14)
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
@@ -79,13 +82,13 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
             labelTitle.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 20),
             
             labelPoints.centerYAnchor.constraint(equalTo: labelTitle.centerYAnchor),
-            labelPoints.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -20),
+            labelPoints.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -35),
             
             labelLost.centerYAnchor.constraint(equalTo: labelTitle.centerYAnchor),
-            labelLost.trailingAnchor.constraint(equalTo: labelPoints.leadingAnchor,constant: -5),
+            labelLost.trailingAnchor.constraint(equalTo: labelPoints.leadingAnchor,constant: -35),
             
             labelWin.centerYAnchor.constraint(equalTo: labelTitle.centerYAnchor),
-            labelWin.trailingAnchor.constraint(equalTo: labelLost.leadingAnchor,constant: -5),
+            labelWin.trailingAnchor.constraint(equalTo: labelLost.leadingAnchor,constant: -35),
             
             allParticipants.leadingAnchor.constraint(equalTo: leadingAnchor),
             allParticipants.trailingAnchor.constraint(equalTo: trailingAnchor),
