@@ -7,9 +7,31 @@
 
 import UIKit
 
+extension UITabBarController {
+    func createNavControllers(vc: UIViewController, selected: UIImage, unselected: UIImage) -> UINavigationController {
+        let viewController = vc
+        let navController = UINavigationController(rootViewController: viewController)
+        navController.tabBarItem.image = unselected
+        navController.tabBarItem.selectedImage = selected
+
+        navController.navigationBar.barTintColor = .colorCoal
+        navController.navigationBar.isTranslucent = false
+        self.navigationController?.view.tintColor = .white
+     //  navController.navigationBar.tintColor = .white
+
+        return navController
+    }
+    
+}
+
 
 extension UIViewController
 {
+    func randomString(length: Int) -> String {
+      let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+      return String((0..<length).map{ _ in letters.randomElement()! })
+    }
+    
     func setupToHideKeyboardOnTapOnView()
     {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(

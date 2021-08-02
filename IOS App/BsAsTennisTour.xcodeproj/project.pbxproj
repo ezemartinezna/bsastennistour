@@ -24,6 +24,9 @@
 		A5703D7926AE6C5500EFB502 /* ZonesCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5703D7826AE6C5500EFB502 /* ZonesCVCell.swift */; };
 		A5703D7B26AFB02400EFB502 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A5703D7A26AFB02400EFB502 /* GoogleService-Info.plist */; };
 		A5703D7D26B3A09500EFB502 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5703D7C26B3A09500EFB502 /* Extensions.swift */; };
+		A5703D8026B73AAA00EFB502 /* AdminTourVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5703D7F26B73AAA00EFB502 /* AdminTourVC.swift */; };
+		A5703D8226B73C0900EFB502 /* AdminMainTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5703D8126B73C0900EFB502 /* AdminMainTabBar.swift */; };
+		A5703D8426B7460800EFB502 /* CreateNewTourVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5703D8326B7460800EFB502 /* CreateNewTourVC.swift */; };
 		A57D40D9265DF20600C3738D /* ToursCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57D40D8265DF20600C3738D /* ToursCollectionViewCell.swift */; };
 		A58BBA9F266D7C5D00BF89D8 /* MatchesTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58BBA9E266D7C5D00BF89D8 /* MatchesTableCell.swift */; };
 		A58BBAA1266DBD0100BF89D8 /* MatchesCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58BBAA0266DBD0100BF89D8 /* MatchesCVCell.swift */; };
@@ -83,6 +86,9 @@
 		A5703D7826AE6C5500EFB502 /* ZonesCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZonesCVCell.swift; sourceTree = "<group>"; };
 		A5703D7A26AFB02400EFB502 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A5703D7C26B3A09500EFB502 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		A5703D7F26B73AAA00EFB502 /* AdminTourVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminTourVC.swift; sourceTree = "<group>"; };
+		A5703D8126B73C0900EFB502 /* AdminMainTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminMainTabBar.swift; sourceTree = "<group>"; };
+		A5703D8326B7460800EFB502 /* CreateNewTourVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewTourVC.swift; sourceTree = "<group>"; };
 		A57D40D8265DF20600C3738D /* ToursCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToursCollectionViewCell.swift; sourceTree = "<group>"; };
 		A58BBA9E266D7C5D00BF89D8 /* MatchesTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesTableCell.swift; sourceTree = "<group>"; };
 		A58BBAA0266DBD0100BF89D8 /* MatchesCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesCVCell.swift; sourceTree = "<group>"; };
@@ -176,6 +182,15 @@
 			name = UserStats;
 			sourceTree = "<group>";
 		};
+		A5703D7E26B73A7400EFB502 /* AdminTourament */ = {
+			isa = PBXGroup;
+			children = (
+				A5703D7F26B73AAA00EFB502 /* AdminTourVC.swift */,
+				A5703D8326B7460800EFB502 /* CreateNewTourVC.swift */,
+			);
+			name = AdminTourament;
+			sourceTree = "<group>";
+		};
 		A5B4F1E2256DB3A4008D0095 = {
 			isa = PBXGroup;
 			children = (
@@ -201,6 +216,7 @@
 		A5B4F1ED256DB3A4008D0095 /* BsAsTennisTour */ = {
 			isa = PBXGroup;
 			children = (
+				A5703D7E26B73A7400EFB502 /* AdminTourament */,
 				A5501534260EB96400E3040F /* Touraments & Match */,
 				A553887C257731C6005AFC67 /* UserStats */,
 				A5B4F23E257009D3008D0095 /* Incriptions */,
@@ -250,6 +266,7 @@
 				A55280852573FFF900C35BFD /* RankingTableCell.swift */,
 				A550152F260EB39600E3040F /* MyTorneosTableCell.swift */,
 				A5EE08AD26A770970055BEFD /* LiveTableViewCell.swift */,
+				A5703D8126B73C0900EFB502 /* AdminMainTabBar.swift */,
 			);
 			name = UserMain;
 			sourceTree = "<group>";
@@ -452,6 +469,7 @@
 				A5B4F1EF256DB3A4008D0095 /* AppDelegate.swift in Sources */,
 				A55280862573FFF900C35BFD /* RankingTableCell.swift in Sources */,
 				A5B4F22F256ECE8D008D0095 /* ProfesorCollectionCell.swift in Sources */,
+				A5703D8026B73AAA00EFB502 /* AdminTourVC.swift in Sources */,
 				A55F4760257E917C00F80B82 /* MyExpCell.swift in Sources */,
 				A5527338265095D70024486C /* ConfigVC.swift in Sources */,
 				A5B4F1F1256DB3A4008D0095 /* SceneDelegate.swift in Sources */,
@@ -466,11 +484,13 @@
 				A5B4F22A256EB23D008D0095 /* UserMainVC.swift in Sources */,
 				A5EE08AE26A770970055BEFD /* LiveTableViewCell.swift in Sources */,
 				A5EFF600265B248C00C89BDA /* RankCollectionCell.swift in Sources */,
+				A5703D8426B7460800EFB502 /* CreateNewTourVC.swift in Sources */,
 				A5535F5225731E1E00C68F16 /* UserMainTabBar.swift in Sources */,
 				A58BBAA1266DBD0100BF89D8 /* MatchesCVCell.swift in Sources */,
 				A5B4F24D25702028008D0095 /* TorneoInfoCell.swift in Sources */,
 				A5B4F24025700A1E008D0095 /* InscriptionsCell.swift in Sources */,
 				A5501530260EB39600E3040F /* MyTorneosTableCell.swift in Sources */,
+				A5703D8226B73C0900EFB502 /* AdminMainTabBar.swift in Sources */,
 				A56A224726AA6C85003017A1 /* LlavesCell.swift in Sources */,
 				A56A224526AA6A39003017A1 /* ZonesTVCell.swift in Sources */,
 			);

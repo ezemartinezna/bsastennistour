@@ -1,14 +1,14 @@
 //
-//  File.swift
-//  BsAsTennisAcademy
+//  AdminMainTabBar.swift
+//  BsAsTennisTour
 //
-//  Created by Ezequiel Martinez on 28/11/2020.
+//  Created by Ezequiel Martinez on 01/08/2021.
 //
 
 import UIKit
 
-class UserMainTabBar : UITabBarController {
-    
+class AdminMainTabBar: UITabBarController {
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -57,7 +57,7 @@ class UserMainTabBar : UITabBarController {
         fivImageSelect?.withTintColor(.colorPop)
         
         let firstController = createNavControllers(vc: UserMainVC(), selected: firstImageSelect!, unselected: firstImageIdle!)
-        let secondController = createNavControllers(vc: TouramentVC(), selected: secImageSelect!, unselected: secImageIdle!)
+        let secondController = createNavControllers(vc: AdminTourVC(), selected: secImageSelect!, unselected: secImageIdle!)
         let thirdController = createNavControllers(vc: MatchesVC(), selected: thiImageSelect!, unselected: thiImageIdle!)
         let fourController = createNavControllers(vc: UserRankingVC(), selected: fouImageSelect!, unselected: fouImageIdle!)
         let fiveController = createNavControllers(vc: ConfigVC(), selected: fivImageSelect!, unselected: fivImageIdle!)
@@ -66,10 +66,4 @@ class UserMainTabBar : UITabBarController {
      
       
     }
-    
-  
-    
-   
-    
-
 }

@@ -602,6 +602,9 @@ class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegat
     
     @objc func createAccount() {
         
+        let mainPage = AdminMainTabBar()
+        mainPage.modalPresentationStyle = .fullScreen
+        self.present(mainPage, animated: true, completion: nil)
         
     }
     
