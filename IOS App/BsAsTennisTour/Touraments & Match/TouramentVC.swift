@@ -293,12 +293,12 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
                                                     PlayerStat(id: "azsxdcfv", fullName: "Pepe Luis", points: 180, rank: 2, picture: "perfilIcon"),
                                         ]
                                         
-                                        let winPoints = [Points(title: "Campeon", number: 100),
-                                                         Points(title: "SubCampeon", number: 80),
-                                                         Points(title: "Semifinal", number: 40),
-                                                         Points(title: "Cuartos", number: 25),
-                                                         Points(title: "Partido Ganado", number: 10),
-                                                         Points(title: "Inscripcion", number: 5)]
+                                        let winPoints = [Points(title: "Campeon", number: "100"),
+                                                         Points(title: "SubCampeon", number: "80"),
+                                                         Points(title: "Semifinal", number: "40"),
+                                                         Points(title: "Cuartos", number: "25"),
+                                                         Points(title: "Partido Ganado", number: "10"),
+                                                         Points(title: "Inscripcion", number: "5")]
                                         
                                         
                                         let player1 = PlayerLlave(match: "Match1", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: ["-","-","-"])

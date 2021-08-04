@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseDatabase
 
 class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
@@ -17,6 +18,8 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     var collapsedLlaves : Bool = true
 
     var tourament = [Tourament]()
+    
+    var ref: DatabaseReference!
     
     let buttonMenu : UIButton = {
          let button = UIButton(type: .custom)
@@ -407,7 +410,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     private lazy var pageControlLlaves: UIPageControl = {
          let pc = UIPageControl()
          pc.currentPage = 0
-         pc.numberOfPages = tourament[0].llave.count
+//         pc.numberOfPages = tourament[0].llave.count
          pc.currentPageIndicatorTintColor = .black
          pc.pageIndicatorTintColor = .colorGray
          pc.translatesAutoresizingMaskIntoConstraints = false
@@ -439,7 +442,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     private lazy var pageControlZones: UIPageControl = {
          let pc = UIPageControl()
          pc.currentPage = 0
-         pc.numberOfPages = tourament[0].zone.count
+//         pc.numberOfPages = tourament[0].zone.count
          pc.currentPageIndicatorTintColor = .black
          pc.pageIndicatorTintColor = .colorGray
          pc.translatesAutoresizingMaskIntoConstraints = false
@@ -461,75 +464,9 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let allPlayers = [
-                    PlayerStat(id: "1q2w3e4r", fullName: "Ezequiel Martinez", points: 100, rank: 9, picture: "person3"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Jonatan Dalinger", points: 180, rank: 3, picture: "person2"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Mariano Balarino", points: 180, rank: 2, picture: "person1"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Javier Belvedere", points: 180, rank: 4, picture: "person4"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Leo Flores", points: 180, rank: 25, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Gonzalo Alonso", points: 180, rank: 7, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Martin Rioseco", points: 180, rank: 6, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Lucas Barrantes", points: 180, rank: 14, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Gianluca Manograsso", points: 180, rank: 12, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Fernando Caraballo", points: 180, rank: 16, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Martin Saccon", points: 180, rank: 1, picture: "perfilIcon"),
-                    PlayerStat(id: "azsxdcfv", fullName: "Pepe Luis", points: 180, rank: 20, picture: "perfilIcon"),
-        ]
-        
-        let winPoints = [Points(title: "Campeon", number: 100),
-                         Points(title: "SubCampeon", number: 80),
-                         Points(title: "Semifinal", number: 40),
-                         Points(title: "Cuartos", number: 25),
-                         Points(title: "Partido Ganado", number: 10),
-                         Points(title: "Inscripcion", number: 5)]
-
-        
-        
-        let player1 = PlayerLlave(match: "C1", id: "1q2w3e4r", fullName: "Ezequiel Martinez", picture: "person2", win: false, set: ["1","2","3"])
-        let player2 = PlayerLlave(match: "C2", id: "1q2w3e4r", fullName: "Jonatan Dalinger", picture: "person3", win: false, set: ["4","5","6"])
-        let player3 = PlayerLlave(match: "C3", id: "1q2w3e4r", fullName: "Martin Rioseco", picture: "person1", win: false, set: ["7","8","9"])
-        let player4 = PlayerLlave(match: "C4", id: "1q2w3e4r", fullName: "Javier Belvedere", picture: "person4", win: false, set: ["6","6","6"])
-        let player5 = PlayerLlave(match: "C5", id: "1q2w3e4r", fullName: "Gonzalo Alonso", picture: "perfilIcon", win: false, set: ["-","-","-"])
-        let player6 = PlayerLlave(match: "C6", id: "1q2w3e4r", fullName: "Leo Flores", picture: "perfilIcon", win: false, set: ["7","7","7"])
-        let player7 = PlayerLlave(match: "C7", id: "1q2w3e4r", fullName: "Gianluca Manograsso", picture: "perfilIcon", win: false, set: ["-","-","-"])
-        let player8 = PlayerLlave(match: "C8", id: "1q2w3e4r", fullName: "Mariano Balarino", picture: "perfilIcon", win: false, set: ["-","-","-"])
-        
-        let llaves = [Llaves(name: "CUARTOS", types: [Match(name: "Match1", player1: player1, player2: player2),
-                                                      Match(name: "Match2", player1: player3, player2: player4),
-                                                      Match(name: "Match3", player1: player5, player2: player6),
-                                                      Match(name: "Match4", player1: player7, player2: player8),]),
-                      Llaves(name: "SEMIFINAL", types: [Match(name: "Match1", player1: player1, player2: player2),
-                                                        Match(name: "Match2", player1: player3, player2: player4)]),
-                      Llaves(name: "FINAL", types: [Match(name: "Match1", player1: player1, player2: player2)])]
-        
-        let player10 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
-        let player11 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
-        let player12 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
-        let player13 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
-
-        let zonas = [Zonas(name: "ZONA 1", types: [player10,player11,player12,player13]),
-                     Zonas(name: "ZONA 2", types: [player10,player11,player12,player13])]
-        
-        let stats = [TourStats(title: "FECHA", value: UserDefaults.standard.string(forKey: "dayTour") ?? "Sin Fecha"),
-                     TourStats(title: "HORARIO INICIO", value: "12:00PM"),
-                     TourStats(title: "SEDE", value: "Club Mitre"),
-                     TourStats(title: "MODALIDAD    ", value: "Single Mixto"),
-                     TourStats(title: "PRECIO", value: 1200),
-                     TourStats(title: "PARTIDOS ASEGURADOS", value: 4)]
-        
-        tourament.append(Tourament(name: "Torneo Apertura",
-                                   stats : stats,
-                                   players: allPlayers,
-                                   winPoints: winPoints,
-                                   llave: llaves,
-                                   zone: zonas))
-        
-    
-        
-        sortByPosition()
         setupBarItem()
         setupLayout()
+        loadTourament()
     }
     
     func setupBarItem() {
@@ -821,6 +758,9 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var countData = 0 as Int
+        
+        if tourament.count != 0 {
+
         if tableView == allUsersTable {
             countData = tourament[0].players.count
         }
@@ -830,6 +770,8 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         
         if tableView == allPointsTable {
             countData = tourament[0].winPoints.count
+        }
+            
         }
       return countData
         
@@ -1086,6 +1028,184 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         
     }
     
+    func loadTourament() {
+        
+        let dayTour = UserDefaults.standard.string(forKey: "dayTour") ?? ""
+        let nameTour = UserDefaults.standard.string(forKey: "nameTour") ?? ""
+        ref = Database.database().reference().child("Torneos/\(dayTour)/\(nameTour)")
+        
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+
+            if snapshot.exists() {
+                
+                var stats = [TourStats]()
+                var players = [PlayerStat]()
+                var llaves = [Llaves]()
+                var zonas = [Zonas]()
+                var winpoints = [Points]()
+                
+                if let allTour = snapshot.children.allObjects as? [DataSnapshot] {
+                    for tour in allTour {
+                        
+                        switch tour.key {
+                        case "Info":
+                            if let allStats = tour.children.allObjects as? [DataSnapshot] {
+                                for stat in allStats {
+                                    stats.append(TourStats(title: stat.key, value: stat.value ?? ""))
+                                }
+                            }
+                        case "Players":
+                            if let allPlayers = tour.children.allObjects as? [DataSnapshot] {
+                                for player in allPlayers {
+                                    if let allDataPlayer = player.children.allObjects as? [DataSnapshot]{
+                                        for dataPlayer in allDataPlayer {
+                                            var fullName : String = ""
+                                            var points : Int = 0
+                                            var rank : Int = 0
+                                            var picture : String = ""
+                                            if dataPlayer.key == "fullName" {
+                                                fullName = dataPlayer.value as? String ?? "-"
+                                            }
+                                            if dataPlayer.key == "points" {
+                                                points = dataPlayer.value as? Int ?? 0
+                                            }
+                                            if dataPlayer.key == "rank" {
+                                                rank = dataPlayer.value as? Int ?? 0
+                                            }
+                                            if dataPlayer.key == "picture" {
+                                                picture = dataPlayer.value as? String ?? "-"
+                                            }
+                                            
+                                            players.append(PlayerStat(id: player.key, fullName: fullName, points: points, rank: rank, picture: picture))
+                                        }
+                                    }
+                                  
+                                }
+                            }
+                        case "WinPoints":
+                            if let allWinPoints = tour.children.allObjects as? [DataSnapshot] {
+                                for points in allWinPoints {
+                                    let indexInt = points.key.indexes(of: "-", str: points.key)
+                                    
+                                    winpoints.append(Points(title: points.value as? String ?? "-", number: points.key.substring(from: indexInt + 1)))
+                                }
+                            }
+                        case "Zonas":
+                            if let allZonas = tour.children.allObjects as? [DataSnapshot] {
+                                for zona in allZonas {
+                                    var arrayPlayers : [PlayerZona] = []
+                                    if let allPlayers = zona.children.allObjects as? [DataSnapshot]{
+                                        for player in allPlayers {
+                                            if let allInfoPlayer = player.children.allObjects as? [DataSnapshot] {
+                                                
+                                                var fullName : String = ""
+                                                var points : Int = 0
+                                                var lose : Int = 0
+                                                var win : Int = 0
+                                                var picture : String = ""
+                                                
+                                                for info in allInfoPlayer {
+                                                    if info.key == "fullName" {
+                                                        fullName = info.value as? String ?? "-"
+                                                    }
+                                                    if info.key == "points" {
+                                                        points = info.value as? Int ?? 0
+                                                    }
+                                                    if info.key == "lose" {
+                                                        lose = info.value as? Int ?? 0
+                                                    }
+                                                    if info.key == "win" {
+                                                        win = info.value as? Int ?? 0
+                                                    }
+                                                    if info.key == "picture" {
+                                                        picture = info.value as? String ?? "-"
+                                                    }
+                                                }
+                                                arrayPlayers.append(PlayerZona(id: player.key, fullName: fullName, picture: picture, win: win, lose: lose, points: points))
+                                            }
+                                        }
+                                    }
+                                    zonas.append(Zonas(name: zona.key, types: arrayPlayers))
+                                }
+                            }
+                        case "Llaves":
+                            if let allLlaves = tour.children.allObjects as? [DataSnapshot] {
+                                for llave in allLlaves {
+                                    
+                                    var arrayMatch : [Match] = []
+                                    
+                                    if let allMatches = llave.children.allObjects as? [DataSnapshot] {
+                                        for match in allMatches {
+                                            
+                                            var arrayPlayer : [PlayerLlave] = []
+                                            
+                                            if let positions = match.children.allObjects as? [DataSnapshot] {
+                                                for position in positions {
+                                                    
+                                                    var fullName : String = "-"
+                                                    var win : Bool = false
+                                                    var picture : String = "perfilIcon"
+                                                    var SETS : [String] = []
+                                                    
+                                                    if let allPlayer = position.children.allObjects as? [DataSnapshot] {
+                                                        for player in allPlayer {
+                                                            if let allInfo = player.children.allObjects as? [DataSnapshot] {
+                                                                for info in allInfo {
+                                                                    
+                                                                    if info.key == "fullName" {
+                                                                        fullName = info.value as? String ?? "-"
+                                                                    }
+                                                                    
+                                                                    if info.key == "win" {
+                                                                        win = info.value as? Bool ?? false
+                                                                    }
+                                                                    
+                                                                    if info.key == "picture" {
+                                                                        picture = info.value as? String ?? "-"
+                                                                    }
+                                                                    
+                                                                    if info.key == "SET" {
+                                                                        if let allSETS = info.children.allObjects as? [DataSnapshot] {
+                                                                            for set in allSETS {
+                                                                                SETS.append(set.value as? String ?? "0")
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            arrayPlayer.append(PlayerLlave(match: position.key, id: player.key, fullName: fullName, picture: picture, win: win, set: SETS))
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            arrayMatch.append(Match(name: match.key, player1: arrayPlayer[0], player2: arrayPlayer[1]))
+                                
+                                        }
+                                    }
+                                    llaves.append(Llaves(name: llave.key.substring(from: 1), types: arrayMatch))
+                                }
+                            }
+  
+                        default:
+                            print("error")
+                        }
+
+                    }
+                    self.tourament.append(Tourament(name: nameTour, stats: stats, players: players, winPoints: winpoints, llave: llaves, zone: zonas))
+                }
+                self.sortByPosition()
+                self.torneoInfoTable.reloadData()
+                self.allUsersTable.reloadData()
+                self.allPointsTable.reloadData()
+                self.allZones.reloadData()
+                self.allLlaves.reloadData()
+                
+            }
+        })
+        
+        
+    }
+    
 
 
 }
@@ -1129,11 +1249,14 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         var returnInt = 0
+        
+        if tourament.count != 0 {
         if collectionView == allLlaves {
             returnInt = tourament[0].llave.count
         }
         if collectionView == allZones {
             returnInt = tourament[0].zone.count
+        }
         }
         
         return returnInt
@@ -1178,22 +1301,5 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
     }
     
     
-    
-}
-
-extension InscriptionsVC {
-    
-    func NameDivisor(fullName : String) -> (firstName: String,lastname : String) {
-        
-        var firstname = ""
-        var lastname = ""
-        
-        var components = fullName.components(separatedBy: " ")
-        if components.count > 0 {
-            firstname = components.removeFirst()
-            lastname = components.joined(separator: " ")
-        }
-    return(firstname,lastname)
-    }
     
 }

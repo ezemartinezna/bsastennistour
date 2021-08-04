@@ -572,12 +572,12 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate {
         
         let allData : [String : Any] = ["Area":"Polvo de Ladrillo","Price":1500,"Hour":textHorario.text ?? "12:00PM","Max":textMax.text ?? 16,"Model":textModelo.text ?? "Single Mixto","Matches" : textMatch.text ?? 4,"Sede":textSede.text ?? "Club Mitre"]
         
-        let allWins : [String:String] = ["20" : "Participar","40" : "Cuartos","60":"Semifinal","80" : "Final", "100" : "Campeon"]
+        let allWins : [String:String] = ["5-20" : "Participar","4-40" : "Cuartos","3-60":"Semifinal","2-80" : "Final", "1-100" : "Campeon"]
         
         var tourament : [String : [String:Any]] = ["Info":allData]
         tourament.updateValue(allWins, forKey: "WinPoints")
         
-        let infoZona : [String : String] = ["fullName" : "-","lose" : "0","picture" : "personIcon","win" : "0","points":"0"]
+        let infoZona : [String : String] = ["fullName" : "-","lose" : "0","picture" : "perfilIcon","win" : "0","points":"0"]
         
         var zonas : [String :
                         [String : [String : String]]] = [:]
@@ -612,7 +612,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate {
         switch textLlaves.text {
         case "Octavos":
   
-            savellave = ["Octavos" :
+            savellave = ["1Octavos" :
                             ["Match1" :
                                 ["O1" :
                                     ["1q2w3e4r" :["SET":SET]],
@@ -662,7 +662,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate {
                                        ["1q2w3e4r" :["SET":SET]],
                                    ],
                             ],
-                         "Cuartos" :
+                         "2Cuartos" :
                                  ["Match1" :
                                      ["C1" :
                                          ["1q2w3e4r" :["SET":SET]],
@@ -688,7 +688,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate {
                                           ["1q2w3e4r" :["SET":SET]],
                                       ],
                                  ],
-                         "Semifinal" :
+                         "3Semifinal" :
                                  ["Match1" :
                                      ["S1" :
                                          ["1q2w3e4r" :["SET":SET]],
@@ -702,7 +702,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate {
                                          ["1q2w3e4r" :["SET":SET]],
                                      ],
                                  ],
-                         "Final" :
+                         "4Final" :
                                  ["Match1" :
                                      ["S1" :
                                          ["1q2w3e4r" :["SET":SET]],
@@ -714,7 +714,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate {
 
 
         case "Cuartos":
-            savellave = ["Cuartos" :
+            savellave = ["1Cuartos" :
                                  ["Match1" :
                                      ["C1" :
                                          ["1q2w3e4r" :["SET":SET]],
@@ -740,7 +740,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate {
                                           ["1q2w3e4r" :["SET":SET]],
                                       ],
                                  ],
-                         "Semifinal" :
+                         "2Semifinal" :
                                  ["Match1" :
                                      ["S1" :
                                          ["1q2w3e4r" :["SET":SET]],
@@ -754,7 +754,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate {
                                          ["1q2w3e4r" :["SET":SET]],
                                      ],
                                  ],
-                         "Final" :
+                         "3Final" :
                                  ["Match1" :
                                      ["S1" :
                                          ["1q2w3e4r" :["SET":SET]],
@@ -763,7 +763,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate {
                                      ]
             ]]
         case "Semifinal":
-            savellave = ["Semifinal" :
+            savellave = ["1Semifinal" :
                                  ["Match1" :
                                      ["S1" :
                                          ["1q2w3e4r" :["SET":SET]],
@@ -777,7 +777,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate {
                                          ["1q2w3e4r" :["SET":SET]],
                                      ],
                                  ],
-                         "Final" :
+                         "2Final" :
                                  ["Match1" :
                                      ["S1" :
                                          ["1q2w3e4r" :["SET":SET]],
@@ -786,7 +786,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate {
                                      ]
             ]]
         case "Final" :
-            savellave = ["Final" :
+            savellave = ["1Final" :
                                  ["Match1" :
                                      ["S1" :
                                          ["1q2w3e4r" :["SET":SET]],

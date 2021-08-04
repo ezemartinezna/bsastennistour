@@ -7,6 +7,58 @@
 
 import UIKit
 
+extension InscriptionsVC {
+    
+    func NameDivisor(fullName : String) -> (firstName: String,lastname : String) {
+        
+        var firstname = ""
+        var lastname = ""
+        
+        var components = fullName.components(separatedBy: " ")
+        if components.count > 0 {
+            firstname = components.removeFirst()
+            lastname = components.joined(separator: " ")
+        }
+    return(firstname,lastname)
+    }
+    
+}
+
+extension String {
+
+    func indexes(of character: String,str : String) -> Int {
+
+        if let range: Range<String.Index> = str.range(of: character) {
+            let index: Int = str.distance(from: str.startIndex, to: range.lowerBound)
+            return index
+        }
+        else {
+            return 0
+        }
+      }
+    
+    func index(from: Int) -> Index {
+         return self.index(startIndex, offsetBy: from)
+     }
+
+     func substring(from: Int) -> String {
+         let fromIndex = index(from: from)
+         return String(self[fromIndex...])
+     }
+
+     func substring(to: Int) -> String {
+         let toIndex = index(from: to)
+         return String(self[..<toIndex])
+     }
+
+     func substring(with r: Range<Int>) -> String {
+         let startIndex = index(from: r.lowerBound)
+         let endIndex = index(from: r.upperBound)
+         return String(self[startIndex..<endIndex])
+     }
+
+}
+
 extension UITabBarController {
     func createNavControllers(vc: UIViewController, selected: UIImage, unselected: UIImage) -> UINavigationController {
         let viewController = vc
@@ -27,6 +79,7 @@ extension UITabBarController {
 
 extension UIViewController
 {
+    
     func randomString(length: Int) -> String {
       let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
       return String((0..<length).map{ _ in letters.randomElement()! })
