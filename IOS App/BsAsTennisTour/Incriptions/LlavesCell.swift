@@ -38,7 +38,6 @@ class LlavesCell: UICollectionViewCell, UITableViewDataSource, UITableViewDelega
     
     private func setupLayout() {
         
-       
         addSubview(labelTitle)
         addSubview(allParticipants)
         allParticipants.delegate = self

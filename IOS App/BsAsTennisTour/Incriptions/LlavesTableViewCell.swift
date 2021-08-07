@@ -196,7 +196,7 @@ class LlavesTableViewCell: UITableViewCell {
     
     func setupLayout() {
         
-        contentView.backgroundColor = .clear
+        contentView.backgroundColor = .white
         contentView.addSubview(viewContainer)
         
         //PLAYER 1
