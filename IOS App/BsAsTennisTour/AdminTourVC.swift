@@ -6,14 +6,17 @@
 //
 
 import UIKit
+import FirebaseDatabase
 
 class AdminTourVC: UIViewController,UIScrollViewDelegate, UITextFieldDelegate {
 
     //HISTORICO
-    var myTorneos = ["Torneo Relampago","Torneo Invierno","Torneo Roger","Torneo Fin de Año"]
+    var myTorneos : [String] = []
+    var dayMyTorneos : [String] = []
     
     //PROXIMOS
     var allTorneos : [Tourament] = []
+    var ref : DatabaseReference!
     
     var co : Int = 0
     
@@ -226,16 +229,9 @@ class AdminTourVC: UIViewController,UIScrollViewDelegate, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
-//        ref = Database.database().reference().child("Torneos")
-//               ref.observeSingleEvent(of: .value, with: { (snapshot) in
-//
-//
-//
-//               })
-        
         navBarItemLoad()
         setupLayout()
+        loadListTours()
     }
     
     func navBarItemLoad(){
@@ -381,6 +377,30 @@ class AdminTourVC: UIViewController,UIScrollViewDelegate, UITextFieldDelegate {
         
     }
     
+    func loadListTours() {
+        
+        ref = Database.database().reference().child("Torneos/")
+        
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+
+            if snapshot.exists() {
+                if let allDates = snapshot.children.allObjects as? [DataSnapshot] {
+                    for date in allDates {
+                        if let allTours = date.children.allObjects as? [DataSnapshot] {
+                            for tour in allTours {
+                                self.myTorneos.append(tour.key)
+                                self.dayMyTorneos.append(date.key)
+                            }
+                        }
+                    }
+                }
+                self.myTorneosTable.reloadData()
+            }
+            
+        })
+        
+    }
+    
   
     
     @objc func AddTour() {
@@ -466,27 +486,42 @@ extension AdminTourVC : UITableViewDataSource,UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-//        if tableView == allTorneosTable {
-//        gameTimer?.invalidate()
-//
-//            UserDefaults.standard.set(allTorneosDates[indexPath.row], forKey: "dateTour")
-//            UserDefaults.standard.set(allTorneosNames[indexPath.row], forKey: "nameTour")
-//            UserDefaults.standard.set(allTorneosPlace[indexPath.row], forKey: "placeTour")
-//            UserDefaults.standard.synchronize()
-//
-//            eventTorneo(vcOpen: InscriptionsVC(), titleAlert: "Inscribirse")
-//        }
-        
         if tableView == myTorneosTable {
             
-            UserDefaults.standard.set(myTorneos[indexPath.row], forKey: "dateTour")
+            UserDefaults.standard.set(dayMyTorneos[indexPath.row], forKey: "dayTour")
             UserDefaults.standard.set(myTorneos[indexPath.row], forKey: "nameTour")
             UserDefaults.standard.synchronize()
             
-//            eventTorneo(vcOpen: TouramentVC(), titleAlert: "Ver Torneo")
+            let vc = InscriptionsVC()
+            vc.modalPresentationStyle = .fullScreen
+            self.navigationController?.pushViewController(vc, animated: true)
         }
         
     }
     
     
 }
+
+//extension AdminTourVC {
+//    func eventTorneo(vcOpen : UIViewController, titleAlert : String) {
+//
+//
+//        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+//        let subscribe = UIAlertAction(title: titleAlert, style: .default) { (_) in
+//
+//            vcOpen.modalPresentationStyle = .fullScreen
+//            self.navigationController?.pushViewController(vcOpen, animated: true)
+//            self.present(vcOpen, animated: true, completion: nil)
+//
+//        }
+//
+//
+//        let cancel = UIAlertAction(title: "Volver", style: .cancel) { (_) in
+//
+//        }
+//
+//          alert.addAction(subscribe)
+//          alert.addAction(cancel)
+//          present(alert, animated: true)
+//    }
+//}

@@ -9,6 +9,10 @@ import UIKit
 
 class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDelegate {
     
+    var admin = UserDefaults.standard.string(forKey: "ADMIN")
+    
+    weak var delegate:ZonasLlavesDelegate?
+    
     let labelTitle: UILabel = {
           let label = UILabel()
           label.textColor = .colorCoal
@@ -54,8 +58,17 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
         table.rowHeight = 60
         table.backgroundColor = .white
         table.separatorColor = .lightGray
-        table.allowsSelection = false
        return table
+    }()
+    
+    private let stackview : UIStackView = {
+        let stack = UIStackView()
+        stack.distribution = .fillEqually
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.spacing = 10
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
     }()
     
     var allPlayers : [PlayerZona] = []
@@ -69,26 +82,31 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
         
        
         addSubview(labelTitle)
-        addSubview(labelWin)
-        addSubview(labelLost)
-        addSubview(labelPoints)
+        addSubview(stackview)
+        stackview.addArrangedSubview(labelWin)
+        stackview.addArrangedSubview(labelLost)
+        stackview.addArrangedSubview(labelPoints)
         addSubview(allParticipants)
         allParticipants.delegate = self
         allParticipants.dataSource = self
+        
+        if admin == "YES-1" {
+            allParticipants.allowsSelection = true
+        }else{
+            allParticipants.allowsSelection = false
+        }
         
         NSLayoutConstraint.activate([
             
             labelTitle.topAnchor.constraint(equalTo: topAnchor,constant: 20),
             labelTitle.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 20),
             
-            labelPoints.centerYAnchor.constraint(equalTo: labelTitle.centerYAnchor),
-            labelPoints.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -35),
+            stackview.centerYAnchor.constraint(equalTo: labelTitle.centerYAnchor),
+            stackview.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -30),
+            stackview.heightAnchor.constraint(equalToConstant: 40),
+            stackview.widthAnchor.constraint(equalToConstant: 120),
             
-            labelLost.centerYAnchor.constraint(equalTo: labelTitle.centerYAnchor),
-            labelLost.trailingAnchor.constraint(equalTo: labelPoints.leadingAnchor,constant: -35),
-            
-            labelWin.centerYAnchor.constraint(equalTo: labelTitle.centerYAnchor),
-            labelWin.trailingAnchor.constraint(equalTo: labelLost.leadingAnchor,constant: -35),
+
             
             allParticipants.leadingAnchor.constraint(equalTo: leadingAnchor),
             allParticipants.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -123,6 +141,14 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+
+        delegate?.ZonasCellTapped(position: allPlayers[indexPath.row].key)
+
+
+    }
+    
 }
 
 
@@ -145,5 +171,6 @@ extension ZonesCVCell {
         }
     return(firstname,lastname)
     }
+
     
 }

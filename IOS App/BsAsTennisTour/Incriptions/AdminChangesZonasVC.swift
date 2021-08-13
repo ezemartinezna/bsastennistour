@@ -1,0 +1,481 @@
+//
+//  AdminChangesVC.swift
+//  BsAsTennisTour
+//
+//  Created by Ezequiel Martinez on 10/08/2021.
+//
+
+import UIKit
+import FirebaseDatabase
+import SwiftyPickerPopover
+
+class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
+    
+    let pathPlayer = UserDefaults.standard.string(forKey: "pathPlayers") ?? "-"
+    var uid : String = ""
+    var picture : String = ""
+    
+    let containerView: UIView = {
+           let view = UIView()
+           view.backgroundColor = .colorPaper
+           view.translatesAutoresizingMaskIntoConstraints = false
+           return view
+       }()
+    
+    private let labelTitle: UILabel = {
+          let label = UILabel()
+            label.font = UIFont(name: "Helvetica Bold", size: 15)!
+            label.textColor = .colorCoal
+            label.translatesAutoresizingMaskIntoConstraints = false
+          return label
+      }()
+    
+    private let labelNamePlayer : UILabel = {
+        let label = UILabel()
+         label.font = UIFont(name: "Helvetica", size: 16)
+         label.textColor = .gray
+         label.textAlignment = .left
+         label.text = "Nombre del Jugador"
+         label.translatesAutoresizingMaskIntoConstraints = false
+         return label
+    }()
+    
+    private let textNamePlayer : UITextField = {
+        let text = UITextField()
+        text.backgroundColor = .colorPaper
+        text.layer.borderWidth = 0
+        text.font = UIFont(name: "Helvetica", size: 15)
+        text.clearButtonMode = .always
+        text.textColor = .colorCoal
+        text.translatesAutoresizingMaskIntoConstraints = false
+        return text
+    }()
+    
+    private let lineNamePlayer : UIView = {
+        let uView = UIView()
+        uView.backgroundColor = .colorCoal
+        uView.translatesAutoresizingMaskIntoConstraints = false
+        return uView
+    }()
+    
+    private let labelWin : UILabel = {
+        let label = UILabel()
+         label.font = UIFont(name: "Helvetica", size: 16)
+         label.textColor = .gray
+         label.textAlignment = .left
+         label.text = "Ganados"
+         label.translatesAutoresizingMaskIntoConstraints = false
+         return label
+    }()
+    
+    private let textWin : UITextField = {
+        let text = UITextField()
+        text.backgroundColor = .colorPaper
+        text.layer.borderWidth = 0
+        text.font = UIFont(name: "Helvetica", size: 15)
+        text.clearButtonMode = .always
+        text.textColor = .colorCoal
+        text.isUserInteractionEnabled = true
+        text.keyboardType = .numberPad
+        text.translatesAutoresizingMaskIntoConstraints = false
+        return text
+    }()
+    
+    private let lineWin : UIView = {
+        let uView = UIView()
+        uView.backgroundColor = .colorCoal
+        uView.translatesAutoresizingMaskIntoConstraints = false
+        return uView
+    }()
+    
+    private let uViewWin : UIView = {
+        let uView = UIView()
+        uView.isUserInteractionEnabled = true
+        uView.translatesAutoresizingMaskIntoConstraints = false
+        return uView
+    }()
+    
+    private let labelLose : UILabel = {
+        let label = UILabel()
+         label.font = UIFont(name: "Helvetica", size: 16)
+         label.textColor = .gray
+         label.textAlignment = .left
+         label.text = "Perdidos"
+         label.translatesAutoresizingMaskIntoConstraints = false
+         return label
+    }()
+    
+    private let textLose : UITextField = {
+        let text = UITextField()
+        text.backgroundColor = .colorPaper
+        text.layer.borderWidth = 0
+        text.font = UIFont(name: "Helvetica", size: 15)
+        text.clearButtonMode = .always
+        text.textColor = .colorCoal
+        text.keyboardType = .numberPad
+        text.translatesAutoresizingMaskIntoConstraints = false
+        return text
+    }()
+    
+    private let lineLose : UIView = {
+        let uView = UIView()
+        uView.backgroundColor = .colorCoal
+        uView.translatesAutoresizingMaskIntoConstraints = false
+        return uView
+    }()
+    
+    private let uViewLose : UIView = {
+        let uView = UIView()
+        uView.translatesAutoresizingMaskIntoConstraints = false
+        return uView
+    }()
+    
+    private let labelPoints : UILabel = {
+        let label = UILabel()
+         label.font = UIFont(name: "Helvetica", size: 16)
+         label.textColor = .gray
+         label.textAlignment = .left
+         label.text = "Puntos"
+         label.translatesAutoresizingMaskIntoConstraints = false
+         return label
+    }()
+    
+    private let textPoints : UITextField = {
+        let text = UITextField()
+        text.backgroundColor = .colorPaper
+        text.layer.borderWidth = 0
+        text.font = UIFont(name: "Helvetica", size: 15)
+        text.clearButtonMode = .always
+        text.textColor = .colorCoal
+        text.keyboardType = .numberPad
+        text.translatesAutoresizingMaskIntoConstraints = false
+        return text
+    }()
+    
+    private let linePoints : UIView = {
+        let uView = UIView()
+        uView.backgroundColor = .colorCoal
+        uView.translatesAutoresizingMaskIntoConstraints = false
+        return uView
+    }()
+    
+    private let uViewPoints : UIView = {
+        let uView = UIView()
+        uView.translatesAutoresizingMaskIntoConstraints = false
+        return uView
+    }()
+    
+    private let stackview : UIStackView = {
+        let stack = UIStackView()
+        stack.distribution = .fillEqually
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.isUserInteractionEnabled = true
+        stack.spacing = 10
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
+    private let buttonEdit : UIButton = {
+        let button = UIButton()
+        button.setTitle("EDITAR", for: .normal)
+        button.setTitleColor(.black, for: .selected)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont(name: "Helvetica", size: 14)
+        button.layer.backgroundColor = UIColor.colorPop.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
+        button.layer.shadowColor = UIColor.black.withAlphaComponent(0.6).cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 0)
+        button.layer.shadowOpacity = 0.9
+        button.isUserInteractionEnabled = true
+        button.addTarget(self, action: #selector(editAction), for: .touchUpInside)
+        return button
+    }()
+    
+    let blackView: UIView = {
+           let view = UIView()
+        view.backgroundColor = .clear
+           view.translatesAutoresizingMaskIntoConstraints = false
+           return view
+       }()
+    
+    lazy var dismissLayerBtn: UIButton = {
+         let btn = UIButton()
+         btn.backgroundColor = .clear
+         btn.addTarget(self, action: #selector(DismissVW), for: .touchUpInside)
+         btn.translatesAutoresizingMaskIntoConstraints = false
+         return btn
+     }()
+    
+    var ref: DatabaseReference!
+    let path = UserDefaults.standard.string(forKey: "pathModified") ?? "-"
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupLayout()
+        loadInfoPlayer()
+
+
+    }
+    
+    func setupLayout() {
+        
+        if let i = path.lastIndex(of: "/") {
+            let nextIndex = path.index(i, offsetBy: 1)
+            let number = path.suffix(from: nextIndex)
+            labelTitle.text = "EDITAR POSICION \(number)"
+        }
+        
+        view.backgroundColor = UIColor.clear
+        view.addSubview(blackView)
+        blackView.addSubview(dismissLayerBtn)
+        
+        view.addSubview(containerView)
+        
+        view.addSubview(labelTitle)
+        view.addSubview(labelNamePlayer)
+        view.addSubview(textNamePlayer)
+        view.addSubview(lineNamePlayer)
+        stackview.addArrangedSubview(uViewWin)
+        stackview.addArrangedSubview(uViewLose)
+        stackview.addArrangedSubview(uViewPoints)
+        view.addSubview(stackview)
+
+        uViewWin.addSubview(labelWin)
+        view.addSubview(textWin)
+        uViewWin.addSubview(lineWin)
+        uViewLose.addSubview(labelLose)
+        view.addSubview(textLose)
+        uViewLose.addSubview(lineLose)
+        uViewPoints.addSubview(labelPoints)
+        view.addSubview(textPoints)
+        uViewPoints.addSubview(linePoints)
+          
+        view.addSubview(buttonEdit)
+        
+        textNamePlayer.delegate = self
+        textWin.delegate = self
+        textLose.delegate = self
+        textPoints.delegate = self
+        
+        NSLayoutConstraint.activate([
+            
+            blackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.60),
+            blackView.topAnchor.constraint(equalTo: view.topAnchor),
+            blackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            blackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            dismissLayerBtn.topAnchor.constraint(equalTo: blackView.topAnchor),
+            dismissLayerBtn.leadingAnchor.constraint(equalTo: blackView.leadingAnchor),
+            dismissLayerBtn.trailingAnchor.constraint(equalTo: blackView.trailingAnchor),
+            dismissLayerBtn.bottomAnchor.constraint(equalTo: blackView.bottomAnchor),
+            
+            containerView.topAnchor.constraint(equalTo: blackView.bottomAnchor),
+            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            labelTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            labelTitle.topAnchor.constraint(equalTo: containerView.topAnchor,constant: 20),
+            
+            labelNamePlayer.topAnchor.constraint(equalTo: labelTitle.bottomAnchor,constant: 20),
+            labelNamePlayer.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 40),
+            labelNamePlayer.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -40),
+            
+            textNamePlayer.topAnchor.constraint(equalTo: labelNamePlayer.bottomAnchor, constant: 5),
+            textNamePlayer.leadingAnchor.constraint(equalTo: labelNamePlayer.leadingAnchor),
+            textNamePlayer.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20),
+            textNamePlayer.heightAnchor.constraint(equalToConstant: 30),
+
+            lineNamePlayer.topAnchor.constraint(equalTo: textNamePlayer.bottomAnchor, constant: 5),
+            lineNamePlayer.leadingAnchor.constraint(equalTo: labelNamePlayer.leadingAnchor),
+            lineNamePlayer.trailingAnchor.constraint(equalTo: labelNamePlayer.trailingAnchor),
+            lineNamePlayer.heightAnchor.constraint(equalToConstant: 2),
+            
+            stackview.topAnchor.constraint(equalTo: lineNamePlayer.bottomAnchor,constant: 10),
+            stackview.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 40),
+            stackview.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -40),
+            stackview.heightAnchor.constraint(equalToConstant: 50),
+            
+            labelWin.topAnchor.constraint(equalTo: uViewWin.topAnchor),
+            labelWin.leadingAnchor.constraint(equalTo: uViewWin.leadingAnchor),
+            labelWin.trailingAnchor.constraint(equalTo: uViewWin.trailingAnchor),
+            
+            textWin.topAnchor.constraint(equalTo: labelWin.bottomAnchor, constant: 5),
+            textWin.leadingAnchor.constraint(equalTo: uViewWin.leadingAnchor),
+            textWin.trailingAnchor.constraint(equalTo: uViewWin.trailingAnchor),
+            textWin.heightAnchor.constraint(equalToConstant: 30),
+
+            lineWin.topAnchor.constraint(equalTo: textWin.bottomAnchor, constant: 5),
+            lineWin.leadingAnchor.constraint(equalTo: labelWin.leadingAnchor),
+            lineWin.trailingAnchor.constraint(equalTo: labelWin.trailingAnchor),
+            lineWin.heightAnchor.constraint(equalToConstant: 2),
+            
+            labelLose.topAnchor.constraint(equalTo: uViewLose.topAnchor),
+            labelLose.leadingAnchor.constraint(equalTo: uViewLose.leadingAnchor),
+            labelLose.trailingAnchor.constraint(equalTo: uViewLose.trailingAnchor),
+            
+            textLose.topAnchor.constraint(equalTo: labelLose.bottomAnchor, constant: 5),
+            textLose.leadingAnchor.constraint(equalTo: uViewLose.leadingAnchor),
+            textLose.trailingAnchor.constraint(equalTo: uViewLose.trailingAnchor),
+            textLose.heightAnchor.constraint(equalToConstant: 30),
+
+            lineLose.topAnchor.constraint(equalTo: textLose.bottomAnchor, constant: 5),
+            lineLose.leadingAnchor.constraint(equalTo: textLose.leadingAnchor),
+            lineLose.trailingAnchor.constraint(equalTo: textLose.trailingAnchor),
+            lineLose.heightAnchor.constraint(equalToConstant: 2),
+            
+            labelPoints.topAnchor.constraint(equalTo: uViewPoints.topAnchor),
+            labelPoints.leadingAnchor.constraint(equalTo: uViewPoints.leadingAnchor),
+            labelPoints.trailingAnchor.constraint(equalTo: uViewPoints.trailingAnchor),
+            
+            textPoints.topAnchor.constraint(equalTo: labelPoints.bottomAnchor, constant: 5),
+            textPoints.leadingAnchor.constraint(equalTo: uViewPoints.leadingAnchor),
+            textPoints.trailingAnchor.constraint(equalTo: uViewPoints.trailingAnchor),
+            textPoints.heightAnchor.constraint(equalToConstant: 30),
+
+            linePoints.topAnchor.constraint(equalTo: textPoints.bottomAnchor, constant: 5),
+            linePoints.leadingAnchor.constraint(equalTo: textPoints.leadingAnchor),
+            linePoints.trailingAnchor.constraint(equalTo: textPoints.trailingAnchor),
+            linePoints.heightAnchor.constraint(equalToConstant: 2),
+
+            buttonEdit.topAnchor.constraint(equalTo: stackview.bottomAnchor, constant: 60),
+            buttonEdit.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            buttonEdit.heightAnchor.constraint(equalToConstant: 40),
+            buttonEdit.widthAnchor.constraint(equalToConstant: 200),
+            
+            
+        
+        ])
+        
+    }
+    
+    func loadInfoPlayer() {
+        
+        ref = Database.database().reference().child(path)
+        
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+
+            if snapshot.exists() {
+                if let allData = snapshot.children.allObjects as? [DataSnapshot] {
+                    for data in allData {
+                        if data.key == "fullName" {
+                            self.textNamePlayer.text = data.value as? String
+                        }
+                        if data.key == "lose" {
+                            self.textLose.text = "\(data.value as? Int ?? 0)"
+                        }
+                        if data.key == "win" {
+                            self.textWin.text = "\(data.value as? Int ?? 0)"
+                        }
+                        if data.key == "points" {
+                            self.textPoints.text = "\(data.value as? Int ?? 0)"
+                        }
+                        if data.key == "picture" {
+                            self.picture = data.value as? String ?? "-"
+                        }
+                        if data.key == "uid" {
+                            self.uid = data.value as? String ?? "-"
+                        }
+                    }
+                }
+            }
+        })
+        
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        
+        if textField == textNamePlayer {
+            labelNamePlayer.textColor = .colorMint
+            lineNamePlayer.backgroundColor = .colorMint
+            pickPlayer()
+        }
+        
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+        if textField == textNamePlayer {
+            labelNamePlayer.textColor = .gray
+            lineNamePlayer.backgroundColor = .colorCoal
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+    func pickPlayer() {
+        
+        ref = Database.database().reference().child(pathPlayer)
+        
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+
+            if snapshot.exists() {
+                var arrayPlayers : [String] = []
+                if let allPlayers = snapshot.children.allObjects as? [DataSnapshot] {
+                    for player in allPlayers {
+                        if let allData = player.children.allObjects as? [DataSnapshot] {
+                            for data in allData {
+                                if data.key == "fullName" {
+                                    arrayPlayers.append(data.value as? String ?? "-")
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                StringPickerPopover(title: "Ingrese el Jugador:", choices: arrayPlayers)
+                        .setSelectedRow(0)
+                    .setValueChange(action: { _, selectedDate,argData  in
+                            print("current date \(selectedDate)")
+                        })
+                        .setDoneButton(title: "OK", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (popover, selectedRow, selectedString) in
+
+                            self.textNamePlayer.text = selectedString
+                            self.textNamePlayer.endEditing(true)
+                        })
+                        .setCancelButton(title: "Cancel", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (_, _, _) in self.textNamePlayer.endEditing(true)}
+
+                        )
+                        .setSize(height: 150)
+                        .setFontColor(.colorCoal)
+                    .appear(originView: self.textNamePlayer, baseViewController: self)
+            }
+        })
+    }
+    
+    @objc func editAction() {
+        
+        
+        let dataChanged : [String : Any] = ["fullName" : textNamePlayer.text ?? "-",
+                                            "lose" : Int(textLose.text!) ?? 0,
+                                            "win" : Int(textWin.text!) ?? 0,
+                                            "points" : Int(textPoints.text!) ?? 0,
+                                            "uid" : uid,
+                                            "picture" : picture,
+        ]
+        
+        
+        ref = Database.database().reference().child(path)
+        
+        ref.setValue(dataChanged) {
+            (error:Error?, ref:DatabaseReference) in
+            if let error = error {
+              self.showAlert(title: "Error", message: error.localizedDescription)
+              return
+            } else {
+              self.showAlert(title: "Posicion Cambiada", message: "Se modificó con exito")
+            }
+        }
+        
+    }
+    
+    @objc func DismissVW(){
+        NotificationCenter.default.post(name: Notification.Name("LoadZonaTour"), object: nil)
+        self.dismiss(animated: true, completion: nil)
+    }
+
+}

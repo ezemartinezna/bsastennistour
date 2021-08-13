@@ -594,6 +594,9 @@ class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegat
     
     @objc func emailLogin() {
         
+        UserDefaults.standard.set("NO-1", forKey: "ADMIN")
+        UserDefaults.standard.synchronize()
+        
         let mainPage = UserMainTabBar()
         mainPage.modalPresentationStyle = .fullScreen
         self.present(mainPage, animated: true, completion: nil)
@@ -601,6 +604,9 @@ class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegat
     }
     
     @objc func createAccount() {
+        
+        UserDefaults.standard.set("YES-1", forKey: "ADMIN")
+        UserDefaults.standard.synchronize()
         
         let mainPage = AdminMainTabBar()
         mainPage.modalPresentationStyle = .fullScreen

@@ -305,7 +305,7 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
                                         
                                         let llaves = [Llaves(name: "CUARTOS", types: [Match(name: "Match1", player1: player1, player2: player1)])]
                                         
-                                        let player2 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
+                                        let player2 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0, key: "0")
                                         let zonas = [Zonas(name: "ZONA 1", types: [player2,player2,player2,player2])]
                                         
                                         self.allTorneos.append( Tourament(name: tour.key, stats: stats, players: allPlayers, winPoints: winPoints, llave: llaves, zone: zonas) )
@@ -525,28 +525,6 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
         self.navigationController?.pushViewController(vc, animated: true)
         
     }
-    
-//    func eventTorneo(vcOpen : UIViewController, titleAlert : String) {
-//
-//
-//        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-//        let subscribe = UIAlertAction(title: titleAlert, style: .default) { (_) in
-//
-//            vcOpen.modalPresentationStyle = .fullScreen
-//            self.navigationController?.pushViewController(vcOpen, animated: true)
-////            self.present(vcOpen, animated: true, completion: nil)
-//
-//        }
-//
-//
-//        let cancel = UIAlertAction(title: "Volver", style: .cancel) { (_) in
-//
-//        }
-//
-//          alert.addAction(subscribe)
-//          alert.addAction(cancel)
-//          present(alert, animated: true)
-//    }
     
     @objc func comingAction() {
         

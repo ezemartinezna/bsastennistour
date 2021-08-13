@@ -8,7 +8,29 @@
 import UIKit
 import FirebaseDatabase
 
-class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
+class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource, ZonasLlavesDelegate {
+    
+    func ZonasCellTapped(position : String) {
+        
+        let path = "Torneos/\(dayTour)/\(nameTour)/Zonas/\(tourament[0].zone[selectCVZones].name)/\(position)"
+        let pathPlayers = "Torneos/\(dayTour)/\(nameTour)/Players/"
+        
+        UserDefaults.standard.set(path, forKey: "pathModified")
+        UserDefaults.standard.set(pathPlayers,forKey: "pathPlayers")
+        UserDefaults.standard.synchronize()
+        
+        let vc = AdminChangesZonasVC()
+        vc.modalPresentationStyle = .pageSheet
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    func LlavesCellTapped(match: String) {
+        print(match)
+        let vc = AdminChangesLlavesVC()
+        vc.modalPresentationStyle = .pageSheet
+        self.present(vc, animated: true, completion: nil)
+    }
+    
     
     var collapsedPoints : Bool = true
     var collapsedInfo : Bool = true
@@ -18,6 +40,12 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     var collapsedLlaves : Bool = true
 
     var tourament = [Tourament]()
+    
+    let admin = UserDefaults.standard.string(forKey: "ADMIN")
+    let dayTour = UserDefaults.standard.string(forKey: "dayTour") ?? ""
+    let nameTour = UserDefaults.standard.string(forKey: "nameTour") ?? ""
+    
+    var selectCVZones : Int = 0
     
     var ref: DatabaseReference!
     
@@ -388,6 +416,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     let uViewContainerLlaves : UIView = {
         let view = UIView()
         view.isHidden = true
+        view.isUserInteractionEnabled = true
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         return view
@@ -420,6 +449,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     let containerZonesView : UIView = {
         let view = UIView()
         view.isHidden = true
+        view.isUserInteractionEnabled = true
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         return view
@@ -467,6 +497,8 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         setupBarItem()
         setupLayout()
         loadTourament()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(loadZonas), name: NSNotification.Name(rawValue: "LoadZonaTour"), object: nil)
     }
     
     func setupBarItem() {
@@ -751,7 +783,11 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         topView4BottomTable = uView4.topAnchor.constraint(equalTo: containerZonesView.bottomAnchor,constant: 20)
         topView4BottomTable?.isActive = false
     
-        
+        if admin == "YES-1" {
+            trophyImage.isHidden = true
+            buttonRegister.isHidden = true
+            buttonRegister.isEnabled = false
+        }
     }
 
 
@@ -1028,10 +1064,10 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         
     }
     
-    func loadTourament() {
+    @objc func loadTourament() {
         
-        let dayTour = UserDefaults.standard.string(forKey: "dayTour") ?? ""
-        let nameTour = UserDefaults.standard.string(forKey: "nameTour") ?? ""
+        tourament.removeAll()
+        
         ref = Database.database().reference().child("Torneos/\(dayTour)/\(nameTour)")
         
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -1057,12 +1093,13 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                         case "Players":
                             if let allPlayers = tour.children.allObjects as? [DataSnapshot] {
                                 for player in allPlayers {
+                                    var fullName : String = ""
+                                    var points : Int = 0
+                                    var rank : Int = 0
+                                    var picture : String = ""
                                     if let allDataPlayer = player.children.allObjects as? [DataSnapshot]{
                                         for dataPlayer in allDataPlayer {
-                                            var fullName : String = ""
-                                            var points : Int = 0
-                                            var rank : Int = 0
-                                            var picture : String = ""
+                 
                                             if dataPlayer.key == "fullName" {
                                                 fullName = dataPlayer.value as? String ?? "-"
                                             }
@@ -1076,10 +1113,10 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                                                 picture = dataPlayer.value as? String ?? "-"
                                             }
                                             
-                                            players.append(PlayerStat(id: player.key, fullName: fullName, points: points, rank: rank, picture: picture))
+                       
                                         }
                                     }
-                                  
+                                    players.append(PlayerStat(id: player.key, fullName: fullName, points: points, rank: rank, picture: picture))
                                 }
                             }
                         case "WinPoints":
@@ -1103,6 +1140,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                                                 var lose : Int = 0
                                                 var win : Int = 0
                                                 var picture : String = ""
+                                                var uid : String = ""
                                                 
                                                 for info in allInfoPlayer {
                                                     if info.key == "fullName" {
@@ -1120,12 +1158,20 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                                                     if info.key == "picture" {
                                                         picture = info.value as? String ?? "-"
                                                     }
+                                                    if info.key == "uid" {
+                                                        uid = info.value as? String ?? "-"
+                                                    }
                                                 }
-                                                arrayPlayers.append(PlayerZona(id: player.key, fullName: fullName, picture: picture, win: win, lose: lose, points: points))
+                                                arrayPlayers.append(PlayerZona(id: uid, fullName: fullName, picture: picture, win: win, lose: lose, points: points,key: player.key))
                                             }
                                         }
                                     }
-                                    zonas.append(Zonas(name: zona.key, types: arrayPlayers))
+                                    
+                                    let sortedPlayers = arrayPlayers.sorted(by: {
+                                        $0.points > $1.points
+                                    })
+                                    
+                                    zonas.append(Zonas(name: zona.key, types: sortedPlayers))
                                 }
                             }
                         case "Llaves":
@@ -1191,18 +1237,94 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                         }
 
                     }
-                    self.tourament.append(Tourament(name: nameTour, stats: stats, players: players, winPoints: winpoints, llave: llaves, zone: zonas))
+                    self.tourament.append(Tourament(name: self.nameTour, stats: stats, players: players, winPoints: winpoints, llave: llaves, zone: zonas))
                 }
                 self.sortByPosition()
                 self.torneoInfoTable.reloadData()
-                self.allUsersTable.reloadData()
                 self.allPointsTable.reloadData()
-                self.allZones.reloadData()
                 self.allLlaves.reloadData()
+                self.allZones.reloadData()
+             
                 
             }
         })
         
+    }
+    
+    @objc func loadZonas() {
+        
+        tourament[0].zone.removeAll()
+        
+        ref = Database.database().reference().child("Torneos/\(dayTour)/\(nameTour)")
+        
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+
+            if snapshot.exists() {
+                
+                var zonas = [Zonas]()
+                
+                if let allTour = snapshot.children.allObjects as? [DataSnapshot] {
+                    for tour in allTour {
+                        
+                        if tour.key == "Zonas" {
+  
+                            if let allZonas = tour.children.allObjects as? [DataSnapshot] {
+                                for zona in allZonas {
+                                    var arrayPlayers : [PlayerZona] = []
+                                    if let allPlayers = zona.children.allObjects as? [DataSnapshot]{
+                                        for player in allPlayers {
+                                            if let allInfoPlayer = player.children.allObjects as? [DataSnapshot] {
+                                                
+                                                var fullName : String = ""
+                                                var points : Int = 0
+                                                var lose : Int = 0
+                                                var win : Int = 0
+                                                var picture : String = ""
+                                                var uid : String = ""
+                                                
+                                                for info in allInfoPlayer {
+                                                    if info.key == "fullName" {
+                                                        fullName = info.value as? String ?? "-"
+                                                    }
+                                                    if info.key == "points" {
+                                                        points = info.value as? Int ?? 0
+                                                    }
+                                                    if info.key == "lose" {
+                                                        lose = info.value as? Int ?? 0
+                                                    }
+                                                    if info.key == "win" {
+                                                        win = info.value as? Int ?? 0
+                                                    }
+                                                    if info.key == "picture" {
+                                                        picture = info.value as? String ?? "-"
+                                                    }
+                                                    if info.key == "uid" {
+                                                        uid = info.value as? String ?? "-"
+                                                    }
+                                                }
+                                                arrayPlayers.append(PlayerZona(id: uid, fullName: fullName, picture: picture, win: win, lose: lose, points: points,key: player.key))
+                                            }
+                                        }
+                                    }
+                                    
+                                    let sortedPlayers = arrayPlayers.sorted(by: {
+                                        $0.points > $1.points
+                                    })
+                                    
+                                    zonas.append(Zonas(name: zona.key, types: sortedPlayers))
+                                }
+                            }
+
+                        }
+
+                    }
+                    self.tourament[0].zone.append(contentsOf: zonas)
+                }
+
+                self.allZones.reloadData()
+    
+            }
+        })
         
     }
     
@@ -1272,7 +1394,7 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
             
             cell.labelTitle.text = "\(tourament[0].llave[indexPath.row].name)"
             cell.updateCellWith(row: tourament[0].llave[indexPath.row])
-            
+            cell.delegate = self
             returnCell = cell
         }
         
@@ -1282,10 +1404,15 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
 
             cell.labelTitle.text = tourament[0].zone[indexPath.row].name
             cell.updateCellWith(row: tourament[0].zone[indexPath.row].types)
+            cell.delegate = self
             returnCell = cell
         }
         
         return returnCell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectCVZones = indexPath.row
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -1299,7 +1426,6 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-    
     
     
 }

@@ -8,6 +8,10 @@
 import UIKit
 
 class LlavesCell: UICollectionViewCell, UITableViewDataSource, UITableViewDelegate {
+    
+    var admin = UserDefaults.standard.string(forKey: "ADMIN")
+    
+    weak var delegate:ZonasLlavesDelegate?
 
     let labelTitle: UILabel = {
           let label = UILabel()
@@ -24,7 +28,6 @@ class LlavesCell: UICollectionViewCell, UITableViewDataSource, UITableViewDelega
         table.register(LlavesTableViewCell.self, forCellReuseIdentifier: "MyCell")
         table.rowHeight = 150
         table.separatorStyle = UITableViewCell.SeparatorStyle.none
-        table.allowsSelection = false
        return table
     }()
 
@@ -42,6 +45,12 @@ class LlavesCell: UICollectionViewCell, UITableViewDataSource, UITableViewDelega
         addSubview(allParticipants)
         allParticipants.delegate = self
         allParticipants.dataSource = self
+        
+        if admin == "YES-1" {
+            allParticipants.allowsSelection = true
+        }else{
+            allParticipants.allowsSelection = false
+        }
         
         NSLayoutConstraint.activate([
             
@@ -113,9 +122,11 @@ class LlavesCell: UICollectionViewCell, UITableViewDataSource, UITableViewDelega
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.LlavesCellTapped(match: llaves.types[indexPath.row].name)
+    }
+    
 }
-
-
 
 extension LlavesCell {
     func updateCellWith(row: Llaves) {

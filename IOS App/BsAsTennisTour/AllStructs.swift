@@ -165,14 +165,16 @@ public struct PlayerZona {
     var win : Int
     var lose : Int
     var points : Int
+    var key : String
     
-    public init(id : String,fullName : String,picture:String,win:Int,lose:Int,points:Int) {
+    public init(id : String,fullName : String,picture:String,win:Int,lose:Int,points:Int,key:String) {
         self.id = id
         self.fullName = fullName
         self.picture = picture
         self.win = win
         self.lose = lose
         self.points = points
+        self.key = key
     }
 }
 
@@ -193,4 +195,9 @@ public struct Zonas {
         self.name = name
         self.types = types
     }
+}
+
+protocol ZonasLlavesDelegate:AnyObject {
+    func ZonasCellTapped(position : String)
+    func LlavesCellTapped(match : String)
 }

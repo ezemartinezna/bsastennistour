@@ -768,19 +768,18 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         
         tourament.updateValue(winwin, forKey: "WinPoints")
         
-        let infoZona : [String : String] = ["fullName" : "-","lose" : "0","picture" : "perfilIcon","win" : "0","points":"0"]
+        let infoZona : [String : Any] = ["fullName" : "-","lose" : 0,"picture" : "perfilIcon","win" : 0,"points":0,"uid":randomString(length: 7)]
       
         var zonas : [String :
-                        [String : [String : String]]] = [:]
+                        [String : [String : Any]]] = [:]
         
         let cantZona = Int(textZonas.text!) ?? 1
         let total = (Int(textMax.text!) ?? 1) / cantZona
         
         for i in 1...cantZona {
-            var allPlayers : [String : [String : String]] = [:]
-            for _ in 1...total {
-                let random = randomString(length: 7)
-                allPlayers.updateValue(infoZona, forKey: random)
+            var allPlayers : [String : [String : Any]] = [:]
+            for f in 1...total {
+                allPlayers.updateValue(infoZona, forKey: "\(f)")
             }
             zonas.updateValue(allPlayers, forKey: "Zona \(i)")
         }

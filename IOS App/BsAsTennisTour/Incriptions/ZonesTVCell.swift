@@ -50,6 +50,7 @@ class ZonesTVCell: UITableViewCell {
     let labelPositionPoints: UILabel = {
           let label = UILabel()
           label.textColor = .colorPop
+          label.textAlignment = .center
           label.font = UIFont(name: "Helvetica Bold", size: 12)
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
@@ -58,6 +59,7 @@ class ZonesTVCell: UITableViewCell {
     let labelWins: UILabel = {
           let label = UILabel()
           label.textColor = .colorPop
+          label.textAlignment = .center
           label.font = UIFont(name: "Helvetica Bold", size: 12)
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
@@ -66,11 +68,21 @@ class ZonesTVCell: UITableViewCell {
     let labelLosts: UILabel = {
           let label = UILabel()
           label.textColor = .colorPop
+          label.textAlignment = .center
           label.font = UIFont(name: "Helvetica Bold", size: 12)
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
-
+    
+    private let stackview : UIStackView = {
+        let stack = UIStackView()
+        stack.distribution = .fillEqually
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.spacing = 10
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
            super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -96,9 +108,10 @@ class ZonesTVCell: UITableViewCell {
         containerPhotoHeader.addSubview(imagePhotoHeader)
         addSubview(labelName)
         addSubview(labelLastname)
-        addSubview(labelPositionPoints)
-        addSubview(labelWins)
-        addSubview(labelLosts)
+        addSubview(stackview)
+        stackview.addArrangedSubview(labelWins)
+        stackview.addArrangedSubview(labelLosts)
+        stackview.addArrangedSubview(labelPositionPoints)
 
         NSLayoutConstraint.activate([
             containerPhotoHeader.topAnchor.constraint(equalTo: topAnchor,constant: 20),
@@ -117,14 +130,10 @@ class ZonesTVCell: UITableViewCell {
             labelLastname.topAnchor.constraint(equalTo: labelName.bottomAnchor, constant: 5),
             labelLastname.leadingAnchor.constraint(equalTo: labelName.leadingAnchor),
             
-            labelPositionPoints.centerYAnchor.constraint(equalTo: imagePhotoHeader.centerYAnchor),
-            labelPositionPoints.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -45),
-            
-            labelLosts.centerYAnchor.constraint(equalTo: imagePhotoHeader.centerYAnchor),
-            labelLosts.trailingAnchor.constraint(equalTo: labelPositionPoints.leadingAnchor,constant: -50),
-            
-            labelWins.centerYAnchor.constraint(equalTo: imagePhotoHeader.centerYAnchor),
-            labelWins.trailingAnchor.constraint(equalTo: labelLosts.leadingAnchor,constant: -50),
+            stackview.centerYAnchor.constraint(equalTo: imagePhotoHeader.centerYAnchor),
+            stackview.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -30),
+            stackview.heightAnchor.constraint(equalToConstant: 40),
+            stackview.widthAnchor.constraint(equalToConstant: 120),
             
 
         ])

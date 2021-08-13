@@ -30,6 +30,8 @@
 		A57D40D9265DF20600C3738D /* ToursCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57D40D8265DF20600C3738D /* ToursCollectionViewCell.swift */; };
 		A58BBA9F266D7C5D00BF89D8 /* MatchesTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58BBA9E266D7C5D00BF89D8 /* MatchesTableCell.swift */; };
 		A58BBAA1266DBD0100BF89D8 /* MatchesCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58BBAA0266DBD0100BF89D8 /* MatchesCVCell.swift */; };
+		A5A47D0226C342C50069ED25 /* AdminChangesZonasVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A47D0126C342C50069ED25 /* AdminChangesZonasVC.swift */; };
+		A5A47D0426C62F8B0069ED25 /* AdminChangesLlavesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A47D0326C62F8B0069ED25 /* AdminChangesLlavesVC.swift */; };
 		A5B4F1EF256DB3A4008D0095 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4F1EE256DB3A4008D0095 /* AppDelegate.swift */; };
 		A5B4F1F1256DB3A4008D0095 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4F1F0256DB3A4008D0095 /* SceneDelegate.swift */; };
 		A5B4F1F3256DB3A4008D0095 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4F1F2256DB3A4008D0095 /* ViewController.swift */; };
@@ -88,10 +90,12 @@
 		A5703D7C26B3A09500EFB502 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		A5703D7F26B73AAA00EFB502 /* AdminTourVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminTourVC.swift; sourceTree = "<group>"; };
 		A5703D8126B73C0900EFB502 /* AdminMainTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminMainTabBar.swift; sourceTree = "<group>"; };
-		A5703D8326B7460800EFB502 /* CreateNewTourVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewTourVC.swift; sourceTree = "<group>"; };
+		A5703D8326B7460800EFB502 /* CreateNewTourVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewTourVC.swift; sourceTree = "<group>"; tabWidth = 5; };
 		A57D40D8265DF20600C3738D /* ToursCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToursCollectionViewCell.swift; sourceTree = "<group>"; };
 		A58BBA9E266D7C5D00BF89D8 /* MatchesTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesTableCell.swift; sourceTree = "<group>"; };
 		A58BBAA0266DBD0100BF89D8 /* MatchesCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesCVCell.swift; sourceTree = "<group>"; };
+		A5A47D0126C342C50069ED25 /* AdminChangesZonasVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminChangesZonasVC.swift; sourceTree = "<group>"; };
+		A5A47D0326C62F8B0069ED25 /* AdminChangesLlavesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminChangesLlavesVC.swift; sourceTree = "<group>"; };
 		A5B4F1EB256DB3A4008D0095 /* BsAsTennisTour.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BsAsTennisTour.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5B4F1EE256DB3A4008D0095 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A5B4F1F0256DB3A4008D0095 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -191,6 +195,15 @@
 			name = AdminTourament;
 			sourceTree = "<group>";
 		};
+		A5A47D0026C342940069ED25 /* AdminChanges */ = {
+			isa = PBXGroup;
+			children = (
+				A5A47D0126C342C50069ED25 /* AdminChangesZonasVC.swift */,
+				A5A47D0326C62F8B0069ED25 /* AdminChangesLlavesVC.swift */,
+			);
+			name = AdminChanges;
+			sourceTree = "<group>";
+		};
 		A5B4F1E2256DB3A4008D0095 = {
 			isa = PBXGroup;
 			children = (
@@ -274,6 +287,7 @@
 		A5B4F23E257009D3008D0095 /* Incriptions */ = {
 			isa = PBXGroup;
 			children = (
+				A5A47D0026C342940069ED25 /* AdminChanges */,
 				A5B4F238256F506A008D0095 /* InscriptionsVC.swift */,
 				A5B4F24C25702028008D0095 /* TorneoInfoCell.swift */,
 				A5B4F23F25700A1E008D0095 /* InscriptionsCell.swift */,
@@ -469,6 +483,7 @@
 				A5B4F1EF256DB3A4008D0095 /* AppDelegate.swift in Sources */,
 				A55280862573FFF900C35BFD /* RankingTableCell.swift in Sources */,
 				A5B4F22F256ECE8D008D0095 /* ProfesorCollectionCell.swift in Sources */,
+				A5A47D0226C342C50069ED25 /* AdminChangesZonasVC.swift in Sources */,
 				A5703D8026B73AAA00EFB502 /* AdminTourVC.swift in Sources */,
 				A55F4760257E917C00F80B82 /* MyExpCell.swift in Sources */,
 				A5527338265095D70024486C /* ConfigVC.swift in Sources */,
@@ -481,6 +496,7 @@
 				A5535F4D25716B0000C68F16 /* NewsCollectionCell.swift in Sources */,
 				A5703D7D26B3A09500EFB502 /* Extensions.swift in Sources */,
 				A5501536260EB99F00E3040F /* TouramentVC.swift in Sources */,
+				A5A47D0426C62F8B0069ED25 /* AdminChangesLlavesVC.swift in Sources */,
 				A5B4F22A256EB23D008D0095 /* UserMainVC.swift in Sources */,
 				A5EE08AE26A770970055BEFD /* LiveTableViewCell.swift in Sources */,
 				A5EFF600265B248C00C89BDA /* RankCollectionCell.swift in Sources */,
