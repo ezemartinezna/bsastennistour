@@ -8,6 +8,13 @@
 import UIKit
 
 class ZonesTVCell: UITableViewCell {
+    
+    let containerView: UIView = {
+           let view = UIView()
+           view.backgroundColor = .white
+           view.translatesAutoresizingMaskIntoConstraints = false
+           return view
+       }()
 
     let containerPhotoHeader : UIView = {
            let view = UIView()
@@ -101,19 +108,24 @@ class ZonesTVCell: UITableViewCell {
     
     
     func setupLayout() {
-        
-        contentView.backgroundColor = .white
-
-        addSubview(containerPhotoHeader)
+    
+        addSubview(containerView)
+        containerView.addSubview(containerPhotoHeader)
         containerPhotoHeader.addSubview(imagePhotoHeader)
-        addSubview(labelName)
-        addSubview(labelLastname)
-        addSubview(stackview)
+        containerView.addSubview(labelName)
+        containerView.addSubview(labelLastname)
+        containerView.addSubview(stackview)
         stackview.addArrangedSubview(labelWins)
         stackview.addArrangedSubview(labelLosts)
         stackview.addArrangedSubview(labelPositionPoints)
 
         NSLayoutConstraint.activate([
+            
+            containerView.topAnchor.constraint(equalTo: topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
             containerPhotoHeader.topAnchor.constraint(equalTo: topAnchor,constant: 20),
             containerPhotoHeader.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 40),
             containerPhotoHeader.widthAnchor.constraint(equalToConstant: 30),

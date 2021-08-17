@@ -167,19 +167,6 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
           return label
       }()
     
-    
-//    private let allTorneosTable: UITableView = {
-//       let table = UITableView()
-//        table.backgroundColor = .mainGray
-//        table.layer.cornerRadius = 10
-//        table.separatorColor = .clear
-//        table.translatesAutoresizingMaskIntoConstraints = false
-//        table.register(TorneosTableCell.self, forCellReuseIdentifier: "cellTable")
-//        table.rowHeight = 90
-//        table.allowsSelection = true
-//       return table
-//    }()
-    
     private let myTorneosTable: UITableView = {
        let table = UITableView()
         table.backgroundColor = .mainGray

@@ -232,6 +232,8 @@ class AdminTourVC: UIViewController,UIScrollViewDelegate, UITextFieldDelegate {
         navBarItemLoad()
         setupLayout()
         loadListTours()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(loadListTours), name: NSNotification.Name(rawValue: "LoadListTour"), object: nil)
     }
     
     func navBarItemLoad(){
@@ -377,7 +379,10 @@ class AdminTourVC: UIViewController,UIScrollViewDelegate, UITextFieldDelegate {
         
     }
     
-    func loadListTours() {
+    @objc func loadListTours() {
+        
+        myTorneos.removeAll()
+        dayMyTorneos.removeAll()
         
         ref = Database.database().reference().child("Torneos/")
         

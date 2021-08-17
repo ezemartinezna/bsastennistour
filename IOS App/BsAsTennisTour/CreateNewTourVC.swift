@@ -356,6 +356,8 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         text.font = UIFont(name: "Helvetica", size: 15)
         text.clearButtonMode = .always
         text.textColor = .colorCoal
+        text.isEnabled = false
+        text.text = "Sin Llave"
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
     }()
@@ -389,6 +391,34 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
     }()
     
     private let lineZonas : UIView = {
+        let uView = UIView()
+        uView.backgroundColor = .colorCoal
+        uView.translatesAutoresizingMaskIntoConstraints = false
+        return uView
+    }()
+    
+    private let labelMaxClasi : UILabel = {
+        let label = UILabel()
+         label.font = UIFont(name: "Helvetica", size: 16)
+         label.textColor = .gray
+         label.textAlignment = .left
+         label.text = "Máximo de Clasificados"
+         label.translatesAutoresizingMaskIntoConstraints = false
+         return label
+    }()
+    
+    private let textMaxClasi : UITextField = {
+        let text = UITextField()
+        text.backgroundColor = .white
+        text.layer.borderWidth = 0
+        text.font = UIFont(name: "Helvetica", size: 15)
+        text.clearButtonMode = .always
+        text.textColor = .colorCoal
+        text.translatesAutoresizingMaskIntoConstraints = false
+        return text
+    }()
+    
+    private let lineMaxClasi : UIView = {
         let uView = UIView()
         uView.backgroundColor = .colorCoal
         uView.translatesAutoresizingMaskIntoConstraints = false
@@ -540,6 +570,10 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         uViewScrollView1.addSubview(textZonas)
         textZonas.delegate = self
         uViewScrollView1.addSubview(lineZonas)
+        uViewScrollView1.addSubview(labelMaxClasi)
+        uViewScrollView1.addSubview(textMaxClasi)
+        textMaxClasi.delegate = self
+        uViewScrollView1.addSubview(lineMaxClasi)
         
         NSLayoutConstraint.activate([
         
@@ -710,21 +744,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
             lineaCantSet.trailingAnchor.constraint(equalTo: labelCantSet.trailingAnchor),
             lineaCantSet.heightAnchor.constraint(equalToConstant: 2),
             
-            labelLlaves.topAnchor.constraint(equalTo: lineaCantSet.bottomAnchor,constant: 20),
-            labelLlaves.leadingAnchor.constraint(equalTo: uViewScrollView1.leadingAnchor,constant: 40),
-            labelLlaves.trailingAnchor.constraint(equalTo: uViewScrollView1.trailingAnchor,constant: -40),
-
-            textLlaves.topAnchor.constraint(equalTo: labelLlaves.bottomAnchor, constant: 5),
-            textLlaves.leadingAnchor.constraint(equalTo: labelLlaves.leadingAnchor),
-            textLlaves.trailingAnchor.constraint(equalTo: labelLlaves.trailingAnchor),
-            textLlaves.heightAnchor.constraint(equalToConstant: 30),
-
-            lineLlaves.topAnchor.constraint(equalTo: textLlaves.bottomAnchor, constant: 5),
-            lineLlaves.leadingAnchor.constraint(equalTo: labelLlaves.leadingAnchor),
-            lineLlaves.trailingAnchor.constraint(equalTo: labelLlaves.trailingAnchor),
-            lineLlaves.heightAnchor.constraint(equalToConstant: 2),
-            
-            labelZonas.topAnchor.constraint(equalTo: lineLlaves.bottomAnchor,constant: 20),
+            labelZonas.topAnchor.constraint(equalTo: lineaCantSet.bottomAnchor,constant: 20),
             labelZonas.leadingAnchor.constraint(equalTo: uViewScrollView1.leadingAnchor,constant: 40),
             labelZonas.trailingAnchor.constraint(equalTo: uViewScrollView1.trailingAnchor,constant: -40),
 
@@ -737,7 +757,35 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
             lineZonas.leadingAnchor.constraint(equalTo: labelZonas.leadingAnchor),
             lineZonas.trailingAnchor.constraint(equalTo: labelZonas.trailingAnchor),
             lineZonas.heightAnchor.constraint(equalToConstant: 2),
-            lineZonas.bottomAnchor.constraint(equalTo: uViewScrollView1.bottomAnchor,constant: -20)
+            
+            labelMaxClasi.topAnchor.constraint(equalTo: lineZonas.bottomAnchor,constant: 20),
+            labelMaxClasi.leadingAnchor.constraint(equalTo: uViewScrollView1.leadingAnchor,constant: 40),
+            labelMaxClasi.trailingAnchor.constraint(equalTo: uViewScrollView1.trailingAnchor,constant: -40),
+
+            textMaxClasi.topAnchor.constraint(equalTo: labelMaxClasi.bottomAnchor, constant: 5),
+            textMaxClasi.leadingAnchor.constraint(equalTo: labelMaxClasi.leadingAnchor),
+            textMaxClasi.trailingAnchor.constraint(equalTo: labelMaxClasi.trailingAnchor),
+            textMaxClasi.heightAnchor.constraint(equalToConstant: 30),
+
+            lineMaxClasi.topAnchor.constraint(equalTo: textMaxClasi.bottomAnchor, constant: 5),
+            lineMaxClasi.leadingAnchor.constraint(equalTo: labelMaxClasi.leadingAnchor),
+            lineMaxClasi.trailingAnchor.constraint(equalTo: labelMaxClasi.trailingAnchor),
+            lineMaxClasi.heightAnchor.constraint(equalToConstant: 2),
+            
+            labelLlaves.topAnchor.constraint(equalTo: lineMaxClasi.bottomAnchor,constant: 20),
+            labelLlaves.leadingAnchor.constraint(equalTo: uViewScrollView1.leadingAnchor,constant: 40),
+            labelLlaves.trailingAnchor.constraint(equalTo: uViewScrollView1.trailingAnchor,constant: -40),
+
+            textLlaves.topAnchor.constraint(equalTo: labelLlaves.bottomAnchor, constant: 5),
+            textLlaves.leadingAnchor.constraint(equalTo: labelLlaves.leadingAnchor),
+            textLlaves.trailingAnchor.constraint(equalTo: labelLlaves.trailingAnchor),
+            textLlaves.heightAnchor.constraint(equalToConstant: 30),
+
+            lineLlaves.topAnchor.constraint(equalTo: textLlaves.bottomAnchor, constant: 5),
+            lineLlaves.leadingAnchor.constraint(equalTo: labelLlaves.leadingAnchor),
+            lineLlaves.trailingAnchor.constraint(equalTo: labelLlaves.trailingAnchor),
+            lineLlaves.heightAnchor.constraint(equalToConstant: 2),
+            lineLlaves.bottomAnchor.constraint(equalTo: uViewScrollView1.bottomAnchor,constant: -20),
             
                                         
         ])
@@ -751,13 +799,37 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         
     }
     
+    func verifyModel() -> Bool {
+        
+        let cantZonas = Int(textZonas.text!) ?? 1
+        let maxClasi = Int(textMaxClasi.text!) ?? 1
+        let resultado = cantZonas * maxClasi
+        switch resultado {
+        case 2:
+            textLlaves.text = "Final"
+            return true
+        case 4:
+            textLlaves.text = "Semifinal"
+            return true
+        case 8:
+            textLlaves.text = "Cuartos"
+            return true
+        case 16:
+            textLlaves.text = "Octavos"
+            return true
+        default:
+            textLlaves.text = "Sin llave"
+            return false
+        }
+    }
+    
     @objc func confirmAction() {
     
         let saveday = self.formatterUS.string(from: datePicker.date)
 //        let savedayArg = self.formatterARG.string(from: datePicker.date)
         let saveHour = self.formatterHour.string(from: datePicker.date)
         
-        let allData : [String : Any] = ["Area":"Polvo de Ladrillo","Price":1500,"Hour":saveHour,"Max":textMax.text ?? 16,"Model":textModelo.text ?? "Single Mixto","Matches" : textMatch.text ?? 4,"Sede":textSede.text ?? "Club Mitre"]
+        let allData : [String : Any] = ["Area":"Polvo de Ladrillo","Price":1500,"Hour":saveHour,"Max":Int(textMax.text!) ?? 16,"Model":textModelo.text ?? "Single Mixto","Matches" : textMatch.text ?? 4,"Sede":textSede.text ?? "Club Mitre"]
         
         var tourament : [String : [String:Any]] = ["Info":allData]
         
@@ -773,17 +845,17 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         var zonas : [String :
                         [String : [String : Any]]] = [:]
         
-        let cantZona = Int(textZonas.text!) ?? 1
-        let total = (Int(textMax.text!) ?? 1) / cantZona
-        
-        for i in 1...cantZona {
-            var allPlayers : [String : [String : Any]] = [:]
-            for f in 1...total {
-                allPlayers.updateValue(infoZona, forKey: "\(f)")
+        if let cantZona = Int(textZonas.text!) {
+            let total = (Int(textMax.text!) ?? 0) / cantZona
+            for i in 1...cantZona {
+                var allPlayers : [String : [String : Any]] = [:]
+                for f in 1...total {
+                    allPlayers.updateValue(infoZona, forKey: "\(f)")
+                }
+                zonas.updateValue(allPlayers, forKey: "Zona \(i)")
             }
-            zonas.updateValue(allPlayers, forKey: "Zona \(i)")
         }
-        
+
         var SET : [String : String] = [:]
     
         let cantSet = Int(textCantSet.text!) ?? 1
@@ -894,9 +966,9 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
                                  ],
                          "4Final" :
                                  ["Match1" :
-                                     ["S1" :
+                                     ["F1" :
                                          ["1q2w3e4r" :["SET":SET]],
-                                      "S2":
+                                      "F2":
                                          ["1q2w3e4r" :["SET":SET]],
                                      ]
             ]]
@@ -946,9 +1018,9 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
                                  ],
                          "3Final" :
                                  ["Match1" :
-                                     ["S1" :
+                                     ["F1" :
                                          ["1q2w3e4r" :["SET":SET]],
-                                      "S2":
+                                      "F2":
                                          ["1q2w3e4r" :["SET":SET]],
                                      ]
             ]]
@@ -969,30 +1041,23 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
                                  ],
                          "2Final" :
                                  ["Match1" :
-                                     ["S1" :
+                                     ["F1" :
                                          ["1q2w3e4r" :["SET":SET]],
-                                      "S2":
+                                      "F2":
                                          ["1q2w3e4r" :["SET":SET]],
                                      ]
             ]]
         case "Final" :
             savellave = ["1Final" :
                                  ["Match1" :
-                                     ["S1" :
+                                     ["F1" :
                                          ["1q2w3e4r" :["SET":SET]],
-                                      "S2":
+                                      "F2":
                                          ["1q2w3e4r" :["SET":SET]],
                                      ]
             ]]
         default:
-            savellave = ["Final" :
-                                 ["Match1" :
-                                     ["S1" :
-                                         ["1q2w3e4r" :["SET":SET]],
-                                      "S2":
-                                         ["1q2w3e4r" :["SET":SET]],
-                                     ]
-            ]]
+            print("Sin Llave")
         }
         
         
@@ -1026,8 +1091,9 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
                               self.showAlert(title: "Error", message: error.localizedDescription)
                               return
                             } else {
-                                
+                                NotificationCenter.default.post(name: Notification.Name("LoadListTour"), object: nil)
                                 self.showAlert(title: "Torneo Agendado", message: "Se creó correctamente el torneo \(self.titleTorneo.text ?? "Testing Tour")")
+                                self.navigationController?.popViewController(animated: true)
                             }
    
                         }
@@ -1093,27 +1159,6 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         
     }
     
-    func cantLlaves() {
-        
-        StringPickerPopover(title: "Elige Fase Inicial:", choices: ["Octavos","Cuartos","Semifinal","Final"])
-                .setSelectedRow(0)
-            .setValueChange(action: { _, selectedDate,argData  in
-                    print("current date \(selectedDate)")
-                })
-                .setDoneButton(title: "OK", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (popover, selectedRow, selectedString) in
-                    
-                    self.textLlaves.text = selectedString
-                    self.textLlaves.endEditing(true)
-                })
-                .setCancelButton(title: "Cancel", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (_, _, _) in self.textLlaves.endEditing(true)}
-                                 
-                )
-                .setSize(height: 150)
-                .setFontColor(.colorCoal)
-                .appear(originView: textLlaves, baseViewController: self)
-        
-    }
-    
     func cantZonas() {
         
         StringPickerPopover(title: "Cantidad de Zonas:", choices: ["1","2","3","4","5","6","7","8","9"])
@@ -1156,6 +1201,26 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         
     }
     
+    func cantMaxClasi() {
+        
+        StringPickerPopover(title: "Maximo de Clasificados:", choices: ["1","2","3","4","5","6"])
+                .setSelectedRow(0)
+            .setValueChange(action: { _, selectedDate,argData  in
+                    print("current date \(selectedDate)")
+                })
+                .setDoneButton(title: "OK", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (popover, selectedRow, selectedString) in
+                    
+                    self.textMaxClasi.text = selectedString
+                    self.textMaxClasi.endEditing(true)
+                })
+                .setCancelButton(title: "Cancel", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (_, _, _) in self.textMaxClasi.endEditing(true)}
+                                 
+                )
+                .setSize(height: 150)
+                .setFontColor(.colorCoal)
+                .appear(originView: textMaxClasi, baseViewController: self)
+    }
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
         if textField == textCantSet {
@@ -1164,16 +1229,15 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
             cantSETS()
         }
         
-        if textField == textLlaves {
-            labelLlaves.textColor = .colorMint
-            lineLlaves.backgroundColor = .colorMint
-            cantLlaves()
-        }
-        
         if textField == textZonas {
             labelZonas.textColor = .colorMint
             lineZonas.backgroundColor = .colorMint
             cantZonas()
+        }
+        if textField == textMaxClasi {
+            labelMaxClasi.textColor = .colorMint
+            lineMaxClasi.backgroundColor = .colorMint
+            cantMaxClasi()
         }
         
         if textField == textModelo {
@@ -1206,14 +1270,16 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
             lineaCantSet.backgroundColor = .colorCoal
         }
         
-        if textField == textLlaves {
-            labelLlaves.textColor = .gray
-            lineLlaves.backgroundColor = .colorCoal
-        }
-        
         if textField == textZonas {
             labelZonas.textColor = .gray
             lineZonas.backgroundColor = .colorCoal
+        }
+        if textField == textMaxClasi {
+            labelMaxClasi.textColor = .gray
+            lineMaxClasi.backgroundColor = .colorCoal
+            if verifyModel() {
+                
+            }
         }
         
         if textField == textModelo {

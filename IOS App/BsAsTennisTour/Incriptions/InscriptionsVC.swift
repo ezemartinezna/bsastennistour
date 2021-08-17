@@ -10,28 +10,6 @@ import FirebaseDatabase
 
 class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource, ZonasLlavesDelegate {
     
-    func ZonasCellTapped(position : String) {
-        
-        let path = "Torneos/\(dayTour)/\(nameTour)/Zonas/\(tourament[0].zone[selectCVZones].name)/\(position)"
-        let pathPlayers = "Torneos/\(dayTour)/\(nameTour)/Players/"
-        
-        UserDefaults.standard.set(path, forKey: "pathModified")
-        UserDefaults.standard.set(pathPlayers,forKey: "pathPlayers")
-        UserDefaults.standard.synchronize()
-        
-        let vc = AdminChangesZonasVC()
-        vc.modalPresentationStyle = .pageSheet
-        self.present(vc, animated: true, completion: nil)
-    }
-    
-    func LlavesCellTapped(match: String) {
-        print(match)
-        let vc = AdminChangesLlavesVC()
-        vc.modalPresentationStyle = .pageSheet
-        self.present(vc, animated: true, completion: nil)
-    }
-    
-    
     var collapsedPoints : Bool = true
     var collapsedInfo : Bool = true
     var collapsedPlayers : Bool = true
@@ -45,7 +23,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     let dayTour = UserDefaults.standard.string(forKey: "dayTour") ?? ""
     let nameTour = UserDefaults.standard.string(forKey: "nameTour") ?? ""
     
-    var selectCVZones : Int = 0
+    var maxPlayers : Int = 0
     
     var ref: DatabaseReference!
     
@@ -439,7 +417,6 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     private lazy var pageControlLlaves: UIPageControl = {
          let pc = UIPageControl()
          pc.currentPage = 0
-//         pc.numberOfPages = tourament[0].llave.count
          pc.currentPageIndicatorTintColor = .black
          pc.pageIndicatorTintColor = .colorGray
          pc.translatesAutoresizingMaskIntoConstraints = false
@@ -472,7 +449,6 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     private lazy var pageControlZones: UIPageControl = {
          let pc = UIPageControl()
          pc.currentPage = 0
-//         pc.numberOfPages = tourament[0].zone.count
          pc.currentPageIndicatorTintColor = .black
          pc.pageIndicatorTintColor = .colorGray
          pc.translatesAutoresizingMaskIntoConstraints = false
@@ -499,6 +475,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         loadTourament()
         
         NotificationCenter.default.addObserver(self, selector: #selector(loadZonas), name: NSNotification.Name(rawValue: "LoadZonaTour"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(loadLlaves), name: NSNotification.Name(rawValue: "LoadLlaveTour"), object: nil)
     }
     
     func setupBarItem() {
@@ -955,13 +932,21 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             containerZonesView.isHidden = true
             topView4Llaves?.isActive = true
             topView4BottomTable?.isActive = false
-            
         } else {
+            if admin == "YES-1" && tourament[0].llave.count == 0 {
+            buttonZonas.setImage(#imageLiteral(resourceName: "Icono - Más (Verde)"), for: .normal)
+            buttonZonas.addTarget(self, action: #selector(addZona), for: .touchUpInside)
+            }else{
             buttonZonas.setImage(#imageLiteral(resourceName: "upArrowWhite"), for: .normal)
+            }
             containerZonesView.isHidden = false
             topView4Llaves?.isActive = false
             topView4BottomTable?.isActive = true
-      
+            if !collapsedLlaves {
+                buttonLlaves.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
+                uViewContainerLlaves.isHidden = true
+                collapsedLlaves = !collapsedLlaves
+            }
         }
 
         collapsedZonas = !collapsedZonas
@@ -970,21 +955,27 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             self.view.layoutIfNeeded()
             
         }, completion: nil)
-//        allZones.reloadData()
+        allZones.reloadData()
         
     }
     
     @objc func openCloseLlaves() {
-        
         if !collapsedLlaves {
             buttonLlaves.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
             uViewContainerLlaves.isHidden = true
         }else{
             buttonLlaves.setImage(#imageLiteral(resourceName: "upArrowWhite"), for: .normal)
             uViewContainerLlaves.isHidden = false
+            if !collapsedZonas {
+                buttonZonas.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
+                containerZonesView.isHidden = true
+                topView4Llaves?.isActive = true
+                topView4BottomTable?.isActive = false
+                collapsedZonas = !collapsedZonas
+            }
         }
         collapsedLlaves = !collapsedLlaves
-        
+        allLlaves.reloadData()
     }
     
     @objc func registerTour() {
@@ -1064,6 +1055,282 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         
     }
     
+    @objc func addZona() {
+        let dialogMessage = UIAlertController(title: NSLocalizedString("Zonas del Torneo \(nameTour)", comment: ""), message: NSLocalizedString("Ingrese a continuación", comment: ""), preferredStyle: .alert)
+        dialogMessage.addTextField(configurationHandler: {(textField) in
+                               textField.placeholder = NSLocalizedString("Cantidad de Zonas", comment: "")
+        })
+         dialogMessage.addTextField(configurationHandler: {(textField) in
+                                textField.placeholder = NSLocalizedString("Maximo de Clasificados", comment: "")
+         })
+        dialogMessage.addTextField(configurationHandler: {(textField) in
+                               textField.placeholder = NSLocalizedString("Cantidad de Sets", comment: "")
+        })
+        let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
+        self.buttonZonas.removeTarget(self, action: #selector(self.addZona), for: .touchUpInside)
+        let cantZona = dialogMessage.textFields![0]
+        let maxClasi = dialogMessage.textFields![1]
+        let cantSETS = dialogMessage.textFields![2]
+         
+         if cantZona.text != "" && maxClasi.text != "" && cantSETS.text != ""{
+            
+            let infoZona : [String : Any] = ["fullName" : "-","lose" : 0,"picture" : "perfilIcon","win" : 0,"points":0,"uid":self.randomString(length: 7)]
+            
+            var zonas : [String :
+                            [String : [String : Any]]] = [:]
+            if let iCantZona = Int(cantZona.text!) {
+                if let iMaxClasi = Int(maxClasi.text!) {
+                    
+                let total = self.maxPlayers / iCantZona
+                for i in 1...iCantZona {
+                    var allPlayers : [String : [String : Any]] = [:]
+                    for f in 1...total {
+                        allPlayers.updateValue(infoZona, forKey: "\(f)")
+                    }
+                    zonas.updateValue(allPlayers, forKey: "Zona \(i)")
+                }
+                var savellave : [String :
+                                    [String :
+                                            [String :
+                                                    [String :
+                                                        [String : [String : String]]]]]] = [:]
+                    
+                var SET : [String : String] = [:]
+        
+                let cantSet = Int(cantSETS.text!) ?? 1
+            
+                for i in 1...cantSet {
+                    SET.updateValue("-", forKey: "\(i)")
+                }
+                
+                let resultado = iCantZona * iMaxClasi
+                switch resultado {
+                case 2:
+                    savellave = ["1Final" :
+                                         ["Match1" :
+                                             ["F1" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "F2":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ]
+                    ]]
+                case 4:
+                    savellave = ["1Semifinal" :
+                                         ["Match1" :
+                                             ["S1" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "S2":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ],
+                                          "Match2" :
+                                             ["S3" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "S4":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ],
+                                         ],
+                                 "2Final" :
+                                         ["Match1" :
+                                             ["F1" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "F2":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ]
+                    ]]
+                case 8:
+                    savellave = ["1Cuartos" :
+                                         ["Match1" :
+                                             ["C1" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "C2":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ],
+                                          "Match2" :
+                                             ["C3" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "C4":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ],
+                                          "Match3" :
+                                              ["C5" :
+                                                  ["1q2w3e4r" :["SET":SET]],
+                                               "C6":
+                                                  ["1q2w3e4r" :["SET":SET]],
+                                              ],
+                                           "Match4" :
+                                              ["C7" :
+                                                  ["1q2w3e4r" :["SET":SET]],
+                                               "C8":
+                                                  ["1q2w3e4r" :["SET":SET]],
+                                              ],
+                                         ],
+                                 "2Semifinal" :
+                                         ["Match1" :
+                                             ["S1" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "S2":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ],
+                                          "Match2" :
+                                             ["S3" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "S4":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ],
+                                         ],
+                                 "3Final" :
+                                         ["Match1" :
+                                             ["F1" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "F2":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ]
+                    ]]
+                case 16:
+                    savellave = ["1Octavos" :
+                                    ["Match1" :
+                                        ["O1" :
+                                            ["1q2w3e4r" :["SET":SET]],
+                                         "O2":
+                                            ["1q2w3e4r" :["SET":SET]],
+                                        ],
+                                     "Match2" :
+                                        ["O3" :
+                                            ["1q2w3e4r" :["SET":SET]],
+                                         "O4":
+                                            ["1q2w3e4r" :["SET":SET]],
+                                        ],
+                                     "Match3" :
+                                         ["O5" :
+                                             ["1q2w3e4r" :["SET":SET]],
+                                          "O6":
+                                             ["1q2w3e4r" :["SET":SET]],
+                                         ],
+                                      "Match4" :
+                                         ["O7" :
+                                             ["1q2w3e4r" :["SET":SET]],
+                                          "O8":
+                                             ["1q2w3e4r" :["SET":SET]],
+                                         ],
+                                      "Match5" :
+                                          ["O9" :
+                                              ["1q2w3e4r" :["SET":SET]],
+                                           "O10":
+                                              ["1q2w3e4r" :["SET":SET]],
+                                          ],
+                                       "Match6" :
+                                          ["O11" :
+                                              ["1q2w3e4r" :["SET":SET]],
+                                           "O12":
+                                              ["1q2w3e4r" :["SET":SET]],
+                                          ],
+                                       "Match7" :
+                                           ["O13" :
+                                               ["1q2w3e4r" :["SET":SET]],
+                                            "O14":
+                                               ["1q2w3e4r" :["SET":SET]],
+                                           ],
+                                        "Match8" :
+                                           ["O15" :
+                                               ["1q2w3e4r" :["SET":SET]],
+                                            "O16":
+                                               ["1q2w3e4r" :["SET":SET]],
+                                           ],
+                                    ],
+                                 "2Cuartos" :
+                                         ["Match1" :
+                                             ["C1" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "C2":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ],
+                                          "Match2" :
+                                             ["C3" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "C4":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ],
+                                          "Match3" :
+                                              ["C5" :
+                                                  ["1q2w3e4r" :["SET":SET]],
+                                               "C6":
+                                                  ["1q2w3e4r" :["SET":SET]],
+                                              ],
+                                           "Match4" :
+                                              ["C7" :
+                                                  ["1q2w3e4r" :["SET":SET]],
+                                               "C8":
+                                                  ["1q2w3e4r" :["SET":SET]],
+                                              ],
+                                         ],
+                                 "3Semifinal" :
+                                         ["Match1" :
+                                             ["S1" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "S2":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ],
+                                          "Match2" :
+                                             ["S3" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "S4":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ],
+                                         ],
+                                 "4Final" :
+                                         ["Match1" :
+                                             ["F1" :
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                              "F2":
+                                                 ["1q2w3e4r" :["SET":SET]],
+                                             ]
+                    ]]
+                default:
+                    print("Sin Llave")
+                }
+                    
+                    self.ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Llaves")
+                    self.ref.setValue(savellave){
+                                
+                                (error:Error?, ref:DatabaseReference) in
+                                if let error = error {
+                                  self.showAlert(title: "Error", message: error.localizedDescription)
+                                  return
+                                } else {
+                                    
+                                    self.ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Zonas")
+                                    self.ref.setValue(zonas){
+                                        
+                                        (error:Error?, ref:DatabaseReference) in
+                                        if let error = error {
+                                          self.showAlert(title: "Error", message: error.localizedDescription)
+                                          return
+                                        } else {
+                                            self.loadTourament()
+                                            self.showAlert(title: "Torneo Modificado", message: "Se modificó correctamente el torneo \(self.titleTorneo.text ?? "Testing Tour")")
+                                        }
+               
+                                    }
+               
+                                }
+                                
+                            }
+                    
+                    
+            }
+                
+            }
+            
+         }
+        
+        })
+                     
+        dialogMessage.addAction(ok)
+                  
+     self.present(dialogMessage, animated: true, completion: nil)
+    }
+    
+    
     @objc func loadTourament() {
         
         tourament.removeAll()
@@ -1079,6 +1346,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                 var llaves = [Llaves]()
                 var zonas = [Zonas]()
                 var winpoints = [Points]()
+                var winpointsOrder = [Points]()
                 
                 if let allTour = snapshot.children.allObjects as? [DataSnapshot] {
                     for tour in allTour {
@@ -1087,6 +1355,9 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                         case "Info":
                             if let allStats = tour.children.allObjects as? [DataSnapshot] {
                                 for stat in allStats {
+                                    if stat.key == "Max" {
+                                        self.maxPlayers = stat.value as? Int ?? 0
+                                    }
                                     stats.append(TourStats(title: stat.key, value: stat.value ?? ""))
                                 }
                             }
@@ -1122,10 +1393,11 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                         case "WinPoints":
                             if let allWinPoints = tour.children.allObjects as? [DataSnapshot] {
                                 for points in allWinPoints {
-                                    let indexInt = points.key.indexes(of: "-", str: points.key)
-                                    
-                                    winpoints.append(Points(title: points.value as? String ?? "-", number: points.key.substring(from: indexInt + 1)))
+                                    winpoints.append(Points(title: points.value as? String ?? "-", number: points.key))
                                 }
+                                winpointsOrder = winpoints.sorted(by: {
+                                    $0.number < $1.number
+                                })
                             }
                         case "Zonas":
                             if let allZonas = tour.children.allObjects as? [DataSnapshot] {
@@ -1237,14 +1509,15 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                         }
 
                     }
-                    self.tourament.append(Tourament(name: self.nameTour, stats: stats, players: players, winPoints: winpoints, llave: llaves, zone: zonas))
+                    self.tourament.append(Tourament(name: self.nameTour, stats: stats, players: players, winPoints: winpointsOrder, llave: llaves, zone: zonas))
                 }
                 self.sortByPosition()
                 self.torneoInfoTable.reloadData()
                 self.allPointsTable.reloadData()
                 self.allLlaves.reloadData()
                 self.allZones.reloadData()
-             
+                self.pageControlZones.numberOfPages = self.tourament[0].zone.count
+                self.pageControlLlaves.numberOfPages = self.tourament[0].llave.count
                 
             }
         })
@@ -1328,6 +1601,125 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         
     }
     
+    @objc func loadLlaves() {
+        
+        tourament[0].llave.removeAll()
+        
+        ref = Database.database().reference().child("Torneos/\(dayTour)/\(nameTour)")
+        
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+
+            if snapshot.exists() {
+                
+                var llaves = [Llaves]()
+                
+                if let allTour = snapshot.children.allObjects as? [DataSnapshot] {
+                    for tour in allTour {
+                        
+                        if tour.key == "Llaves" {
+  
+                            if let allLlaves = tour.children.allObjects as? [DataSnapshot] {
+                                for llave in allLlaves {
+                                    
+                                    var arrayMatch : [Match] = []
+                                    
+                                    if let allMatches = llave.children.allObjects as? [DataSnapshot] {
+                                        for match in allMatches {
+                                            
+                                            var arrayPlayer : [PlayerLlave] = []
+                                            
+                                            if let positions = match.children.allObjects as? [DataSnapshot] {
+                                                for position in positions {
+                                                    
+                                                    var fullName : String = "-"
+                                                    var win : Bool = false
+                                                    var picture : String = "perfilIcon"
+                                                    var SETS : [String] = []
+                                                    
+                                                    if let allPlayer = position.children.allObjects as? [DataSnapshot] {
+                                                        for player in allPlayer {
+                                                            if let allInfo = player.children.allObjects as? [DataSnapshot] {
+                                                                for info in allInfo {
+                                                                    
+                                                                    if info.key == "fullName" {
+                                                                        fullName = info.value as? String ?? "-"
+                                                                    }
+                                                                    
+                                                                    if info.key == "win" {
+                                                                        win = info.value as? Bool ?? false
+                                                                    }
+                                                                    
+                                                                    if info.key == "picture" {
+                                                                        picture = info.value as? String ?? "-"
+                                                                    }
+                                                                    
+                                                                    if info.key == "SET" {
+                                                                        if let allSETS = info.children.allObjects as? [DataSnapshot] {
+                                                                            for set in allSETS {
+                                                                                SETS.append(set.value as? String ?? "0")
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            arrayPlayer.append(PlayerLlave(match: position.key, id: player.key, fullName: fullName, picture: picture, win: win, set: SETS))
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            arrayMatch.append(Match(name: match.key, player1: arrayPlayer[0], player2: arrayPlayer[1]))
+                                
+                                        }
+                                    }
+                                    llaves.append(Llaves(name: llave.key.substring(from: 1), types: arrayMatch))
+                                }
+                            }
+
+                    }
+                    }
+                    self.tourament[0].llave.append(contentsOf: llaves)
+                }
+
+                self.allLlaves.reloadData()
+    
+            }
+        })
+        
+    }
+    
+    func ZonasCellTapped(position : String,index : Int) {
+        
+        let path = "Torneos/\(dayTour)/\(nameTour)/Zonas/\(tourament[0].zone[pageControlZones.currentPage].name)/\(position)"
+        let pathPlayers = "Torneos/\(dayTour)/\(nameTour)/Players/"
+        
+        UserDefaults.standard.set(path, forKey: "pathModified")
+        UserDefaults.standard.set(index, forKey: "indexZone")
+        UserDefaults.standard.set(pathPlayers,forKey: "pathPlayers")
+        UserDefaults.standard.synchronize()
+        
+        let vc = AdminChangesZonasVC()
+        vc.modalPresentationStyle = .pageSheet
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    func LlavesCellTapped(match: String) {
+        
+        let i = pageControlLlaves.currentPage + 1
+        
+        let path = "Torneos/\(dayTour)/\(nameTour)/Llaves/\(i)\(tourament[0].llave[pageControlLlaves.currentPage].name)/\(match)"
+        let pathPlayers = "Torneos/\(dayTour)/\(nameTour)/Players/"
+        
+        UserDefaults.standard.set(path, forKey: "pathMatch")
+        UserDefaults.standard.set(tourament[0].llave[pageControlLlaves.currentPage].name,forKey: "nameLlave")
+        UserDefaults.standard.set(pathPlayers,forKey: "pathPlayers")
+        UserDefaults.standard.synchronize()
+        
+        
+        let vc = AdminChangesLlavesVC()
+        vc.modalPresentationStyle = .pageSheet
+        self.present(vc, animated: true, completion: nil)
+    }
+    
 
 
 }
@@ -1374,10 +1766,24 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
         
         if tourament.count != 0 {
         if collectionView == allLlaves {
-            returnInt = tourament[0].llave.count
+            
+            if tourament[0].llave.count == 0 {
+                collectionView.setEmptyView(title: "Sin Llaves.", messageImage: #imageLiteral(resourceName: "Icono Torneo Información En Competencia"))
+            }
+            else {
+                returnInt = tourament[0].llave.count
+                collectionView.restore()
+            }
+    
         }
         if collectionView == allZones {
-            returnInt = tourament[0].zone.count
+            
+            if tourament[0].zone.count == 0 {
+                collectionView.setEmptyView(title: "Sin Zonas.", messageImage: #imageLiteral(resourceName: "Icono Torneo Información Próximamente"))
+            }else{
+                returnInt = tourament[0].zone.count
+                collectionView.restore()
+            }
         }
         }
         
@@ -1403,16 +1809,12 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! ZonesCVCell
 
             cell.labelTitle.text = tourament[0].zone[indexPath.row].name
-            cell.updateCellWith(row: tourament[0].zone[indexPath.row].types)
+            cell.updateCellWith(row: tourament[0].zone[indexPath.row].types, max: (tourament[0].llave.count * tourament[0].llave.count) / tourament[0].zone.count)
             cell.delegate = self
             returnCell = cell
         }
         
         return returnCell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        selectCVZones = indexPath.row
     }
     
     func collectionView(_ collectionView: UICollectionView,

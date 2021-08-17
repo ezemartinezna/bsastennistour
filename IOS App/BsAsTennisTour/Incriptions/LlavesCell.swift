@@ -105,17 +105,17 @@ class LlavesCell: UICollectionViewCell, UITableViewDataSource, UITableViewDelega
             
         cell.updatePlayer2(row: llaves.types[indexPath.row].player2.set)
  
-        if llaves.name == "OCTAVOS" {
+        if llaves.name == "Octavos" {
             cell.labelDatails.text = "C\(indexPath.row + 1) - Octavos de Final - Partido \(indexPath.row + 1) - Cuartos \(indexPath.row + 1)"
         }
         
-        if llaves.name == "CUARTOS" {
+        if llaves.name == "Cuartos" {
             cell.labelDatails.text = "S\(indexPath.row + 1) - Cuartos de Final - Partido \(indexPath.row + 1) - Semifinalista \(indexPath.row + 1)"
         }
-        if llaves.name == "SEMIFINAL" {
+        if llaves.name == "Semifinal" {
             cell.labelDatails.text = "F\(indexPath.row + 1) - Semifinal - Partido \(indexPath.row + 1) - Finalistas \(indexPath.row + 1)"
         }
-        if llaves.name == "FINAL" {
+        if llaves.name == "Final" {
             cell.labelDatails.text = "Campeón - Partido Final - Final del Torneo"
         }
         

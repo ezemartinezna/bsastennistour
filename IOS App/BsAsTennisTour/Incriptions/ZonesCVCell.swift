@@ -72,6 +72,7 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
     }()
     
     var allPlayers : [PlayerZona] = []
+    var maxCant : Int = 0
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -80,7 +81,7 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
     
     private func setupLayout() {
         
-       
+        contentView.backgroundColor = .colorMint
         addSubview(labelTitle)
         addSubview(stackview)
         stackview.addArrangedSubview(labelWin)
@@ -129,6 +130,12 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as! ZonesTVCell
     
+        let index = indexPath.row + 1
+        if index <= maxCant {
+            cell.containerView.backgroundColor = .colorMint
+        }else{
+            cell.containerView.backgroundColor = .white
+        }
         let (firstname,lastname) = NameDivisor(fullName: allPlayers[indexPath.row].fullName)
         cell.labelName.text = firstname
         cell.labelLastname.text = lastname
@@ -144,7 +151,7 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 
-        delegate?.ZonasCellTapped(position: allPlayers[indexPath.row].key)
+        delegate?.ZonasCellTapped(position: allPlayers[indexPath.row].key, index: indexPath.row)
 
 
     }
@@ -154,8 +161,9 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
 
 
 extension ZonesCVCell {
-    func updateCellWith(row: [PlayerZona]) {
+    func updateCellWith(row: [PlayerZona], max : Int) {
         self.allPlayers = row
+        self.maxCant = max
         self.allParticipants.reloadData()
     }
     

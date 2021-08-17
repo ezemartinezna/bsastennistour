@@ -198,6 +198,6 @@ public struct Zonas {
 }
 
 protocol ZonasLlavesDelegate:AnyObject {
-    func ZonasCellTapped(position : String)
+    func ZonasCellTapped(position : String, index : Int)
     func LlavesCellTapped(match : String)
 }

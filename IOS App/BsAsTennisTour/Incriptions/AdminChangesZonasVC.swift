@@ -24,6 +24,7 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
     
     private let labelTitle: UILabel = {
           let label = UILabel()
+            label.text = "EDITAR POSICION \(UserDefaults.standard.integer(forKey: "indexZone") + 1)"
             label.font = UIFont(name: "Helvetica Bold", size: 15)!
             label.textColor = .colorCoal
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -220,13 +221,7 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
     }
     
     func setupLayout() {
-        
-        if let i = path.lastIndex(of: "/") {
-            let nextIndex = path.index(i, offsetBy: 1)
-            let number = path.suffix(from: nextIndex)
-            labelTitle.text = "EDITAR POSICION \(number)"
-        }
-        
+
         view.backgroundColor = UIColor.clear
         view.addSubview(blackView)
         blackView.addSubview(dismissLayerBtn)
