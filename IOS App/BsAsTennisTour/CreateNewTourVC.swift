@@ -829,7 +829,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
 //        let savedayArg = self.formatterARG.string(from: datePicker.date)
         let saveHour = self.formatterHour.string(from: datePicker.date)
         
-        let allData : [String : Any] = ["Area":"Polvo de Ladrillo","Price":1500,"Hour":saveHour,"Max":Int(textMax.text!) ?? 16,"Model":textModelo.text ?? "Single Mixto","Matches" : textMatch.text ?? 4,"Sede":textSede.text ?? "Club Mitre"]
+        let allData : [String : Any] = ["Area":"Polvo de Ladrillo","Precio":"1500","Hora":saveHour,"Max":textMax.text ?? "16","Modelo":textModelo.text ?? "Single Mixto","Partidos Asegurados" : textMatch.text ?? "4","Sede":textSede.text ?? "Club Mitre"]
         
         var tourament : [String : [String:Any]] = ["Info":allData]
         

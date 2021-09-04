@@ -13,6 +13,7 @@ class AdminTourVC: UIViewController,UIScrollViewDelegate, UITextFieldDelegate {
     //HISTORICO
     var myTorneos : [String] = []
     var dayMyTorneos : [String] = []
+    var cantPlayers : [String] = []
     
     //PROXIMOS
     var allTorneos : [Tourament] = []
@@ -395,6 +396,32 @@ class AdminTourVC: UIViewController,UIScrollViewDelegate, UITextFieldDelegate {
                             for tour in allTours {
                                 self.myTorneos.append(tour.key)
                                 self.dayMyTorneos.append(date.key)
+                                var maxPlayers = ""
+                                var currentPlayers = ""
+                                if let allInfo = tour.children.allObjects as? [DataSnapshot] {
+                                    for info in allInfo {
+                                        if info.key == "Info" {
+                                            if let allData = info.children.allObjects as? [DataSnapshot] {
+                                                for data in allData {
+                                                    if data.key == "Max" {
+                                                        maxPlayers = data.value as? String ?? "-"
+                                                        currentPlayers = "0/\(maxPlayers)"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if info.key == "Players" {
+                                            if let allPlayers = info.children.allObjects as? [DataSnapshot] {
+                                                var i = 0
+                                                for _ in allPlayers {
+                                                    i+=1
+                                                }
+                                                currentPlayers = "\(i)/\(maxPlayers)"
+                                            }
+                                        }
+                                    }
+                                }
+                                self.cantPlayers.append(currentPlayers)
                             }
                         }
                     }
@@ -483,6 +510,7 @@ extension AdminTourVC : UITableViewDataSource,UITableViewDelegate {
         if tableView == myTorneosTable {
             let myCell = tableView.dequeueReusableCell(withIdentifier: "cellTable", for: indexPath) as! MyTorneosTableCell
             myCell.labelName.text = myTorneos[indexPath.row]
+            myCell.labelPlayers.text = cantPlayers[indexPath.row]
             returnCell = myCell
         }
         
@@ -506,27 +534,3 @@ extension AdminTourVC : UITableViewDataSource,UITableViewDelegate {
     
     
 }
-
-//extension AdminTourVC {
-//    func eventTorneo(vcOpen : UIViewController, titleAlert : String) {
-//
-//
-//        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-//        let subscribe = UIAlertAction(title: titleAlert, style: .default) { (_) in
-//
-//            vcOpen.modalPresentationStyle = .fullScreen
-//            self.navigationController?.pushViewController(vcOpen, animated: true)
-//            self.present(vcOpen, animated: true, completion: nil)
-//
-//        }
-//
-//
-//        let cancel = UIAlertAction(title: "Volver", style: .cancel) { (_) in
-//
-//        }
-//
-//          alert.addAction(subscribe)
-//          alert.addAction(cancel)
-//          present(alert, animated: true)
-//    }
-//}

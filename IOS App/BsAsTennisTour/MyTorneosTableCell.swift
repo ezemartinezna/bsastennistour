@@ -38,6 +38,14 @@ class MyTorneosTableCell: UITableViewCell {
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
+    
+    let labelPlayers: UILabel = {
+          let label = UILabel()
+          label.textColor = .darkGray
+          label.font = .boldSystemFont(ofSize: 17)
+          label.translatesAutoresizingMaskIntoConstraints = false
+          return label
+      }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
            super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -72,6 +80,7 @@ class MyTorneosTableCell: UITableViewCell {
         
         viewContainer.addSubview(tourImage)
         viewContainer.addSubview(labelName)
+        viewContainer.addSubview(labelPlayers)
         
         labelName.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         labelName.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
@@ -80,6 +89,9 @@ class MyTorneosTableCell: UITableViewCell {
         tourImage.widthAnchor.constraint(equalToConstant: 25).isActive = true
         tourImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
         tourImage.centerYAnchor.constraint(equalTo: labelName.centerYAnchor).isActive = true
+        
+        labelPlayers.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        labelPlayers.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -30).isActive = true
 
         
         

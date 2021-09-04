@@ -99,9 +99,9 @@ public struct TourStats {
 
 public struct Points {
     var title : String
-    var number : String
+    var number : Int
     
-    public init(title : String, number : String) {
+    public init(title : String, number : Int) {
         self.title = title
         self.number = number
     }

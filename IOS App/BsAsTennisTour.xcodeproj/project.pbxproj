@@ -92,6 +92,7 @@
 		A5703D8126B73C0900EFB502 /* AdminMainTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminMainTabBar.swift; sourceTree = "<group>"; };
 		A5703D8326B7460800EFB502 /* CreateNewTourVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewTourVC.swift; sourceTree = "<group>"; tabWidth = 5; };
 		A57D40D8265DF20600C3738D /* ToursCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToursCollectionViewCell.swift; sourceTree = "<group>"; };
+		A58A89FC26E331F600FD19DF /* BsAsTennisTour.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BsAsTennisTour.entitlements; sourceTree = "<group>"; };
 		A58BBA9E266D7C5D00BF89D8 /* MatchesTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesTableCell.swift; sourceTree = "<group>"; };
 		A58BBAA0266DBD0100BF89D8 /* MatchesCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesCVCell.swift; sourceTree = "<group>"; };
 		A5A47D0126C342C50069ED25 /* AdminChangesZonasVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminChangesZonasVC.swift; sourceTree = "<group>"; };
@@ -229,6 +230,7 @@
 		A5B4F1ED256DB3A4008D0095 /* BsAsTennisTour */ = {
 			isa = PBXGroup;
 			children = (
+				A58A89FC26E331F600FD19DF /* BsAsTennisTour.entitlements */,
 				A5703D7E26B73A7400EFB502 /* AdminTourament */,
 				A5501534260EB96400E3040F /* Touraments & Match */,
 				A553887C257731C6005AFC67 /* UserStats */,
@@ -677,6 +679,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BsAsTennisTour/BsAsTennisTour.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 76TJX7A5JB;
 				INFOPLIST_FILE = BsAsTennisTour/Info.plist;
@@ -697,6 +700,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BsAsTennisTour/BsAsTennisTour.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 76TJX7A5JB;
 				INFOPLIST_FILE = BsAsTennisTour/Info.plist;

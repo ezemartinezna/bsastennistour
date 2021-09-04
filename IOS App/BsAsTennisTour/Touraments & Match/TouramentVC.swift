@@ -266,26 +266,10 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
                                         }
                                         
                                         let allPlayers = [
-                                                    PlayerStat(id: "1q2w3e4r", fullName: "Ezequiel Martinez", points: 100, rank: 9, picture: "person3"),
-                                                    PlayerStat(id: "azsxdcfv", fullName: "Jonatan Dalinger", points: 180, rank: 2, picture: "person2"),
-                                                    PlayerStat(id: "azsxdcfv", fullName: "Mariano Balarino", points: 180, rank: 2, picture: "person1"),
-                                                    PlayerStat(id: "azsxdcfv", fullName: "Javier Belvedere", points: 180, rank: 2, picture: "person4"),
-                                                    PlayerStat(id: "azsxdcfv", fullName: "Leo Flores", points: 180, rank: 2, picture: "perfilIcon"),
-                                                    PlayerStat(id: "azsxdcfv", fullName: "Gonzalo Alonso", points: 180, rank: 2, picture: "perfilIcon"),
-                                                    PlayerStat(id: "azsxdcfv", fullName: "Martin Rioseco", points: 180, rank: 2, picture: "perfilIcon"),
-                                                    PlayerStat(id: "azsxdcfv", fullName: "Lucas Barrantes", points: 180, rank: 2, picture: "perfilIcon"),
-                                                    PlayerStat(id: "azsxdcfv", fullName: "Gianluca Manograsso", points: 180, rank: 2, picture: "perfilIcon"),
-                                                    PlayerStat(id: "azsxdcfv", fullName: "Fernando Caraballo", points: 180, rank: 2, picture: "perfilIcon"),
-                                                    PlayerStat(id: "azsxdcfv", fullName: "Martin Saccon", points: 180, rank: 2, picture: "perfilIcon"),
-                                                    PlayerStat(id: "azsxdcfv", fullName: "Pepe Luis", points: 180, rank: 2, picture: "perfilIcon"),
+                                                    PlayerStat(id: "1q2w3e4r", fullName: "Ezequiel Martinez", points: 100, rank: 9, picture: "person3")
                                         ]
                                         
-                                        let winPoints = [Points(title: "Campeon", number: "100"),
-                                                         Points(title: "SubCampeon", number: "80"),
-                                                         Points(title: "Semifinal", number: "40"),
-                                                         Points(title: "Cuartos", number: "25"),
-                                                         Points(title: "Partido Ganado", number: "10"),
-                                                         Points(title: "Inscripcion", number: "5")]
+                                        let winPoints = [Points(title: "Campeon", number: 100)]
                                         
                                         
                                         let player1 = PlayerLlave(match: "Match1", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: ["-","-","-"])
@@ -494,7 +478,6 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
             UserDefaults.standard.set(myTorneos[indexPath.row], forKey: "nameTour")
             UserDefaults.standard.synchronize()
             
-//            eventTorneo(vcOpen: TouramentVC(), titleAlert: "Ver Torneo")
         }
         
     }
@@ -568,8 +551,8 @@ extension TouramentVC : UICollectionViewDataSource {
           
             cell.labelDate.text = "\(allTorneos[indexPath.row].stats[0].value)"
             cell.labelNameTour.text = allTorneos[indexPath.row].name.uppercased()
-            cell.labelType.text = "\(allTorneos[indexPath.row].stats[5].value)"
-            cell.labelMaxPlayers.text = "\(allTorneos[indexPath.row].stats[4].value) JUGADORES"
+            cell.labelType.text = "\(allTorneos[indexPath.row].stats[4].value)"
+            cell.labelMaxPlayers.text = "\(allTorneos[indexPath.row].stats[3].value) JUGADORES"
 
         returnCell = cell
         }

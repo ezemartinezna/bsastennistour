@@ -6,8 +6,16 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseDatabase
+import FBSDKLoginKit
+import AuthenticationServices
+import CryptoKit
 
 class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegate {
+    
+    var ref: DatabaseReference!
+    private var currentNonce : String?
     
     private let uViewBackground : UIView = {
         let uView = UIView()
@@ -594,29 +602,126 @@ class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegat
     
     @objc func emailLogin() {
         
-        UserDefaults.standard.set("NO-1", forKey: "ADMIN")
-        UserDefaults.standard.synchronize()
+        let userEmailAddress = textEmail.text!
+        let userPassword = textPassword.text!
         
-        let mainPage = UserMainTabBar()
-        mainPage.modalPresentationStyle = .fullScreen
-        self.present(mainPage, animated: true, completion: nil)
+        if(userEmailAddress.isEmpty || userPassword.isEmpty)
+        {
+          // Display an alert message
+            self.showAlert(title: "Error", message: NSLocalizedString("Complete los datos de Usuario y Contraseña", comment: ""))
+            return
+        }
+        
+        Auth.auth().signIn(withEmail: userEmailAddress, password: userPassword){ (result,error) in
+            
+            if let result = result, error == nil {
+                
+                let uid = result.user.uid
+                let email = result.user.email ?? "NIL"
+                let emailverify = result.user.isEmailVerified
+                if emailverify {
+                    self.firebaseDBLogin(uid: uid,email: email,firstname: "NIL",lastname: "NIL",provider: "Mail")
+                }else{
+                    self.showAlert(title: NSLocalizedString("Active su Email", comment: ""), message: NSLocalizedString("Active su cuenta desde el link que se le envio a su buzon.", comment: ""))
+                }
+                
+                
+            }else{
+                self.showAlert(title: "Error", message: error!.localizedDescription)
+            }
+        }
         
     }
     
     @objc func createAccount() {
         
-        UserDefaults.standard.set("YES-1", forKey: "ADMIN")
-        UserDefaults.standard.synchronize()
+        let userEmail = textEmail.text!
+        let userPassword = textPassword.text!
         
-        let mainPage = AdminMainTabBar()
-        mainPage.modalPresentationStyle = .fullScreen
-        self.present(mainPage, animated: true, completion: nil)
+        Auth.auth().createUser(withEmail: userEmail, password: userPassword) { (result, error) in
+            
+            if let result = result, error == nil {
+                
+                let uid = result.user.uid
+                self.ref = Database.database().reference().child("Users/\(uid)")
+                let user = ["userEmail" : userEmail,"firstName" : "-","lastName":"-","admin" : "0","badge":"0"]
+
+                self.ref.setValue(user){
+                  (error:Error?, ref:DatabaseReference) in
+                  if let error = error {
+                    self.showAlert(title: "Error", message: error.localizedDescription)
+                  } else {
+                    result.user.sendEmailVerification { error in
+                        if let error = error {
+                            self.showAlert(title: "Error", message: error.localizedDescription)
+                        }else{
+                            self.showAlert(title: "Cuenta Creada", message: "Se creó correctamente la cuenta")
+                        }
+                    }
+                  }
+                }
+               
+        
+                
+            }else{
+                self.showAlert(title: "Error",message: error!.localizedDescription)
+            }
+            
+        }
+        
+
         
     }
     
     @objc func facebookLogin() {
         
-        print("Facebook Login")
+        let loginManager = LoginManager()
+        loginManager.logOut()
+        loginManager.logIn(permissions:[ .publicProfile, .email, .userFriends ], viewController: self) { loginResult in
+            
+            switch loginResult {
+            
+            case .failed(let error):
+                self.showAlert(title: "Error", message: error.localizedDescription)
+            
+            case .cancelled:
+                print("User cancelled login process.")
+                break
+            
+            case .success(granted: let granted,declined: _, token: let token):
+                
+                let credential = FacebookAuthProvider.credential(withAccessToken: token.tokenString)
+                
+                Auth.auth().signIn(with: credential) { (result, error) in
+                
+                    if let result = result, error == nil {
+                        
+                        var firstName : String = "NIL"
+                        var lastName : String = "NIL"
+                        var email : String = "NIL"
+                        let uid = result.user.uid
+                        
+                        if (granted.contains(.email) && (granted.contains(.publicProfile))){
+                            let fullname = result.user.displayName ?? "NIL"
+                            email = result.user.email ?? "NIL"
+                            var components = fullname.components(separatedBy: " ")
+                            if components.count > 0 {
+                                firstName = components.removeFirst()
+                                lastName = components.joined(separator: " ")
+                            }
+                        }
+                        
+                        self.firebaseDBLogin(uid: uid,email: email,firstname: firstName,lastname: lastName,provider: "Facebook")
+                        
+                        
+                        
+                    }else{
+                      self.showAlert(title: "Error", message: error!.localizedDescription)
+                    }
+                }
+                
+            }
+        }
         
         
     }
@@ -629,7 +734,122 @@ class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegat
     
     @objc func appleLogin() {
 
-        print("Google Login")
+        currentNonce = randomNonceString()
+       
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        request.nonce = sha256(currentNonce!)
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+        
+    }
+    
+    private func randomNonceString(length: Int = 32) -> String {
+      precondition(length > 0)
+      let charset: Array<Character> =
+          Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+      var result = ""
+      var remainingLength = length
+
+      while remainingLength > 0 {
+        let randoms: [UInt8] = (0 ..< 16).map { _ in
+          var random: UInt8 = 0
+          let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+          if errorCode != errSecSuccess {
+            fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
+          }
+          return random
+        }
+
+        randoms.forEach { random in
+          if remainingLength == 0 {
+            return
+          }
+
+          if random < charset.count {
+            result.append(charset[Int(random)])
+            remainingLength -= 1
+          }
+        }
+      }
+
+      return result
+    }
+    
+    private func sha256(_ input: String) -> String {
+      let inputData = Data(input.utf8)
+      let hashedData = SHA256.hash(data: inputData)
+      let hashString = hashedData.compactMap {
+        return String(format: "%02x", $0)
+      }.joined()
+
+      return hashString
+    }
+    
+    func firebaseDBLogin(uid:String,email:String,firstname:String,lastname:String,provider:String) {
+        
+    ref = Database.database().reference().child("Users/\(uid)")
+    
+    ref.observeSingleEvent(of: .value, with: { (snapshot) in
+        
+      let value = snapshot.value as? NSDictionary
+      let total = value?.allKeys.count
+        if total ?? 0 > 0 {
+          //ALREADY LOGIN
+          let admin = value?["admin"] as? String ?? ""
+            
+            UserDefaults.standard.set(uid, forKey: "uid")
+            UserDefaults.standard.set(provider, forKey: "Provider")
+            
+            var vc = UIViewController()
+            
+                
+          if (admin != "1"){
+               
+            UserDefaults.standard.set("NO-1", forKey: "ADMIN")
+            vc = UserMainTabBar()
+        
+          }else{
+            
+            UserDefaults.standard.set("YES-1", forKey: "ADMIN")
+            vc = AdminMainTabBar()
+            
+          }
+            
+            UserDefaults.standard.synchronize()
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.window?.rootViewController = vc
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true, completion: nil)
+            
+            
+        }
+        else{
+            //NOT LOGIN BEFORE
+
+            let user = ["userEmail" : email,"firstName" : firstname,"lastName":lastname,"admin" : "0","badge":"0"]
+
+            self.ref.setValue(user){
+                       (error:Error?, ref:DatabaseReference) in
+                       if let error = error {
+                         self.showAlert(title: "Error", message: error.localizedDescription)
+                       } else {
+
+                        UserDefaults.standard.set(uid, forKey: "uid")
+                        UserDefaults.standard.set(provider, forKey: "Provider")
+                        UserDefaults.standard.synchronize()
+
+                       }
+                    }
+
+        }
+          }) { (error) in
+            self.showAlert(title: "Error", message: error.localizedDescription)
+        }
         
     }
     
@@ -637,5 +857,46 @@ class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegat
         self.view.endEditing(true)
     }
 
+}
+
+extension ViewController: ASAuthorizationControllerDelegate {
+
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+
+        if let nonce = currentNonce,
+            let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
+            let appleIDToken = appleIDCredential.identityToken,
+            let appleIDTokenString = String(data: appleIDToken, encoding: .utf8) {
+
+            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: appleIDTokenString, rawNonce: nonce)
+
+            Auth.auth().signIn(with: credential) { (result, error) in
+
+                   if let result = result, error == nil {
+
+                       let uid = result.user.uid
+                       let firstname = appleIDCredential.fullName?.givenName ?? "NIL"
+                       let lastname = appleIDCredential.fullName?.familyName ?? "NIL"
+                       let email = appleIDCredential.email ?? "null@apple.com"
+
+                       self.firebaseDBLogin(uid: uid,email: email,firstname: firstname,lastname: lastname,provider: "Apple")
+                   }else{
+                     self.showAlert(title: "Error", message: error!.localizedDescription)
+                   }
+            }
+        }
+    }
+
+
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        self.showAlert(title: "Error", message: error.localizedDescription)
+    }
+}
+
+extension ViewController: ASAuthorizationControllerPresentationContextProviding {
+
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
+    }
 }
 

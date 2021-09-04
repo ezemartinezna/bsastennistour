@@ -23,6 +23,8 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     let dayTour = UserDefaults.standard.string(forKey: "dayTour") ?? ""
     let nameTour = UserDefaults.standard.string(forKey: "nameTour") ?? ""
     
+    let uid = UserDefaults.standard.string(forKey: "uid") ?? "-"
+    
     var maxPlayers : Int = 0
     
     var ref: DatabaseReference!
@@ -219,7 +221,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(TorneoInfoCell.self, forCellReuseIdentifier: "secondCell")
         table.rowHeight = 50
-        table.allowsSelection = false
+        table.allowsSelection = true
         table.isHidden = true
        return table
     }()
@@ -849,6 +851,42 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         return containerVw
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if admin == "YES-1" {
+            if tableView == torneoInfoTable {
+            let dialogMessage = UIAlertController(title: NSLocalizedString("Cambiar Datos", comment: ""), message: NSLocalizedString("\(tourament[0].stats[indexPath.row].title)", comment: ""), preferredStyle: .alert)
+            dialogMessage.addTextField(configurationHandler: {(textField) in
+                textField.text = NSLocalizedString("\(self.tourament[0].stats[indexPath.row].value)", comment: "")
+            })
+            let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
+            let infoChanged = dialogMessage.textFields![0]
+             
+                self.ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Info/\(self.tourament[0].stats[indexPath.row].title)")
+                self.ref.setValue(infoChanged.text){
+                    (error:Error?, ref:DatabaseReference) in
+                    if let error = error {
+                      self.showAlert(title: "Error", message: error.localizedDescription)
+                      return
+                    } else {
+                        self.tourament[0].stats[indexPath.row].value = infoChanged.text!
+                        self.showAlert(title: "Se cambió con éxito", message: "Info cambiada correctamente")
+                        self.torneoInfoTable.reloadData()
+                    }
+                }
+            })
+            let cancel = UIAlertAction(title: "Volver", style: .cancel) { (_) in
+                print("Volver")
+            }
+            dialogMessage.addAction(ok)
+            dialogMessage.addAction(cancel)
+                      
+         self.present(dialogMessage, animated: true, completion: nil)
+
+        }
+        }
+    }
+    
 
     @objc func handleExpandClose() {
    
@@ -980,7 +1018,20 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     
     @objc func registerTour() {
         
-        print("INSCRIPTO")
+        let savePlayer = [uid : ["fullName" : "Ezequiel Martinez","picture" : "person3","rank" : 3, "points" : 100]]
+        
+        ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Players/")
+        self.ref.setValue(savePlayer){
+            (error:Error?, ref:DatabaseReference) in
+            if let error = error {
+              self.showAlert(title: "Error", message: error.localizedDescription)
+              return
+            } else {
+                self.tourament[0].players.append(PlayerStat(id: self.uid, fullName: "Ezequiel Martinez", points: 100, rank: 3, picture: "person3"))
+                self.showAlert(title: "Se cambió con éxito", message: "Info cambiada correctamente")
+                self.allUsersTable.reloadData()
+            }
+        }
         
     }
     
@@ -1056,6 +1107,9 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     }
     
     @objc func addZona() {
+        
+        self.buttonZonas.removeTarget(self, action: #selector(self.addZona), for: .touchUpInside)
+        
         let dialogMessage = UIAlertController(title: NSLocalizedString("Zonas del Torneo \(nameTour)", comment: ""), message: NSLocalizedString("Ingrese a continuación", comment: ""), preferredStyle: .alert)
         dialogMessage.addTextField(configurationHandler: {(textField) in
                                textField.placeholder = NSLocalizedString("Cantidad de Zonas", comment: "")
@@ -1067,7 +1121,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                                textField.placeholder = NSLocalizedString("Cantidad de Sets", comment: "")
         })
         let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
-        self.buttonZonas.removeTarget(self, action: #selector(self.addZona), for: .touchUpInside)
+        
         let cantZona = dialogMessage.textFields![0]
         let maxClasi = dialogMessage.textFields![1]
         let cantSETS = dialogMessage.textFields![2]
@@ -1356,7 +1410,8 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                             if let allStats = tour.children.allObjects as? [DataSnapshot] {
                                 for stat in allStats {
                                     if stat.key == "Max" {
-                                        self.maxPlayers = stat.value as? Int ?? 0
+                                        let valueString = stat.value as? String ?? "0"
+                                        self.maxPlayers = Int(valueString) ?? 0
                                     }
                                     stats.append(TourStats(title: stat.key, value: stat.value ?? ""))
                                 }
@@ -1393,10 +1448,11 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                         case "WinPoints":
                             if let allWinPoints = tour.children.allObjects as? [DataSnapshot] {
                                 for points in allWinPoints {
-                                    winpoints.append(Points(title: points.value as? String ?? "-", number: points.key))
+                                    let numero = Int(points.key) ?? 0
+                                    winpoints.append(Points(title: points.value as? String ?? "-", number: numero))
                                 }
                                 winpointsOrder = winpoints.sorted(by: {
-                                    $0.number < $1.number
+                                    $0.number > $1.number
                                 })
                             }
                         case "Zonas":
