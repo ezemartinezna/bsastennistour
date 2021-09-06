@@ -7,27 +7,33 @@
 
 import UIKit
 import HGCircularSlider
+import SDWebImage
+import FirebaseDatabase
+import FirebaseStorage
 
 class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSource,UIScrollViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+    
+    let uid = UserDefaults.standard.string(forKey: "uid") ?? "-"
     
     var allTrophys = ["Torneo Relampago", "Torneo Invierno ", "Torneo Roger"]
     var allPositions = ["1","2","3"]
     
-    var maxexp = 600
-    var cantlevels = 6
+    var maxexp : Int = 1000
+    var cantlevels : Int = 10
     var totalexp = 0
     
-    var allExperienceNames = ["Año Entrenamiento Academy","Torneos Ganados","Participacion Torneo","Participacion Torneo","Bonificacion"]
-    var allExperience = [80,60,40,40,10]
+    var allExperienceNames : [String] = []
+    var allExperience : [Int] = []
     
-    var rankingPosition = "5"
-    var rankingPoints = "80"
+    var rankingPosition : Int = 0
+    var rankingPoints : Int = 0
     
     var leftSelected = 0 as Int
     var rightSelected = 1 as Int
     var doubleHand = 0 as Int
     var oneHand = 1 as Int
     
+    var ref: DatabaseReference!
     
     let titleMain : UILabel = {
         let label = UILabel()
@@ -46,7 +52,6 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     let titleName : UILabel = {
         let label = UILabel()
-        label.text = "Ezequiel"
         label.textColor = .white
         label.isHighlighted = false
         label.textAlignment = .center
@@ -61,7 +66,6 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     let titleLastName : UILabel = {
         let label = UILabel()
-        label.text = "Martinez"
         label.textColor = .white
         label.isHighlighted = false
         label.textAlignment = .center
@@ -398,6 +402,24 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         return label
     }()
     
+    let labelNoRanking : UILabel = {
+        let label = UILabel()
+        label.text = "Sin puntos"
+        label.textColor = .mainFacebook
+        label.isHighlighted = false
+        label.textAlignment = .center
+        label.font = UIFont.boldSystemFont(ofSize: 40)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.2
+        label.numberOfLines = 0 // or 1
+        label.layer.masksToBounds = false
+        label.layer.shadowColor = UIColor.white.withAlphaComponent(0.6).cgColor
+        label.layer.shadowOffset = CGSize(width: 0, height: 0)
+        label.layer.shadowOpacity = 0.5
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     let labelRankPosicion: UILabel = {
           let label = UILabel()
           label.text = "Posicion"
@@ -481,7 +503,16 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         return image
     }()
     
-    
+    private let buttonEdit : UIButton  = {
+       let button = UIButton()
+        button.setImage(#imageLiteral(resourceName: "pencil_icon_white"), for: .normal)
+        button.tintColor = .white
+        button.contentMode = .scaleAspectFit
+        button.isUserInteractionEnabled = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
      let containerPhotoHeader : UIView = {
             let view = UIView()
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -495,7 +526,7 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     let imagePhotoHeader: UIImageView = {
            let imageView = UIImageView()
-           imageView.image = #imageLiteral(resourceName: "person4")
+           imageView.image = #imageLiteral(resourceName: "perfilIcon")
            imageView.translatesAutoresizingMaskIntoConstraints = false
            imageView.layer.masksToBounds = true
            imageView.contentMode = .scaleAspectFill
@@ -730,8 +761,8 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
 
         navBarItemLoad()
         setupLayout()
-        calculateExperience()
-        calculateRanking()
+
+        loadUserData()
     }
     
 
@@ -769,6 +800,7 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         containerPhotoHeader.addSubview(imagePhotoHeader)
         uView1.addSubview(imageCameraView)
         imageCameraView.addSubview(imageCamera)
+        uView1.addSubview(buttonEdit)
         
         view.addSubview(uView2)
         uView2.addSubview(circularExp)
@@ -801,6 +833,7 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         uViewTable3.addSubview(uViewLeftTable3)
         uViewTable3.addSubview(uViewRightTable3)
         uViewTable3.addSubview(uViewLineTable3Vertical)
+        uViewTable3.addSubview(labelNoRanking)
         
         uViewLeftTable3.addSubview(labelRankingPosition)
         uViewRightTable3.addSubview(labelRankingPoints)
@@ -856,6 +889,11 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
             titleLastName.centerYAnchor.constraint(equalTo: uView1.centerYAnchor,constant: 15),
             titleLastName.centerXAnchor.constraint(equalTo: uView1.centerXAnchor),
             
+            buttonEdit.centerYAnchor.constraint(equalTo: titleLastName.topAnchor),
+            buttonEdit.widthAnchor.constraint(equalToConstant: 20),
+            buttonEdit.heightAnchor.constraint(equalToConstant: 20),
+            buttonEdit.centerXAnchor.constraint(equalTo: uViewRight.centerXAnchor),
+   
             backgroundImage.topAnchor.constraint(equalTo: uView1.safeAreaLayoutGuide.topAnchor),
             backgroundImage.leadingAnchor.constraint(equalTo: uView1.leadingAnchor),
             backgroundImage.trailingAnchor.constraint(equalTo: uView1.trailingAnchor),
@@ -1036,6 +1074,9 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
             labelRankPuntos.widthAnchor.constraint(equalTo: uViewRightTable3.widthAnchor),
             labelRankPuntos.centerXAnchor.constraint(equalTo: uViewRightTable3.centerXAnchor),
             
+            labelNoRanking.centerXAnchor.constraint(equalTo: uViewTable3.centerXAnchor),
+            labelNoRanking.centerYAnchor.constraint(equalTo: uViewTable3.centerYAnchor,constant: 15),
+
             
             //INSIDE SCROLLVIEW1
             
@@ -1194,33 +1235,64 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     func calculateExperience() {
         
         totalexp = allExperience.reduce(0, +)
+        
+        ref = Database.database().reference().child("AdminExp/")
+        ref.observeSingleEvent(of: .value, with: { [self] (snapshot) in
+            
+            if snapshot.exists() {
+                if let maxExp = snapshot.childSnapshot(forPath: "MaxExp").value as? Int {
+                    self.maxexp = maxExp
+                }
+                if let maxLevel = snapshot.childSnapshot(forPath: "MaxLevel").value as? Int {
+                    self.cantlevels = maxLevel
+                }
+                
+                let difference = maxexp / cantlevels
+                circularExp.maximumValue = CGFloat(difference)
+                
+                let nivel = Int(totalexp / difference) + 1
+                labelNivel.text = "\(nivel)"
+                
+                let expNivel = totalexp - ((nivel - 1) * difference)
+                circularExp.endPointValue = CGFloat(expNivel)
+                
+                let restExp = difference - expNivel
+                let expSum = difference * nivel
+                
+                labelProxLevel.text = "Next +\(restExp)Exp"
+                labelTotalExp.text = "\(totalexp)/\(expSum)Exp"
+                
+                if totalexp == maxexp {
+                    labelNivel.textColor = .mainOrange
+                    circularExp.trackColor = .mainOrange
+                }
+            }
+        })
 
-        let difference = maxexp / cantlevels
-        circularExp.maximumValue = CGFloat(difference)
-        
-        let nivel = Int(totalexp / difference) + 1
-        labelNivel.text = "\(nivel)"
-        
-        let expNivel = totalexp - ((nivel - 1) * difference)
-        circularExp.endPointValue = CGFloat(expNivel)
-        
-        let restExp = difference - expNivel
-        let expSum = difference * nivel
-        
-        labelProxLevel.text = "Next +\(restExp)Exp"
-        labelTotalExp.text = "\(totalexp)/\(expSum)Exp"
-        
-        if totalexp == maxexp {
-            labelNivel.textColor = .mainOrange
-            circularExp.trackColor = .mainOrange
-        }
+       
    
     }
     
     func calculateRanking() {
         
-        labelRankingPosition.text = "#\(rankingPosition)"
-        labelRankingPoints.text = "\(rankingPoints)"
+        if rankingPoints != 0 && rankingPosition != 0 {
+            uViewLineTable3Vertical.isHidden = false
+            labelRankPosicion.isHidden = false
+            labelRankingPosition.isHidden = false
+            labelRankPuntos.isHidden = false
+            labelRankingPoints.isHidden = false
+            labelNoRanking.isHidden = true
+            
+            labelRankingPosition.text = "#\(rankingPosition)"
+            labelRankingPoints.text = "\(rankingPoints)"
+        }else{
+            uViewLineTable3Vertical.isHidden = true
+            labelRankPosicion.isHidden = true
+            labelRankingPosition.isHidden = true
+            labelRankPuntos.isHidden = true
+            labelRankingPoints.isHidden = true
+            labelNoRanking.isHidden = false
+        }
         
     }
     
@@ -1252,7 +1324,48 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
   
       func uploadImagePic(){
         
-        print(123)
+        var data = NSData()
+        data = imagePhotoHeader.image!.jpegData(compressionQuality: 0.8)! as NSData
+        
+        let filePath = "/images/\(uid)"
+        let metaData = StorageMetadata()
+        metaData.contentType = "image/jpeg"
+
+        let storageRef = Storage.storage().reference().child(filePath)
+        storageRef.putData(data as Data, metadata: metaData){(metaData,error) in
+            if let error = error {
+                self.showAlert(title: "Error", message: error.localizedDescription)
+                return
+            }else{
+          
+                storageRef.downloadURL { (url, error) in
+                    
+                    if let error = error {
+                        self.showAlert(title: "Error", message: error.localizedDescription)
+                        return
+                        
+                    } else {
+                        let urlStr:String = (url?.absoluteString) ?? ""
+                        
+                        self.ref = Database.database().reference().child("Users/\(self.uid)")
+
+                       let user = ["picture" : urlStr]
+
+                       self.ref.updateChildValues(user as [AnyHashable : Any]){
+                                  (error:Error?, ref:DatabaseReference) in
+                                  if let error = error {
+                                    self.showAlert(title: "Error", message: error.localizedDescription)
+                                  } else {
+
+                                    self.loadUserData()
+                                  }
+                               }
+
+                    }
+            }
+        }
+
+    }
         
       }
     
@@ -1343,6 +1456,53 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
             uView5.backgroundColor = .blackLight
             labelOneHands.textColor = .colorMint
             
+        }
+        
+    }
+    
+    func loadUserData() {
+        
+        ref = Database.database().reference().child("Users/\(uid)/")
+        ref.observeSingleEvent(of: .value, with: { [self] (snapshot) in
+            
+            if snapshot.exists() {
+                
+                
+                if let allData = snapshot.children.allObjects as? [DataSnapshot] {
+                    for data in allData {
+                        
+                        switch data.key {
+                        case "Experience":
+                            if let allExp = data.children.allObjects as? [DataSnapshot] {
+                                for exp in allExp {
+                                    self.allExperienceNames.append(exp.key)
+                                    self.allExperience.append(exp.value as? Int ?? 0)
+                                }
+                            }
+                        case "firstName":
+                            self.titleName.text = data.value as? String ?? "-"
+                        case "lastName":
+                            self.titleLastName.text = data.value as? String ?? "-"
+                        case "picture":
+                            let imageUrl = URL(string:data.value as? String ?? "-")
+                            self.imagePhotoHeader.sd_setImage(with: imageUrl, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+                        case "rank":
+                            self.rankingPosition = data.value as? Int ?? 0
+                        case "points":
+                            self.rankingPoints = data.value as? Int ?? 0
+                        default:
+                            print("LoadUser")
+                        }
+          
+                    }
+                }
+                calculateExperience()
+                calculateRanking()
+                self.allExpTable.reloadData()
+   
+           }
+        }) { (error) in
+            self.showAlert(title: "Error", message: error.localizedDescription)
         }
         
     }

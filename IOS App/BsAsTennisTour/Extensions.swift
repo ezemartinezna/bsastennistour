@@ -109,15 +109,12 @@ extension UIViewController
             self.present(alert, animated: true)
         })
     }
-    func showAlertWithOkAction(title: String, message:String) {
+    func showAlertWithOkAction(title: String, message:String,index:Int) {
 
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let ok = UIAlertAction(title: "OK", style: .default, handler: { action in
-            
-            let mainPage = UserMainVC()
-            let mainPageNav = UINavigationController(rootViewController: mainPage)
-            mainPageNav.modalPresentationStyle = .fullScreen
-            self.present(mainPageNav, animated: true, completion: nil)
+
+            self.tabBarController?.selectedIndex = index
             
         })
         alert.addAction(ok)

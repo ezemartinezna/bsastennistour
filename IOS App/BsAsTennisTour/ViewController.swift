@@ -644,7 +644,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegat
                 
                 let uid = result.user.uid
                 self.ref = Database.database().reference().child("Users/\(uid)")
-                let user = ["userEmail" : userEmail,"firstName" : "-","lastName":"-","admin" : "0","badge":"0"]
+                let user = ["userEmail" : userEmail,"firstName" : "-","lastName":"-","admin" : "0","badge":"0","rank" : 0,"points":0,"picture":"https://firebasestorage.googleapis.com/v0/b/bsastennistour.appspot.com/o/perfilIcon.png?alt=media&token=1653dd88-f0c5-46e8-8276-9861b2967cfb"] as [String : Any]
 
                 self.ref.setValue(user){
                   (error:Error?, ref:DatabaseReference) in
@@ -831,7 +831,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegat
         else{
             //NOT LOGIN BEFORE
 
-            let user = ["userEmail" : email,"firstName" : firstname,"lastName":lastname,"admin" : "0","badge":"0"]
+            let user = ["userEmail" : email,"firstName" : firstname,"lastName":lastname,"admin" : "0","badge":"0","rank" : 0,"points":0,"picture":"https://firebasestorage.googleapis.com/v0/b/bsastennistour.appspot.com/o/perfilIcon.png?alt=media&token=1653dd88-f0c5-46e8-8276-9861b2967cfb"] as [String : Any]
 
             self.ref.setValue(user){
                        (error:Error?, ref:DatabaseReference) in

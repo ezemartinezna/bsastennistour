@@ -1018,20 +1018,55 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     
     @objc func registerTour() {
         
-        let savePlayer = [uid : ["fullName" : "Ezequiel Martinez","picture" : "person3","rank" : 3, "points" : 100]]
+        ref = Database.database().reference().child("Users/\(uid)/")
         
-        ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Players/")
-        self.ref.setValue(savePlayer){
-            (error:Error?, ref:DatabaseReference) in
-            if let error = error {
-              self.showAlert(title: "Error", message: error.localizedDescription)
-              return
-            } else {
-                self.tourament[0].players.append(PlayerStat(id: self.uid, fullName: "Ezequiel Martinez", points: 100, rank: 3, picture: "person3"))
-                self.showAlert(title: "Se cambió con éxito", message: "Info cambiada correctamente")
-                self.allUsersTable.reloadData()
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+
+            if snapshot.exists() {
+                
+                var fullName = "-"
+                var rank = 0
+                var points = 0
+                
+                if let firstName = snapshot.childSnapshot(forPath: "firstName").value {
+                    if let lastName = snapshot.childSnapshot(forPath: "lastName").value {
+                        fullName = "\(firstName) \(lastName)"
+                    }
+                }
+                
+                if let rankValue = snapshot.childSnapshot(forPath: "rank").value as? Int {
+                    rank = rankValue
+                }
+                
+                if let pointValue = snapshot.childSnapshot(forPath: "points").value as? Int {
+                    points = pointValue
+                }
+                
+                if fullName == "- -" {
+                    self.showAlertWithOkAction(title: "Configure su Perfil", message: "Modifique su nombre y apellido.",index: 3)
+                }else{
+                
+                let savePlayer = [self.uid : ["fullName" : fullName,"picture" : "person3","rank" : rank, "points" : points]]
+                
+                self.ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Players/")
+                self.ref.setValue(savePlayer){
+                    (error:Error?, ref:DatabaseReference) in
+                    if let error = error {
+                      self.showAlert(title: "Error", message: error.localizedDescription)
+                      return
+                    } else {
+                        self.tourament[0].players.append(PlayerStat(id: self.uid, fullName: "Ezequiel Martinez", points: 100, rank: 3, picture: "person3"))
+                        self.showAlert(title: "Torneo Inscripto", message: "Se registró correctamente.")
+                        self.allUsersTable.reloadData()
+                    }
+                }
+                }
+                
             }
-        }
+        })
+        
+        
+
         
     }
     

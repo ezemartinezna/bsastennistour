@@ -110,6 +110,9 @@ PODS:
   - nanopb/decode (2.30906.0)
   - nanopb/encode (2.30906.0)
   - PromisesObjC (1.2.11)
+  - SDWebImage (5.9.5):
+    - SDWebImage/Core (= 5.9.5)
+  - SDWebImage/Core (5.9.5)
   - SwiftyPickerPopover (6.6.6)
 
 DEPENDENCIES:
@@ -120,6 +123,7 @@ DEPENDENCIES:
   - Firebase/Messaging
   - Firebase/Storage
   - HGCircularSlider
+  - SDWebImage (~> 5.0)
   - SwiftyPickerPopover
 
 SPEC REPOS:
@@ -144,6 +148,7 @@ SPEC REPOS:
     - leveldb-library
     - nanopb
     - PromisesObjC
+    - SDWebImage
     - SwiftyPickerPopover
 
 SPEC CHECKSUMS:
@@ -167,8 +172,9 @@ SPEC CHECKSUMS:
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: 1bf24dd71191072e120b83dd02d08f3da0d65e53
   PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
+  SDWebImage: 0b2ba0d56479bf6a45ecddbfd5558bea93150d25
   SwiftyPickerPopover: a402960a6687c911ffcb4e9fb282a1bc61186ab4
 
-PODFILE CHECKSUM: e7895145bea71e28666ae9cce9c148d4dd01f0b8
+PODFILE CHECKSUM: eb17bcae084d2b1789e5f287f9f4e793ab2bb56b
 
 COCOAPODS: 1.10.0
