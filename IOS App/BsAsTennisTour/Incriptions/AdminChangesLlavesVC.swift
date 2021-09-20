@@ -27,6 +27,9 @@ class AdminChangesLlavesVC: UIViewController, UITextFieldDelegate {
     let containerView: UIView = {
            let view = UIView()
            view.backgroundColor = .colorSage
+            view.clipsToBounds = true
+            view.layer.cornerRadius = 10
+            view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
            view.translatesAutoresizingMaskIntoConstraints = false
            return view
        }()

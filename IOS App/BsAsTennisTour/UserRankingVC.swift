@@ -10,8 +10,9 @@ import HGCircularSlider
 import SDWebImage
 import FirebaseDatabase
 import FirebaseStorage
+import SwiftyPickerPopover
 
-class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSource,UIScrollViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate, UITableViewDataSource,UIScrollViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     let uid = UserDefaults.standard.string(forKey: "uid") ?? "-"
     
@@ -28,10 +29,10 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     var rankingPosition : Int = 0
     var rankingPoints : Int = 0
     
-    var leftSelected = 0 as Int
-    var rightSelected = 1 as Int
-    var doubleHand = 0 as Int
-    var oneHand = 1 as Int
+    var leftSelected = 1 as Int
+    var rightSelected = 0 as Int
+    var doubleHand = 1 as Int
+    var oneHand = 0 as Int
     
     var ref: DatabaseReference!
     
@@ -215,7 +216,19 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     let viewContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.mainGray.withAlphaComponent(0.7)
+        view.backgroundColor = .colorPaper
+        view.isUserInteractionEnabled = true
+        view.isOpaque = false
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.cornerRadius = 20
+        view.layer.borderWidth = 1
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let viewContainer2: UIView = {
+        let view = UIView()
+        view.backgroundColor = .colorSage
         view.isUserInteractionEnabled = true
         view.isOpaque = false
         view.layer.borderColor = UIColor.lightGray.cgColor
@@ -509,6 +522,7 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         button.tintColor = .white
         button.contentMode = .scaleAspectFit
         button.isUserInteractionEnabled = true
+        button.addTarget(self, action: #selector(editName), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -534,20 +548,6 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
            return imageView
        }()
     
-    private let uView21 : UIView = {
-        let uView = UIView()
-        uView.layer.backgroundColor = UIColor.grayWhite.cgColor
-        
-        uView.layer.masksToBounds = false
-        uView.addBorder(.top, color: .lightGray, thickness: 2)
-        uView.addBorder(.bottom, color: .lightGray, thickness: 2)
-        uView.addBorder(.left, color: .lightGray, thickness: 2)
-        uView.addBorder(.right, color: .lightGray, thickness: 1)
-        uView.translatesAutoresizingMaskIntoConstraints = false
-        uView.isUserInteractionEnabled = true
-        return uView
-    }()
-    
     private let imageLeft : UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "right-hand-unsel"), for: .normal)
@@ -565,19 +565,20 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     }()
     
     private let labelHabil: UILabel = {
-          let label = UILabel()
-          label.text = "Mano Hábil"
-          label.textColor = .darkGray
-          label.font = .boldSystemFont(ofSize: 18)
-          label.translatesAutoresizingMaskIntoConstraints = false
-          return label
+        let label = UILabel()
+         label.font = UIFont(name: "Helvetica", size: 16)
+         label.textColor = .colorPaper
+         label.textAlignment = .left
+         label.text = "Mano Habil"
+         label.translatesAutoresizingMaskIntoConstraints = false
+         return label
       }()
     
     private let labelIZQ: UILabel = {
           let label = UILabel()
           label.text = "IZQ"
-          label.textColor = .darkGray
-          label.font = .boldSystemFont(ofSize: 16)
+          label.textColor = .colorPop
+          label.font = .boldSystemFont(ofSize: 9)
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
@@ -586,19 +587,28 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
           let label = UILabel()
           label.text = "DER"
           label.textColor = .colorMint
-          label.font = .boldSystemFont(ofSize: 16)
+          label.font = .boldSystemFont(ofSize: 9)
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
     
+    private let uView21 : UIView = {
+        let uView = UIView()
+        uView.layer.backgroundColor = UIColor.grayWhite.cgColor
+        uView.layer.cornerRadius = 10
+        uView.layer.borderWidth = 2.5
+        uView.layer.borderColor = UIColor.colorPop.cgColor
+        uView.translatesAutoresizingMaskIntoConstraints = false
+        uView.isUserInteractionEnabled = true
+        return uView
+    }()
+    
     private let uView3 : UIView = {
         let uView = UIView()
         uView.layer.backgroundColor = UIColor.blackLight.cgColor
-        uView.layer.masksToBounds = false
-        uView.addBorder(.top, color: .lightGray, thickness: 2)
-        uView.addBorder(.bottom, color: .lightGray, thickness: 2)
-        uView.addBorder(.left, color: .lightGray, thickness: 1)
-        uView.addBorder(.right, color: .lightGray, thickness: 2)
+        uView.layer.cornerRadius = 10
+        uView.layer.borderWidth = 2.5
+        uView.layer.borderColor = UIColor.blackLight.cgColor
         uView.translatesAutoresizingMaskIntoConstraints = false
         uView.isUserInteractionEnabled = true
         return uView
@@ -607,11 +617,9 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     private let uView4 : UIView = {
         let uView = UIView()
         uView.layer.backgroundColor = UIColor.grayWhite.cgColor
-        uView.layer.masksToBounds = false
-        uView.addBorder(.top, color: .lightGray, thickness: 2)
-        uView.addBorder(.bottom, color: .lightGray, thickness: 2)
-        uView.addBorder(.left, color: .lightGray, thickness: 2)
-        uView.addBorder(.right, color: .lightGray, thickness: 1)
+        uView.layer.cornerRadius = 10
+        uView.layer.borderWidth = 2.5
+        uView.layer.borderColor = UIColor.colorPop.cgColor
         uView.translatesAutoresizingMaskIntoConstraints = false
         uView.isUserInteractionEnabled = true
         return uView
@@ -620,11 +628,9 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     private let uView5 : UIView = {
         let uView = UIView()
         uView.layer.backgroundColor = UIColor.blackLight.cgColor
-        uView.layer.masksToBounds = false
-        uView.addBorder(.top, color: .lightGray, thickness: 2)
-        uView.addBorder(.bottom, color: .lightGray, thickness: 2)
-        uView.addBorder(.left, color: .lightGray, thickness: 1)
-        uView.addBorder(.right, color: .lightGray, thickness: 2)
+        uView.layer.cornerRadius = 10
+        uView.layer.borderWidth = 2.5
+        uView.layer.borderColor = UIColor.blackLight.cgColor
         uView.translatesAutoresizingMaskIntoConstraints = false
         uView.isUserInteractionEnabled = true
         return uView
@@ -647,112 +653,116 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     }()
     
     private let labelBackhand : UILabel = {
-          let label = UILabel()
-          label.text = "Tipo Revés"
-          label.textColor = .darkGray
-          label.font = .boldSystemFont(ofSize: 18)
-          label.translatesAutoresizingMaskIntoConstraints = false
-          return label
+        let label = UILabel()
+         label.font = UIFont(name: "Helvetica", size: 16)
+         label.textColor = .colorPaper
+         label.textAlignment = .left
+         label.text = "Tipo de Reves"
+         label.translatesAutoresizingMaskIntoConstraints = false
+         return label
       }()
     
     private let labelTwoHands: UILabel = {
           let label = UILabel()
-          label.text = "DOS Manos"
-          label.textColor = .darkGray
-          label.font = .boldSystemFont(ofSize: 16)
+          label.text = "DOS"
+          label.textColor = .colorPop
+          label.font = .boldSystemFont(ofSize: 9)
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
     
     private let labelOneHands: UILabel = {
           let label = UILabel()
-          label.text = "UNA Mano"
+          label.text = "UNA"
           label.textColor = .colorMint
-          label.font = .boldSystemFont(ofSize: 16)
+          label.font = .boldSystemFont(ofSize: 9)
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
     
-    private let labelAltura: UILabel = {
-          let label = UILabel()
-          label.text = "Altura"
-          label.textColor = .darkGray
-          label.font = .boldSystemFont(ofSize: 18)
-          label.translatesAutoresizingMaskIntoConstraints = false
-          return label
-      }()
+    private let labelGender : UILabel = {
+        let label = UILabel()
+         label.font = UIFont(name: "Helvetica", size: 16)
+         label.textColor = .gray
+         label.textAlignment = .left
+         label.text = "Genero"
+         label.translatesAutoresizingMaskIntoConstraints = false
+         return label
+    }()
     
-    private let labelGender: UILabel = {
-          let label = UILabel()
-          label.text = "Genero"
-          label.textColor = .darkGray
-          label.font = .boldSystemFont(ofSize: 18)
-          label.translatesAutoresizingMaskIntoConstraints = false
-          return label
-      }()
+    private let textGender : UITextField = {
+        let text = UITextField()
+        text.backgroundColor = .colorPaper
+        text.layer.borderWidth = 0
+        text.font = UIFont(name: "Helvetica", size: 15)
+        text.clearButtonMode = .always
+        text.textColor = .colorCoal
+        text.translatesAutoresizingMaskIntoConstraints = false
+        return text
+    }()
     
-    private let labelEmail: UILabel = {
-          let label = UILabel()
-          label.text = "Email"
-          label.textColor = .darkGray
-          label.font = .boldSystemFont(ofSize: 18)
-          label.translatesAutoresizingMaskIntoConstraints = false
-          return label
-      }()
+    private let lineGender : UIView = {
+        let uView = UIView()
+        uView.backgroundColor = .colorCoal
+        uView.translatesAutoresizingMaskIntoConstraints = false
+        return uView
+    }()
     
-    let txtAltura: UITextField = {
-          let text = UITextField()
-        text.attributedPlaceholder = NSAttributedString(string: "Altura", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white.withAlphaComponent(1.0)])
-            text.textColor = .white
-            text.textAlignment = .center
-            text.backgroundColor = .darkGray
-            text.layer.cornerRadius = 20
-            text.layer.borderWidth = 3
-            text.layer.borderColor = UIColor.lightGray.cgColor
-            text.layer.shadowColor = UIColor.lightGray.withAlphaComponent(0.8).cgColor
-            text.layer.shadowOffset = CGSize(width: 0, height: 0)
-            text.layer.shadowOpacity = 1
-            text.layer.shadowRadius = 20
-            text.layer.masksToBounds = false
-            text.translatesAutoresizingMaskIntoConstraints = false
-          return text
-      }()
+    private let labelHeight : UILabel = {
+        let label = UILabel()
+         label.font = UIFont(name: "Helvetica", size: 16)
+         label.textColor = .gray
+         label.textAlignment = .left
+         label.text = "Altura"
+         label.translatesAutoresizingMaskIntoConstraints = false
+         return label
+    }()
     
-    let txtGender: UITextField = {
-          let text = UITextField()
-        text.attributedPlaceholder = NSAttributedString(string: "Genero", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white.withAlphaComponent(1.0)])
-            text.textColor = .white
-            text.textAlignment = .center
-            text.backgroundColor = .darkGray
-            text.layer.cornerRadius = 20
-            text.layer.borderWidth = 3
-            text.layer.borderColor = UIColor.lightGray.cgColor
-            text.layer.shadowColor = UIColor.lightGray.withAlphaComponent(0.8).cgColor
-            text.layer.shadowOffset = CGSize(width: 0, height: 0)
-            text.layer.shadowOpacity = 1
-            text.layer.shadowRadius = 20
-            text.layer.masksToBounds = false
-            text.translatesAutoresizingMaskIntoConstraints = false
-          return text
-      }()
+    private let textHeight : UITextField = {
+        let text = UITextField()
+        text.backgroundColor = .colorPaper
+        text.layer.borderWidth = 0
+        text.font = UIFont(name: "Helvetica", size: 15)
+        text.clearButtonMode = .always
+        text.textColor = .colorCoal
+        text.translatesAutoresizingMaskIntoConstraints = false
+        return text
+    }()
     
-    let txtEmail: UITextField = {
-          let text = UITextField()
-        text.attributedPlaceholder = NSAttributedString(string: "Email", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white.withAlphaComponent(1.0)])
-            text.textColor = .white
-            text.textAlignment = .center
-            text.backgroundColor = .darkGray
-            text.layer.cornerRadius = 20
-            text.layer.borderWidth = 3
-            text.layer.borderColor = UIColor.lightGray.cgColor
-            text.layer.shadowColor = UIColor.lightGray.withAlphaComponent(0.8).cgColor
-            text.layer.shadowOffset = CGSize(width: 0, height: 0)
-            text.layer.shadowOpacity = 1
-            text.layer.shadowRadius = 20
-            text.layer.masksToBounds = false
-            text.translatesAutoresizingMaskIntoConstraints = false
-          return text
-      }()
+    private let lineHeight : UIView = {
+        let uView = UIView()
+        uView.backgroundColor = .colorCoal
+        uView.translatesAutoresizingMaskIntoConstraints = false
+        return uView
+    }()
+    
+    private let labelAge : UILabel = {
+        let label = UILabel()
+         label.font = UIFont(name: "Helvetica", size: 16)
+         label.textColor = .gray
+         label.textAlignment = .left
+         label.text = "Edad"
+         label.translatesAutoresizingMaskIntoConstraints = false
+         return label
+    }()
+    
+    private let textAge : UITextField = {
+        let text = UITextField()
+        text.backgroundColor = .colorPaper
+        text.layer.borderWidth = 0
+        text.font = UIFont(name: "Helvetica", size: 15)
+        text.clearButtonMode = .always
+        text.textColor = .colorCoal
+        text.translatesAutoresizingMaskIntoConstraints = false
+        return text
+    }()
+    
+    private let lineAge : UIView = {
+        let uView = UIView()
+        uView.backgroundColor = .colorCoal
+        uView.translatesAutoresizingMaskIntoConstraints = false
+        return uView
+    }()
     
     
 
@@ -761,12 +771,20 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
 
         navBarItemLoad()
         setupLayout()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(loadUserData), name: NSNotification.Name(rawValue: "LoadUserData"), object: nil)
 
-        loadUserData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        NotificationCenter.default.post(name: Notification.Name("LoadUserData"), object: nil)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
 
-   
     func navBarItemLoad(){
         view.backgroundColor = .mainGray
         let vw = UIView()
@@ -840,17 +858,18 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         uViewRightTable3.addSubview(labelRankPuntos)
         uViewLeftTable3.addSubview(labelRankPosicion)
         
-        viewContainer.addSubview(labelHabil)
-        viewContainer.addSubview(uView21)
-        viewContainer.addSubview(uView3)
-        viewContainer.addSubview(labelIZQ)
-        viewContainer.addSubview(labelDER)
+        viewContainer.addSubview(viewContainer2)
+        viewContainer2.addSubview(labelHabil)
+        viewContainer2.addSubview(uView21)
+        viewContainer2.addSubview(uView3)
+        viewContainer2.addSubview(labelIZQ)
+        viewContainer2.addSubview(labelDER)
         
-        viewContainer.addSubview(labelBackhand)
-        viewContainer.addSubview(uView4)
-        viewContainer.addSubview(uView5)
-        viewContainer.addSubview(labelTwoHands)
-        viewContainer.addSubview(labelOneHands)
+        viewContainer2.addSubview(labelBackhand)
+        viewContainer2.addSubview(uView4)
+        viewContainer2.addSubview(uView5)
+        viewContainer2.addSubview(labelTwoHands)
+        viewContainer2.addSubview(labelOneHands)
         
         uView21.addSubview(imageLeft)
         uView3.addSubview(imageRight)
@@ -858,11 +877,18 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         uView5.addSubview(imageOneHand)
         
         viewContainer.addSubview(labelGender)
-        viewContainer.addSubview(labelAltura)
-        viewContainer.addSubview(labelEmail)
-        viewContainer.addSubview(txtGender)
-        viewContainer.addSubview(txtAltura)
-        viewContainer.addSubview(txtEmail)
+        viewContainer.addSubview(textGender)
+        viewContainer.addSubview(lineGender)
+        viewContainer.addSubview(labelHeight)
+        viewContainer.addSubview(textHeight)
+        viewContainer.addSubview(lineHeight)
+        viewContainer.addSubview(labelAge)
+        viewContainer.addSubview(textAge)
+        viewContainer.addSubview(lineAge)
+        
+        textGender.delegate = self
+        textHeight.delegate = self
+        textAge.delegate = self
         
         //CONSTRAINTS
         NSLayoutConstraint.activate([
@@ -1080,17 +1106,22 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
             
             //INSIDE SCROLLVIEW1
             
-            labelHabil.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
-            labelHabil.topAnchor.constraint(equalTo: viewContainer.topAnchor,constant: 10),
+            viewContainer2.topAnchor.constraint(equalTo: viewContainer.topAnchor),
+            viewContainer2.leadingAnchor.constraint(equalTo: viewContainer.leadingAnchor),
+            viewContainer2.trailingAnchor.constraint(equalTo: viewContainer.trailingAnchor),
+            viewContainer2.heightAnchor.constraint(equalToConstant: 150),
             
-            uView21.widthAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.30),
-            uView21.heightAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.30),
-            uView21.topAnchor.constraint(equalTo: labelHabil.bottomAnchor, constant: 5),
-            uView21.trailingAnchor.constraint(equalTo: viewContainer.centerXAnchor),
+            labelHabil.topAnchor.constraint(equalTo: viewContainer.topAnchor,constant: 20),
+            labelHabil.centerXAnchor.constraint(equalTo: uViewLeft.centerXAnchor),
             
-            uView3.widthAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.30),
-            uView3.heightAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.30),
-            uView3.topAnchor.constraint(equalTo: labelHabil.bottomAnchor, constant: 5),
+            uView21.widthAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.18),
+            uView21.heightAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.18),
+            uView21.topAnchor.constraint(equalTo: labelHabil.bottomAnchor, constant: 15),
+            uView21.trailingAnchor.constraint(equalTo: labelHabil.centerXAnchor),
+            
+            uView3.widthAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.18),
+            uView3.heightAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.18),
+            uView3.topAnchor.constraint(equalTo: labelHabil.bottomAnchor, constant: 15),
             uView3.leadingAnchor.constraint(equalTo: uView21.trailingAnchor),
             
             imageLeft.centerXAnchor.constraint(equalTo: uView21.centerXAnchor),
@@ -1108,17 +1139,17 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
             labelDER.topAnchor.constraint(equalTo: uView3.topAnchor, constant: 5),
             labelDER.trailingAnchor.constraint(equalTo: uView3.trailingAnchor, constant: -5),
             
-            labelBackhand.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
-            labelBackhand.topAnchor.constraint(equalTo: uView3.bottomAnchor, constant: 10),
+            labelBackhand.centerXAnchor.constraint(equalTo: uViewRight.centerXAnchor),
+            labelBackhand.topAnchor.constraint(equalTo: viewContainer.topAnchor,constant: 20),
             
-            uView4.widthAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.30),
-            uView4.heightAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.30),
-            uView4.topAnchor.constraint(equalTo: labelBackhand.bottomAnchor, constant: 5),
-            uView4.trailingAnchor.constraint(equalTo: viewContainer.centerXAnchor),
+            uView4.widthAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.18),
+            uView4.heightAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.18),
+            uView4.topAnchor.constraint(equalTo: labelBackhand.bottomAnchor, constant: 15),
+            uView4.trailingAnchor.constraint(equalTo: labelBackhand.centerXAnchor),
             
-            uView5.widthAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.30),
-            uView5.heightAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.30),
-            uView5.topAnchor.constraint(equalTo: labelBackhand.bottomAnchor, constant: 5),
+            uView5.widthAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.18),
+            uView5.heightAnchor.constraint(equalTo: viewContainer.widthAnchor, multiplier: 0.18),
+            uView5.topAnchor.constraint(equalTo: labelBackhand.bottomAnchor, constant: 15),
             uView5.leadingAnchor.constraint(equalTo: uView4.trailingAnchor),
             
             imageDoubleHand.centerXAnchor.constraint(equalTo: uView4.centerXAnchor),
@@ -1136,30 +1167,48 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
             labelOneHands.topAnchor.constraint(equalTo: uView5.topAnchor, constant: 5),
             labelOneHands.trailingAnchor.constraint(equalTo: uView5.trailingAnchor, constant: -5),
             
-            labelGender.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
-            labelGender.topAnchor.constraint(equalTo: uView4.bottomAnchor, constant: 10),
+            labelGender.topAnchor.constraint(equalTo: viewContainer2.bottomAnchor, constant: 10),
+            labelGender.leadingAnchor.constraint(equalTo: viewContainer.leadingAnchor,constant: 40),
+            labelGender.trailingAnchor.constraint(equalTo: viewContainer.trailingAnchor,constant: -40),
+            
+            textGender.topAnchor.constraint(equalTo: labelGender.bottomAnchor, constant: 5),
+            textGender.leadingAnchor.constraint(equalTo: labelGender.leadingAnchor),
+            textGender.trailingAnchor.constraint(equalTo: labelGender.trailingAnchor),
+            textGender.heightAnchor.constraint(equalToConstant: 30),
 
-            txtGender.topAnchor.constraint(equalTo: labelGender.bottomAnchor, constant: 5),
-            txtGender.leadingAnchor.constraint(equalTo: uView4.leadingAnchor),
-            txtGender.trailingAnchor.constraint(equalTo: uView5.trailingAnchor),
-            txtGender.heightAnchor.constraint(equalToConstant: 40),
+            lineGender.topAnchor.constraint(equalTo: textGender.bottomAnchor, constant: 5),
+            lineGender.leadingAnchor.constraint(equalTo: labelGender.leadingAnchor),
+            lineGender.trailingAnchor.constraint(equalTo: labelGender.trailingAnchor),
+            lineGender.heightAnchor.constraint(equalToConstant: 2),
+            
+            labelHeight.topAnchor.constraint(equalTo: lineGender.bottomAnchor, constant: 10),
+            labelHeight.leadingAnchor.constraint(equalTo: viewContainer.leadingAnchor,constant: 40),
+            labelHeight.trailingAnchor.constraint(equalTo: viewContainer.trailingAnchor,constant: -40),
+            
+            textHeight.topAnchor.constraint(equalTo: labelHeight.bottomAnchor, constant: 5),
+            textHeight.leadingAnchor.constraint(equalTo: labelHeight.leadingAnchor),
+            textHeight.trailingAnchor.constraint(equalTo: labelHeight.trailingAnchor),
+            textHeight.heightAnchor.constraint(equalToConstant: 30),
 
-            labelAltura.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
-            labelAltura.topAnchor.constraint(equalTo: txtGender.bottomAnchor, constant: 10),
+            lineHeight.topAnchor.constraint(equalTo: textHeight.bottomAnchor, constant: 5),
+            lineHeight.leadingAnchor.constraint(equalTo: labelHeight.leadingAnchor),
+            lineHeight.trailingAnchor.constraint(equalTo: labelHeight.trailingAnchor),
+            lineHeight.heightAnchor.constraint(equalToConstant: 2),
 
-            txtAltura.topAnchor.constraint(equalTo: labelAltura.bottomAnchor, constant: 5),
-            txtAltura.leadingAnchor.constraint(equalTo: uView4.leadingAnchor),
-            txtAltura.trailingAnchor.constraint(equalTo: uView5.trailingAnchor),
-            txtAltura.heightAnchor.constraint(equalToConstant: 40),
+            labelAge.topAnchor.constraint(equalTo: lineHeight.bottomAnchor, constant: 10),
+            labelAge.leadingAnchor.constraint(equalTo: viewContainer.leadingAnchor,constant: 40),
+            labelAge.trailingAnchor.constraint(equalTo: viewContainer.trailingAnchor,constant: -40),
+            
+            textAge.topAnchor.constraint(equalTo: labelAge.bottomAnchor, constant: 5),
+            textAge.leadingAnchor.constraint(equalTo: labelAge.leadingAnchor),
+            textAge.trailingAnchor.constraint(equalTo: labelAge.trailingAnchor),
+            textAge.heightAnchor.constraint(equalToConstant: 30),
 
-            labelEmail.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
-            labelEmail.topAnchor.constraint(equalTo: txtAltura.bottomAnchor, constant: 10),
-
-            txtEmail.topAnchor.constraint(equalTo: labelEmail.bottomAnchor, constant: 5),
-            txtEmail.leadingAnchor.constraint(equalTo: uView4.leadingAnchor),
-            txtEmail.trailingAnchor.constraint(equalTo: uView5.trailingAnchor),
-            txtEmail.bottomAnchor.constraint(equalTo: viewContainer.bottomAnchor,constant: -15),
-            txtEmail.heightAnchor.constraint(equalToConstant: 40),
+            lineAge.topAnchor.constraint(equalTo: textAge.bottomAnchor, constant: 5),
+            lineAge.leadingAnchor.constraint(equalTo: labelAge.leadingAnchor),
+            lineAge.trailingAnchor.constraint(equalTo: labelAge.trailingAnchor),
+            lineAge.heightAnchor.constraint(equalToConstant: 2),
+            lineAge.bottomAnchor.constraint(equalTo: viewContainer.bottomAnchor, constant: -20)
 
         
         
@@ -1183,6 +1232,46 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
       containerPhotoHeader.layer.cornerRadius = containerPhotoHeader.frame.height / 2.0
       imagePhotoHeader.layer.cornerRadius = imagePhotoHeader.frame.height / 2.0
     }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        
+        if textField == textGender {
+            labelGender.textColor = .colorMint
+            lineGender.backgroundColor = .colorMint
+            pickGender()
+        }
+        
+        if textField == textHeight {
+            labelHeight.textColor = .colorMint
+            lineHeight.backgroundColor = .colorMint
+            pickHeight()
+        }
+        
+        if textField == textAge {
+            labelAge.textColor = .colorMint
+            lineAge.backgroundColor = .colorMint
+            pickAge()
+        }
+        
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+        if textField == textGender {
+            labelGender.textColor = .gray
+            lineGender.backgroundColor = .colorCoal
+        }
+        if textField == textHeight {
+            labelHeight.textColor = .gray
+            lineHeight.backgroundColor = .colorCoal
+        }
+        if textField == textAge {
+            labelAge.textColor = .gray
+            lineAge.backgroundColor = .colorCoal
+        }
+    }
+    
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var countCells = 0
@@ -1369,6 +1458,14 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
       }
     
+    @objc func editName() {
+        
+        let vc = UserChangeName()
+        vc.modalPresentationStyle = .pageSheet
+        self.present(vc, animated: true, completion: nil)
+        
+    }
+    
     @objc func infoAction() {
         
         infoButton.setTitleColor(.colorPop, for: .normal)
@@ -1396,15 +1493,17 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     @objc func pressLeftButton() {
         
         if leftSelected == 0 {
-            
+
             leftSelected = 1
             rightSelected = 0
-            imageLeft.setImage(#imageLiteral(resourceName: "right-hand-select"), for: .normal)
-            uView21.backgroundColor = .blackLight
-            labelIZQ.textColor = .colorMint
-            imageRight.setImage(#imageLiteral(resourceName: "left-hand-unsel"), for: .normal)
-            uView3.backgroundColor = .grayWhite
-            labelDER.textColor = .darkGray
+            imageLeft.setImage(#imageLiteral(resourceName: "right-hand-unsel"), for: .normal)
+            uView21.backgroundColor = .grayWhite
+            uView21.layer.borderColor = UIColor.colorPop.cgColor
+            labelIZQ.textColor = .colorPop
+            imageRight.setImage(#imageLiteral(resourceName: "left-hand-select"), for: .normal)
+            uView3.backgroundColor = .blackLight
+            uView3.layer.borderColor = UIColor.blackLight.cgColor
+            labelDER.textColor = .colorMint
             
         }
         
@@ -1415,12 +1514,14 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         if rightSelected == 0 {
             leftSelected = 0
             rightSelected = 1
-            imageLeft.setImage(#imageLiteral(resourceName: "right-hand-unsel"), for: .normal)
-            uView21.backgroundColor = .grayWhite
-            labelDER.textColor = .colorMint
-            imageRight.setImage(#imageLiteral(resourceName: "left-hand-select"), for: .normal)
-            uView3.backgroundColor = .blackLight
-            labelIZQ.textColor = .darkGray
+            imageLeft.setImage(#imageLiteral(resourceName: "right-hand-select"), for: .normal)
+            uView21.backgroundColor = .blackLight
+            uView21.layer.borderColor = UIColor.blackLight.cgColor
+            labelDER.textColor = .colorPop
+            imageRight.setImage(#imageLiteral(resourceName: "left-hand-unsel"), for: .normal)
+            uView3.backgroundColor = .grayWhite
+            uView3.layer.borderColor = UIColor.colorPop.cgColor
+            labelIZQ.textColor = .colorMint
             
         }
         
@@ -1432,12 +1533,14 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
             
             doubleHand = 1
             oneHand = 0
-            imageDoubleHand.setImage(#imageLiteral(resourceName: "backhand-two-white"), for: .normal)
-            uView4.backgroundColor = .blackLight
-            labelTwoHands.textColor = .colorMint
-            imageOneHand.setImage(#imageLiteral(resourceName: "backhand-one"), for: .normal)
-            uView5.backgroundColor = .grayWhite
-            labelOneHands.textColor = .darkGray
+            imageDoubleHand.setImage(#imageLiteral(resourceName: "backhand-two"), for: .normal)
+            uView4.backgroundColor = .grayWhite
+            uView4.layer.borderColor = UIColor.colorPop.cgColor
+            labelTwoHands.textColor = .colorPop
+            imageOneHand.setImage(#imageLiteral(resourceName: "backhand=one-white"), for: .normal)
+            uView5.backgroundColor = .blackLight
+            uView5.layer.borderColor = UIColor.blackLight.cgColor
+            labelOneHands.textColor = .colorMint
             
         }
         
@@ -1449,18 +1552,23 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
        
             doubleHand = 0
             oneHand = 1
-            imageDoubleHand.setImage(#imageLiteral(resourceName: "backhand-two"), for: .normal)
-            uView4.backgroundColor = .grayWhite
-            labelTwoHands.textColor = .darkGray
-            imageOneHand.setImage(#imageLiteral(resourceName: "backhand=one-white"), for: .normal)
-            uView5.backgroundColor = .blackLight
-            labelOneHands.textColor = .colorMint
+            imageDoubleHand.setImage(#imageLiteral(resourceName: "backhand-two-white"), for: .normal)
+            uView4.backgroundColor = .blackLight
+            uView4.layer.borderColor = UIColor.blackLight.cgColor
+            labelTwoHands.textColor = .colorMint
+            imageOneHand.setImage(#imageLiteral(resourceName: "backhand-one"), for: .normal)
+            uView5.backgroundColor = .grayWhite
+            uView5.layer.borderColor = UIColor.colorPop.cgColor
+            labelOneHands.textColor = .colorPop
             
         }
         
     }
     
-    func loadUserData() {
+    @objc func loadUserData() {
+        
+        allExperience.removeAll()
+        allExperienceNames.removeAll()
         
         ref = Database.database().reference().child("Users/\(uid)/")
         ref.observeSingleEvent(of: .value, with: { [self] (snapshot) in
@@ -1490,6 +1598,25 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
                             self.rankingPosition = data.value as? Int ?? 0
                         case "points":
                             self.rankingPoints = data.value as? Int ?? 0
+                        case "hand":
+                            if data.value as? String ?? "-" == "left" {
+                                pressLeftButton()
+                            } else if data.value as? String ?? "-" == "right" {
+                                pressRightButton()
+                            }
+                        case "reves":
+                            if data.value as? String ?? "-" == "onehand" {
+                                pressOneHand()
+                            } else if data.value as? String ?? "-" == "double" {
+                                pressDoubleHand()
+                            }
+                        case "gender":
+                            self.textGender.text = data.value as? String ?? ""
+                        case "height":
+                            self.textHeight.text = data.value as? String ?? ""
+                        case "age" :
+                            self.textAge.text = data.value as? String ?? "-"
+                            
                         default:
                             print("LoadUser")
                         }
@@ -1504,6 +1631,79 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         }) { (error) in
             self.showAlert(title: "Error", message: error.localizedDescription)
         }
+        
+    }
+    
+    func pickGender() {
+        
+        StringPickerPopover(title: "Genero", choices: ["Masculino","Femenino"])
+                .setSelectedRow(0)
+            .setValueChange(action: { _, selectedDate,argData  in
+                    print("current date \(selectedDate)")
+                })
+                .setDoneButton(title: "OK", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (popover, selectedRow, selectedString) in
+                    
+                    self.textGender.text = selectedString
+                    self.textGender.endEditing(true)
+                })
+                .setCancelButton(title: "Cancel", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (_, _, _) in self.textGender.endEditing(true)}
+                                 
+                )
+                .setSize(height: 150)
+                .setFontColor(.colorCoal)
+                .appear(originView: textGender, baseViewController: self)
+        
+    }
+    
+    func pickHeight() {
+        
+        var allHeights : [String] = []
+        for n in 150...210 {
+            allHeights.append("\(n)")
+        }
+        
+        StringPickerPopover(title: "Altura en Cm", choices: allHeights)
+                .setSelectedRow(0)
+            .setValueChange(action: { _, selectedDate,argData  in
+                    print("current date \(selectedDate)")
+                })
+                .setDoneButton(title: "OK", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (popover, selectedRow, selectedString) in
+                    
+                    self.textHeight.text = selectedString
+                    self.textHeight.endEditing(true)
+                })
+                .setCancelButton(title: "Cancel", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (_, _, _) in self.textHeight.endEditing(true)}
+                                 
+                )
+                .setSize(height: 150)
+                .setFontColor(.colorCoal)
+                .appear(originView: textHeight, baseViewController: self)
+        
+    }
+    
+    func pickAge() {
+        
+        var allAges : [String] = []
+        for n in 18...60 {
+            allAges.append("\(n)")
+        }
+        
+        StringPickerPopover(title: "Altura en Cm", choices: allAges)
+                .setSelectedRow(0)
+            .setValueChange(action: { _, selectedDate,argData  in
+                    print("current date \(selectedDate)")
+                })
+                .setDoneButton(title: "OK", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (popover, selectedRow, selectedString) in
+                    
+                    self.textAge.text = selectedString
+                    self.textAge.endEditing(true)
+                })
+                .setCancelButton(title: "Cancel", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (_, _, _) in self.textAge.endEditing(true)}
+                                 
+                )
+                .setSize(height: 150)
+                .setFontColor(.colorCoal)
+                .appear(originView: textAge, baseViewController: self)
         
     }
 

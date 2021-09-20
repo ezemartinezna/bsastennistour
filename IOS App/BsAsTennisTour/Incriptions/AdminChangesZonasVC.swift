@@ -19,6 +19,9 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
            let view = UIView()
            view.backgroundColor = .colorPaper
            view.translatesAutoresizingMaskIntoConstraints = false
+           view.clipsToBounds = true
+           view.layer.cornerRadius = 10
+           view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
            return view
        }()
     

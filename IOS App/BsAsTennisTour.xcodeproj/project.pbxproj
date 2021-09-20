@@ -30,6 +30,7 @@
 		A57D40D9265DF20600C3738D /* ToursCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57D40D8265DF20600C3738D /* ToursCollectionViewCell.swift */; };
 		A58BBA9F266D7C5D00BF89D8 /* MatchesTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58BBA9E266D7C5D00BF89D8 /* MatchesTableCell.swift */; };
 		A58BBAA1266DBD0100BF89D8 /* MatchesCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58BBAA0266DBD0100BF89D8 /* MatchesCVCell.swift */; };
+		A59E199126E6789D00258210 /* UserChangeName.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59E199026E6789D00258210 /* UserChangeName.swift */; };
 		A5A47D0226C342C50069ED25 /* AdminChangesZonasVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A47D0126C342C50069ED25 /* AdminChangesZonasVC.swift */; };
 		A5A47D0426C62F8B0069ED25 /* AdminChangesLlavesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A47D0326C62F8B0069ED25 /* AdminChangesLlavesVC.swift */; };
 		A5B4F1EF256DB3A4008D0095 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4F1EE256DB3A4008D0095 /* AppDelegate.swift */; };
@@ -95,6 +96,7 @@
 		A58A89FC26E331F600FD19DF /* BsAsTennisTour.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BsAsTennisTour.entitlements; sourceTree = "<group>"; };
 		A58BBA9E266D7C5D00BF89D8 /* MatchesTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesTableCell.swift; sourceTree = "<group>"; };
 		A58BBAA0266DBD0100BF89D8 /* MatchesCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesCVCell.swift; sourceTree = "<group>"; };
+		A59E199026E6789D00258210 /* UserChangeName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserChangeName.swift; sourceTree = "<group>"; };
 		A5A47D0126C342C50069ED25 /* AdminChangesZonasVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminChangesZonasVC.swift; sourceTree = "<group>"; };
 		A5A47D0326C62F8B0069ED25 /* AdminChangesLlavesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminChangesLlavesVC.swift; sourceTree = "<group>"; };
 		A5B4F1EB256DB3A4008D0095 /* BsAsTennisTour.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BsAsTennisTour.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				A5535F59257321AA00C68F16 /* UserRankingVC.swift */,
+				A59E199026E6789D00258210 /* UserChangeName.swift */,
 				A55F475F257E917C00F80B82 /* MyExpCell.swift */,
 				A55F475A257BEE7900F80B82 /* MyTrophysCell.swift */,
 			);
@@ -493,6 +496,7 @@
 				A5B4F239256F506A008D0095 /* InscriptionsVC.swift in Sources */,
 				A5535F5A257321AA00C68F16 /* UserRankingVC.swift in Sources */,
 				A5B4F24825700CF4008D0095 /* AllStructs.swift in Sources */,
+				A59E199126E6789D00258210 /* UserChangeName.swift in Sources */,
 				A57D40D9265DF20600C3738D /* ToursCollectionViewCell.swift in Sources */,
 				A5B4F234256F2384008D0095 /* TorneosTableCell.swift in Sources */,
 				A5535F4D25716B0000C68F16 /* NewsCollectionCell.swift in Sources */,
