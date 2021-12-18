@@ -1490,7 +1490,7 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
         
     }
     
-    @objc func pressLeftButton() {
+    @objc func pressLeftButton(pressed : Bool) {
         
         if leftSelected == 0 {
 
@@ -1505,11 +1505,16 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
             uView3.layer.borderColor = UIColor.blackLight.cgColor
             labelDER.textColor = .colorMint
             
+            if pressed {
+                ref = Database.database().reference().child("Users/\(self.uid)/hand")
+                ref.setValue("left")
+            }
+            
         }
         
     }
     
-    @objc func pressRightButton() {
+    @objc func pressRightButton(pressed : Bool) {
         
         if rightSelected == 0 {
             leftSelected = 0
@@ -1523,11 +1528,16 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
             uView3.layer.borderColor = UIColor.colorPop.cgColor
             labelIZQ.textColor = .colorMint
             
+            if pressed {
+                ref = Database.database().reference().child("Users/\(self.uid)/hand")
+                ref.setValue("right")
+            }
+            
         }
         
     }
     
-    @objc func pressDoubleHand() {
+    @objc func pressDoubleHand(pressed : Bool) {
         
         if doubleHand == 0 {
             
@@ -1542,11 +1552,16 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
             uView5.layer.borderColor = UIColor.blackLight.cgColor
             labelOneHands.textColor = .colorMint
             
+            if pressed {
+                ref = Database.database().reference().child("Users/\(self.uid)/reves")
+                ref.setValue("double")
+            }
+            
         }
         
     }
     
-    @objc func pressOneHand() {
+    @objc func pressOneHand(pressed : Bool) {
         
         if oneHand == 0 {
        
@@ -1560,6 +1575,11 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
             uView5.backgroundColor = .grayWhite
             uView5.layer.borderColor = UIColor.colorPop.cgColor
             labelOneHands.textColor = .colorPop
+            
+            if pressed {
+                ref = Database.database().reference().child("Users/\(self.uid)/reves")
+                ref.setValue("onehand")
+            }
             
         }
         
@@ -1600,15 +1620,15 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
                             self.rankingPoints = data.value as? Int ?? 0
                         case "hand":
                             if data.value as? String ?? "-" == "left" {
-                                pressLeftButton()
+                                pressLeftButton(pressed: false)
                             } else if data.value as? String ?? "-" == "right" {
-                                pressRightButton()
+                                pressRightButton(pressed: false)
                             }
                         case "reves":
                             if data.value as? String ?? "-" == "onehand" {
-                                pressOneHand()
+                                pressOneHand(pressed: false)
                             } else if data.value as? String ?? "-" == "double" {
-                                pressDoubleHand()
+                                pressDoubleHand(pressed: false)
                             }
                         case "gender":
                             self.textGender.text = data.value as? String ?? ""
