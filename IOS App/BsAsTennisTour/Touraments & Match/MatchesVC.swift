@@ -226,11 +226,19 @@ class MatchesVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        navBarItemLoad()
         setupLayout()
         loadMatchesNext()
         loadMatchesPrev()
 
+    }
+    
+    func navBarItemLoad(){
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .colorCoal
+        self.navigationController?.navigationBar.standardAppearance = appearance;
+        self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
     }
     
 

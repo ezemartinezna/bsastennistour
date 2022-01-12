@@ -9,9 +9,6 @@ import com.emdev.bsastennistour.Main.MainVC
 import kotlinx.android.synthetic.main.activity_main.*
 import com.emdev.bsastennistour.showAlert.showAlert
 
-// CREATE AN ALERT MESSAGE
-//    showAlert().dialog("Tu vieja","Tu MAMA", this)
-
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

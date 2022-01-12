@@ -297,10 +297,11 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
     }
     
     func navBarItemLoad(){
-        
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for:.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.layoutIfNeeded()
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .colorCoal
+        self.navigationController?.navigationBar.standardAppearance = appearance;
+        self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
     }
     
     func setupLayout() {

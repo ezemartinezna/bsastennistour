@@ -36,21 +36,6 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
     
     var ref: DatabaseReference!
     
-    let titleMain : UILabel = {
-        let label = UILabel()
-        label.text = "Jugador"
-        label.textColor = .white
-        label.isHighlighted = false
-        label.textAlignment = .center
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.layer.masksToBounds = false
-        label.layer.shadowColor = UIColor.white.withAlphaComponent(0.6).cgColor
-        label.layer.shadowOffset = CGSize(width: 0, height: 0)
-        label.layer.shadowOpacity = 0.5
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     let titleName : UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -79,27 +64,11 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
         return label
     }()
     
-    private let profileIcon: UIImageView = {
-        let image = UIImageView()
-        image.image = #imageLiteral(resourceName: "statsIcon")
-        image.contentMode = .scaleAspectFit
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
-    }()
-    
     private let uView1 : UIView = {
         let view = UIView()
+        view.backgroundColor = .colorCoal
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
-    }()
-    
-    private let backgroundImage: UIImageView = {
-        let image = UIImageView()
-        image.image = #imageLiteral(resourceName: "tenisStats-2")
-        image.alpha = 0.9
-        image.contentMode = .scaleToFill
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
     }()
     
     private let uView2 : UIView = {
@@ -787,21 +756,12 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
 
     func navBarItemLoad(){
         view.backgroundColor = .mainGray
-        let vw = UIView()
-        vw.isUserInteractionEnabled = true
-        vw.addSubview(titleMain)
-        
-        let menuBarItem = UIBarButtonItem(customView: profileIcon)
-   
-        menuBarItem.customView?.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        menuBarItem.customView?.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        self.navigationItem.rightBarButtonItem = menuBarItem
-       
-        vw.translatesAutoresizingMaskIntoConstraints = false
-        navigationItem.titleView = vw
-            
-        titleMain.centerXAnchor.constraint(equalTo: vw.centerXAnchor).isActive = true
-        titleMain.centerYAnchor.constraint(equalTo: vw.centerYAnchor).isActive = true
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .colorCoal
+        self.navigationController?.navigationBar.standardAppearance = appearance;
+        self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
+
     }
     
     func setupLayout() {
@@ -810,7 +770,6 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
         view.addSubview(uViewLeft)
         view.addSubview(uViewRight)
         
-        uView1.addSubview(backgroundImage)
         uView1.addSubview(titleName)
         uView1.addSubview(titleLastName)
         
@@ -910,20 +869,10 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
             uViewLeft.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             uViewLeft.topAnchor.constraint(equalTo: view.topAnchor),
             
-            titleName.centerYAnchor.constraint(equalTo: uView1.centerYAnchor,constant: -15),
-            titleName.centerXAnchor.constraint(equalTo: uView1.centerXAnchor),
-            titleLastName.centerYAnchor.constraint(equalTo: uView1.centerYAnchor,constant: 15),
-            titleLastName.centerXAnchor.constraint(equalTo: uView1.centerXAnchor),
-            
             buttonEdit.centerYAnchor.constraint(equalTo: titleLastName.topAnchor),
             buttonEdit.widthAnchor.constraint(equalToConstant: 20),
             buttonEdit.heightAnchor.constraint(equalToConstant: 20),
-            buttonEdit.centerXAnchor.constraint(equalTo: uViewRight.centerXAnchor),
-   
-            backgroundImage.topAnchor.constraint(equalTo: uView1.safeAreaLayoutGuide.topAnchor),
-            backgroundImage.leadingAnchor.constraint(equalTo: uView1.leadingAnchor),
-            backgroundImage.trailingAnchor.constraint(equalTo: uView1.trailingAnchor),
-            backgroundImage.bottomAnchor.constraint(equalTo: uView1.bottomAnchor),
+            buttonEdit.centerXAnchor.constraint(equalTo: uViewRight.centerXAnchor,constant: -20),
             
             lineButton1.leadingAnchor.constraint(equalTo: uViewLeft.leadingAnchor, constant: 30),
             lineButton1.trailingAnchor.constraint(equalTo: uViewLeft.trailingAnchor, constant: -30),
@@ -945,7 +894,7 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
             datosButton.heightAnchor.constraint(equalToConstant: 15),
             datosButton.widthAnchor.constraint(equalTo: uViewRight.widthAnchor),
             
-            containerPhotoHeader.centerYAnchor.constraint(equalTo: uView1.centerYAnchor),
+            containerPhotoHeader.centerYAnchor.constraint(equalTo: uView1.centerYAnchor,constant: -35),
             containerPhotoHeader.centerXAnchor.constraint(equalTo: uViewLeft.centerXAnchor),
             containerPhotoHeader.heightAnchor.constraint(equalTo: uView1.heightAnchor,multiplier: 0.5),
             containerPhotoHeader.widthAnchor.constraint(equalTo: uView1.heightAnchor,multiplier: 0.5),
@@ -954,6 +903,11 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
             imagePhotoHeader.centerXAnchor.constraint(equalTo: containerPhotoHeader.centerXAnchor),
             imagePhotoHeader.heightAnchor.constraint(equalTo: containerPhotoHeader.heightAnchor),
             imagePhotoHeader.widthAnchor.constraint(equalTo: containerPhotoHeader.widthAnchor),
+            
+            titleName.topAnchor.constraint(equalTo: containerPhotoHeader.topAnchor,constant: 15),
+            titleName.centerXAnchor.constraint(equalTo: uView1.centerXAnchor),
+            titleLastName.topAnchor.constraint(equalTo: titleName.bottomAnchor,constant: 5),
+            titleLastName.centerXAnchor.constraint(equalTo: uView1.centerXAnchor),
             
             imageCameraView.widthAnchor.constraint(equalTo: imagePhotoHeader.widthAnchor,multiplier: 0.25),
             imageCameraView.heightAnchor.constraint(equalTo: imagePhotoHeader.heightAnchor,multiplier: 0.25),
