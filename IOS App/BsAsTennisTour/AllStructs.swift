@@ -25,6 +25,16 @@ public struct Users {
     }
 }
 
+public struct Ranking {
+    var name : String?
+    var allPlayers : [PlayerRank]?
+    
+    public init(name : String? = nil, allPlayers : [PlayerRank]? = nil) {
+        self.name = name
+        self.allPlayers = allPlayers
+    }
+}
+
 
 public struct AllParticipants {
     var allUsers: [Users]
@@ -104,6 +114,31 @@ public struct Points {
     public init(title : String, number : Int) {
         self.title = title
         self.number = number
+    }
+}
+
+public struct PlayerRank {
+    
+    var id : String
+    var name : String
+    var lastname : String
+    var points : Int
+    var picture : String
+    var allMatch : Int
+    var winMatch : Int
+    var lostMatch : Int
+    var tourMatch : Int
+    
+    public init(id : String,name : String,lastname : String,points : Int,picture : String,allMatch : Int, winMatch : Int, lostMatch : Int, tourMatch : Int) {
+        self.id = id
+        self.name = name
+        self.lastname = lastname
+        self.points = points
+        self.picture = picture
+        self.allMatch = allMatch
+        self.winMatch = winMatch
+        self.lostMatch = lostMatch
+        self.tourMatch = tourMatch
     }
 }
 

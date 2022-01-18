@@ -11,6 +11,8 @@ import FirebaseDatabase
 import FBSDKLoginKit
 import AuthenticationServices
 import CryptoKit
+import GoogleSignIn
+import Firebase
 
 class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegate {
     
@@ -728,7 +730,53 @@ class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegat
     
     @objc func googleLogin() {
 
-        print("Google Login")
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+        let config = GIDConfiguration(clientID: clientID)
+        
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
+
+          if let error = error {
+              self.showAlert(title: "Error", message: error.localizedDescription)
+            return
+          }
+
+          guard
+            let authentication = user?.authentication,
+            let idToken = authentication.idToken
+          else {
+            return
+          }
+
+            
+          let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                         accessToken: authentication.accessToken)
+            
+            Auth.auth().signIn(with: credential) { (result, error) in
+                
+                if let result = result, error == nil {
+                    
+                    var firstName : String = "NIL"
+                    var lastName : String = "NIL"
+                    var email : String = "NIL"
+                    let uid = result.user.uid
+                  
+                    let fullname = result.user.displayName ?? "NIL"
+                    email = result.user.email ?? "NIL"
+                    var components = fullname.components(separatedBy: " ")
+                    if components.count > 0 {
+                        firstName = components.removeFirst()
+                        lastName = components.joined(separator: " ")
+                    }
+                
+                    
+                    self.firebaseDBLogin(uid: uid,email: email,firstname: firstName,lastname: lastName,provider: "Google")
+                }else{
+                    self.showAlert(title: "Error", message: error!.localizedDescription)
+                }
+                
+            }
+
+        }
         
     }
     
@@ -845,6 +893,14 @@ class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegat
 
                        }
                     }
+     
+            UserDefaults.standard.set("NO-1", forKey: "ADMIN")
+            let vc = UserMainTabBar()
+            UserDefaults.standard.synchronize()
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.window?.rootViewController = vc
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true, completion: nil)
 
         }
           }) { (error) in

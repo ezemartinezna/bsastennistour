@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		02B17399CF01D9BBFA0BF52A /* Pods_BsAsTennisTour.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FA49D5C5757E2CFD8DE47DB /* Pods_BsAsTennisTour.framework */; };
 		A5501530260EB39600E3040F /* MyTorneosTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A550152F260EB39600E3040F /* MyTorneosTableCell.swift */; };
 		A5501536260EB99F00E3040F /* TouramentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5501535260EB99F00E3040F /* TouramentVC.swift */; };
 		A55273332650953D0024486C /* MatchesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55273322650953D0024486C /* MatchesVC.swift */; };
@@ -50,6 +49,7 @@
 		A5B4F24D25702028008D0095 /* TorneoInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B4F24C25702028008D0095 /* TorneoInfoCell.swift */; };
 		A5EE08AE26A770970055BEFD /* LiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5EE08AD26A770970055BEFD /* LiveTableViewCell.swift */; };
 		A5EFF600265B248C00C89BDA /* RankCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5EFF5FF265B248C00C89BDA /* RankCollectionCell.swift */; };
+		EE498971F68D0F9541377E85 /* Pods_BsAsTennisTour.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F6AB8BBEAEBEFF94A137AA4 /* Pods_BsAsTennisTour.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,9 +70,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1DAF0BE9787017BE52DEBA57 /* Pods-BsAsTennisTour.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BsAsTennisTour.release.xcconfig"; path = "Target Support Files/Pods-BsAsTennisTour/Pods-BsAsTennisTour.release.xcconfig"; sourceTree = "<group>"; };
-		79FD11E6615FB5FECBEDB3B1 /* Pods-BsAsTennisTour.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BsAsTennisTour.debug.xcconfig"; path = "Target Support Files/Pods-BsAsTennisTour/Pods-BsAsTennisTour.debug.xcconfig"; sourceTree = "<group>"; };
-		8FA49D5C5757E2CFD8DE47DB /* Pods_BsAsTennisTour.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BsAsTennisTour.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		09A38DF628E6F78B76A0CA8D /* Pods-BsAsTennisTour.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BsAsTennisTour.release.xcconfig"; path = "Target Support Files/Pods-BsAsTennisTour/Pods-BsAsTennisTour.release.xcconfig"; sourceTree = "<group>"; };
+		8147074C1A1FE2BB6620E62B /* Pods-BsAsTennisTour.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BsAsTennisTour.debug.xcconfig"; path = "Target Support Files/Pods-BsAsTennisTour/Pods-BsAsTennisTour.debug.xcconfig"; sourceTree = "<group>"; };
+		8F6AB8BBEAEBEFF94A137AA4 /* Pods_BsAsTennisTour.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BsAsTennisTour.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A550152F260EB39600E3040F /* MyTorneosTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTorneosTableCell.swift; sourceTree = "<group>"; };
 		A5501535260EB99F00E3040F /* TouramentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouramentVC.swift; sourceTree = "<group>"; };
 		A55273322650953D0024486C /* MatchesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesVC.swift; sourceTree = "<group>"; };
@@ -129,7 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				02B17399CF01D9BBFA0BF52A /* Pods_BsAsTennisTour.framework in Frameworks */,
+				EE498971F68D0F9541377E85 /* Pods_BsAsTennisTour.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,10 +150,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2025105F6787D1AE702EDF44 /* Frameworks */ = {
+		1390987A27CCDE975F4B1035 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8FA49D5C5757E2CFD8DE47DB /* Pods_BsAsTennisTour.framework */,
+				8F6AB8BBEAEBEFF94A137AA4 /* Pods_BsAsTennisTour.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -161,8 +161,8 @@
 		A383E0C124FD845DCFB095E2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				79FD11E6615FB5FECBEDB3B1 /* Pods-BsAsTennisTour.debug.xcconfig */,
-				1DAF0BE9787017BE52DEBA57 /* Pods-BsAsTennisTour.release.xcconfig */,
+				8147074C1A1FE2BB6620E62B /* Pods-BsAsTennisTour.debug.xcconfig */,
+				09A38DF628E6F78B76A0CA8D /* Pods-BsAsTennisTour.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -216,7 +216,7 @@
 				A5B4F20F256DB3A5008D0095 /* BsAsTennisTourUITests */,
 				A5B4F1EC256DB3A4008D0095 /* Products */,
 				A383E0C124FD845DCFB095E2 /* Pods */,
-				2025105F6787D1AE702EDF44 /* Frameworks */,
+				1390987A27CCDE975F4B1035 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -311,11 +311,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A5B4F215256DB3A5008D0095 /* Build configuration list for PBXNativeTarget "BsAsTennisTour" */;
 			buildPhases = (
-				B32465EFB5C893402EFF3315 /* [CP] Check Pods Manifest.lock */,
+				629A3CD6893BAD37537E3087 /* [CP] Check Pods Manifest.lock */,
 				A5B4F1E7256DB3A4008D0095 /* Sources */,
 				A5B4F1E8256DB3A4008D0095 /* Frameworks */,
 				A5B4F1E9256DB3A4008D0095 /* Resources */,
-				2C64CC6AD0375771A7EF46EE /* [CP] Embed Pods Frameworks */,
+				0C41EE1CBF3AD7CA7EF9EB73 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -432,7 +432,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2C64CC6AD0375771A7EF46EE /* [CP] Embed Pods Frameworks */ = {
+		0C41EE1CBF3AD7CA7EF9EB73 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -449,7 +449,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BsAsTennisTour/Pods-BsAsTennisTour-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B32465EFB5C893402EFF3315 /* [CP] Check Pods Manifest.lock */ = {
+		629A3CD6893BAD37537E3087 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -679,7 +679,7 @@
 		};
 		A5B4F216256DB3A5008D0095 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 79FD11E6615FB5FECBEDB3B1 /* Pods-BsAsTennisTour.debug.xcconfig */;
+			baseConfigurationReference = 8147074C1A1FE2BB6620E62B /* Pods-BsAsTennisTour.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -700,7 +700,7 @@
 		};
 		A5B4F217256DB3A5008D0095 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1DAF0BE9787017BE52DEBA57 /* Pods-BsAsTennisTour.release.xcconfig */;
+			baseConfigurationReference = 09A38DF628E6F78B76A0CA8D /* Pods-BsAsTennisTour.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

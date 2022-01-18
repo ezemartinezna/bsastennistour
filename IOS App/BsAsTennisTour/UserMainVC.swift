@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SDWebImage
+import FirebaseDatabase
 
 class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource {
     
@@ -14,16 +16,11 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
     var profesorsTitle = ["Agustin Louys","Francisco Louys"]
 
     var allNews = ["news1","news2","news3"]
-    var rankingPoints = ["2081","1834","1779","1693","700"]
-    var rankPlayersName = ["Mariano","Martin","Javier","Ezequiel","Jonathan"]
-    var rankPlayersLastName = ["Balarino","Rioseco","Belvedere","Martinez","Dalinger"]
-    var rankPlays = ["75","75","75","70","67"]
-    var rankWins = ["86","76","70","65","55"]
-    var rankTours = ["5","4","4","4","3"]
-    var rankImages = ["person1","person2","person3","person4","person1"]
+    var allRankings = Ranking()
+
     var isLive : Bool = true
     var matchesLive : [AllMatches] = []
-  
+    var ref: DatabaseReference!
    
     var co : Int = 0
     
@@ -352,7 +349,7 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
         navBarItemLoad()
         setupScrollView()
         loadMatchLive()
-        
+        loadRanking()
         
     }
 
@@ -362,9 +359,12 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .colorCoal
+        appearance.shadowColor = .colorCoal
+    
         self.navigationController?.navigationBar.standardAppearance = appearance;
         self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
         
+
     }
     
     
@@ -670,12 +670,94 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
         
     }
     
+    func loadRanking() {
+        
+        ref = Database.database().reference().child("Ranking/")
+        ref.observeSingleEvent(of: .value, with: { [self] (snapshot) in
+            
+            if snapshot.exists() {
+                
+                
+                if let allData = snapshot.children.allObjects as? [DataSnapshot] {
+                    for data in allData {
+                        if data.key == "General" {
+                            
+                            allRankings.name = data.key
+                            if let allPlayers = data.children.allObjects as? [DataSnapshot] {
+                                
+                                var loadAllPlayers : [PlayerRank] = []
+                                
+                                for player in allPlayers {
+
+                                    let id : String = player.key
+                                    var name : String = ""
+                                    var lastname : String = ""
+                                    var points : Int = 0
+                                    var picture : String = ""
+                                    var allMatch : Int = 0
+                                    var winMatch : Int = 0
+                                    var lostMatch : Int = 0
+                                    var tourMatch : Int = 0
+                                    
+                                    if let allData = player.children.allObjects as? [DataSnapshot] {
+                                        
+                                        for data in allData {
+                                            switch data.key {
+                                            case "firstName":
+                                                name = data.value as? String ?? "-"
+                                            case "lastName":
+                                                lastname = data.value as? String ?? "-"
+                                            case "allMatch":
+                                                allMatch = data.value as? Int ?? 0
+                                            case "lostMatch":
+                                                lostMatch = data.value as? Int ?? 0
+                                            case "winMatch":
+                                                winMatch = data.value as? Int ?? 0
+                                            case "points":
+                                                points = data.value as? Int ?? 0
+                                            case "tourament":
+                                                tourMatch = data.value as? Int ?? 0
+                                            case "picture":
+                                                picture = data.value as? String ?? "-"
+                                            default:
+                                                print("Not Handled")
+                                            }
+                                        }
+                                    }
+                                   
+                                    loadAllPlayers.append(PlayerRank(id: id,
+                                                                     name: name,
+                                                                     lastname: lastname,
+                                                                     points: points,
+                                                                     picture: picture,
+                                                                     allMatch: allMatch,
+                                                                     winMatch: winMatch,
+                                                                     lostMatch: lostMatch,
+                                                                     tourMatch: tourMatch))
+      
+                                }
+                                let sortedUsers = loadAllPlayers.sorted(by: {
+                                    $1.points < $0.points
+                                })
+                                
+                                self.allRankings.allPlayers = sortedUsers
+                            }
+                        }
+                    }
+                }
+                self.allRankingTable.reloadData()
+                self.snapCollectionRank.reloadData()
+            }
+        })
+        
+    }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var countTable = 0
 
         if tableView == allRankingTable {
-            countTable = rankPlayersLastName.count
+            countTable = allRankings.allPlayers?.count ?? 0
         }
         if tableView == liveTableView {
             countTable = matchesLive.count
@@ -691,13 +773,16 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
         if tableView == allRankingTable {
             let myCell = tableView.dequeueReusableCell(withIdentifier: "cellTable", for: indexPath) as! RankingTableCell
             myCell.labelPosition.text = "#\(String(indexPath.row + 1)) Posicion en el Ranking"
-            myCell.labelName.text = rankPlayersName[indexPath.row]
-            myCell.labelLastname.text = rankPlayersLastName[indexPath.row].uppercased()
+            myCell.labelName.text = allRankings.allPlayers?[indexPath.row].name
+            myCell.labelLastname.text = allRankings.allPlayers?[indexPath.row].lastname.uppercased()
             myCell.labelPosB.text = "\(String(indexPath.row + 1))"
-            myCell.labelPointsB.text = "\(String(rankingPoints[indexPath.row]))"
-            myCell.labelPlaysB.text = "\(String(rankPlays[indexPath.row]))"
-            myCell.labelWinsB.text = "\(String(rankWins[indexPath.row]))%"
-            myCell.labelToursB.text = "\(String(rankTours[indexPath.row]))"
+            myCell.labelPointsB.text = "\(String(describing: allRankings.allPlayers?[indexPath.row].points))"
+            myCell.labelPlaysB.text = "\(String(describing: allRankings.allPlayers?[indexPath.row].allMatch))"
+            if let winMatch = allRankings.allPlayers?[indexPath.row].winMatch, let allMatch = allRankings.allPlayers?[indexPath.row].allMatch  {
+                let totalPercent = (winMatch * 100) / allMatch
+                myCell.labelWinsB.text = "\(totalPercent)%"
+            }
+            myCell.labelToursB.text = "\(String(describing: allRankings.allPlayers?[indexPath.row].tourMatch))"
             
             if indexPath.row == 0 {
                 myCell.tourImage.image = #imageLiteral(resourceName: "Pelota Oro")
@@ -808,7 +893,7 @@ extension UserMainVC: UICollectionViewDataSource {
             returnInt = allNews.count
         }
         if collectionView == snapCollectionRank {
-            returnInt = rankingPoints.count
+            returnInt = allRankings.allPlayers?.count ?? 0
         }
         return returnInt
     }
@@ -833,12 +918,18 @@ extension UserMainVC: UICollectionViewDataSource {
         
         if collectionView == snapCollectionRank {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! RankCollectionCell
-            cell.imagePerson.image = UIImage(named: rankImages[indexPath.row])
-            cell.labelName.text = "\(rankPlayersName[indexPath.row].uppercased()),"
-            cell.labelLastName.text = rankPlayersLastName[indexPath.row].uppercased()
-            cell.labelPoints.text = rankingPoints[indexPath.row]
+            
+            if indexPath.row < 10 {
+            
+            let imageUrl = URL(string:allRankings.allPlayers?[indexPath.row].picture ?? "-")
+            cell.imagePerson.sd_setImage(with: imageUrl, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+     
+                cell.labelName.text = "\(String(describing: allRankings.allPlayers?[indexPath.row].name.uppercased())),"
+            cell.labelLastName.text = allRankings.allPlayers?[indexPath.row].lastname.uppercased()
+                cell.labelPoints.text = "\(String(describing: allRankings.allPlayers?[indexPath.row].points))"
             cell.labelPos.text = "#\(indexPath.row + 1) Posición"
             
+            }
             returnCell = cell
         }
         

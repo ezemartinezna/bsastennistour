@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import GoogleSignIn
 
 class ConfigVC: UIViewController {
     
@@ -48,6 +49,12 @@ class ConfigVC: UIViewController {
         }catch {
             self.showAlert(title: "Error", message: "LogOut Error")
         }
+        
+    }
+    
+    func googleSingOut() {
+        
+        GIDSignIn.sharedInstance.signOut()
         
     }
 

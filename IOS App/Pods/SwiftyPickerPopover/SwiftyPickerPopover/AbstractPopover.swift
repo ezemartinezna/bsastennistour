@@ -135,10 +135,9 @@ open class AbstractPopover: NSObject {
         let contentVC = configureContentViewController(navigationController: navigationController)
         navigationController.popoverPresentationController?.delegate = contentVC
         
-        navigationController.navigationBar.barTintColor = UIColor(red: 229/255, green: 63/255, blue: 35/255, alpha: 1)
-        navigationController.popoverPresentationController?.backgroundColor =  UIColor(red: 229/255, green: 63/255, blue: 35/255, alpha: 1)
-        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
-        navigationController.navigationBar.titleTextAttributes = textAttributes
+        let color = backgroundColor ?? baseViewController.navigationController?.navigationBar.barTintColor ?? baseViewController.view.backgroundColor
+        navigationController.navigationBar.barTintColor = color
+        navigationController.popoverPresentationController?.backgroundColor =  color
         
         tintColor = baseViewController.view.tintColor
         
@@ -160,7 +159,7 @@ open class AbstractPopover: NSObject {
     private func addDimmedBackgroundViewIfNeeded(_ baseViewController: UIViewController) {
         if let isEnabled = isEnabledDimmedBackgroundView, isEnabled {
             let dimmedView = UIView(frame: UIScreen.main.bounds)
-            dimmedView.backgroundColor = UIColor(red: 229/255, green: 63/255, blue: 35/255, alpha: 1)
+            dimmedView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
             dimmedView.accessibilityIdentifier = kDimmedViewIdentifer
             if let parentView = baseViewController.navigationController?.view ?? baseViewController.view {
                 parentView.addSubview(dimmedView)

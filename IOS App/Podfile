@@ -16,4 +16,5 @@ target 'BsAsTennisTour' do
   pod 'FBSDKLoginKit'
   pod 'SwiftyPickerPopover'
   pod 'SDWebImage', '~> 5.0'
+  pod 'GoogleSignIn'
 end
