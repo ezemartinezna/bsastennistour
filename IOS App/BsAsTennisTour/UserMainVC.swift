@@ -715,7 +715,7 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
                                                 winMatch = data.value as? Int ?? 0
                                             case "points":
                                                 points = data.value as? Int ?? 0
-                                            case "tourament":
+                                            case "tournament":
                                                 tourMatch = data.value as? Int ?? 0
                                             case "picture":
                                                 picture = data.value as? String ?? "-"
@@ -726,14 +726,16 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
                                     }
                                    
                                     loadAllPlayers.append(PlayerRank(id: id,
-                                                                     name: name,
-                                                                     lastname: lastname,
-                                                                     points: points,
+                                                                     name: String(name),
+                                                                     lastname: String(lastname),
+                                                                     points: Int(points),
                                                                      picture: picture,
-                                                                     allMatch: allMatch,
-                                                                     winMatch: winMatch,
-                                                                     lostMatch: lostMatch,
-                                                                     tourMatch: tourMatch))
+                                                                     allMatch: Int(allMatch),
+                                                                     winMatch: Int(winMatch),
+                                                                     lostMatch: Int(lostMatch),
+                                                                     tourMatch: Int(tourMatch)
+                                                                    )
+                                    )
       
                                 }
                                 let sortedUsers = loadAllPlayers.sorted(by: {
@@ -776,13 +778,13 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
             myCell.labelName.text = allRankings.allPlayers?[indexPath.row].name
             myCell.labelLastname.text = allRankings.allPlayers?[indexPath.row].lastname.uppercased()
             myCell.labelPosB.text = "\(String(indexPath.row + 1))"
-            myCell.labelPointsB.text = "\(String(describing: allRankings.allPlayers?[indexPath.row].points))"
-            myCell.labelPlaysB.text = "\(String(describing: allRankings.allPlayers?[indexPath.row].allMatch))"
+            myCell.labelPointsB.text = "\(allRankings.allPlayers?[indexPath.row].points ?? 0)"
+            myCell.labelPlaysB.text = "\(allRankings.allPlayers?[indexPath.row].allMatch ?? 0)"
             if let winMatch = allRankings.allPlayers?[indexPath.row].winMatch, let allMatch = allRankings.allPlayers?[indexPath.row].allMatch  {
                 let totalPercent = (winMatch * 100) / allMatch
                 myCell.labelWinsB.text = "\(totalPercent)%"
             }
-            myCell.labelToursB.text = "\(String(describing: allRankings.allPlayers?[indexPath.row].tourMatch))"
+            myCell.labelToursB.text = "\(allRankings.allPlayers?[indexPath.row].tourMatch ?? 0)"
             
             if indexPath.row == 0 {
                 myCell.tourImage.image = #imageLiteral(resourceName: "Pelota Oro")
@@ -924,9 +926,9 @@ extension UserMainVC: UICollectionViewDataSource {
             let imageUrl = URL(string:allRankings.allPlayers?[indexPath.row].picture ?? "-")
             cell.imagePerson.sd_setImage(with: imageUrl, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
      
-                cell.labelName.text = "\(String(describing: allRankings.allPlayers?[indexPath.row].name.uppercased())),"
+                cell.labelName.text = "\(allRankings.allPlayers?[indexPath.row].name.uppercased() ?? ""),"
             cell.labelLastName.text = allRankings.allPlayers?[indexPath.row].lastname.uppercased()
-                cell.labelPoints.text = "\(String(describing: allRankings.allPlayers?[indexPath.row].points))"
+                cell.labelPoints.text = "\(allRankings.allPlayers?[indexPath.row].points ?? 0)"
             cell.labelPos.text = "#\(indexPath.row + 1) Posición"
             
             }
