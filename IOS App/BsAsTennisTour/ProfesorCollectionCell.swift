@@ -47,7 +47,7 @@ class ProfesorCollectionCell: UICollectionViewCell {
     let imageType : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
@@ -75,7 +75,7 @@ class ProfesorCollectionCell: UICollectionViewCell {
             uView1.topAnchor.constraint(equalTo: viewContainer.topAnchor),
             uView1.leadingAnchor.constraint(equalTo: viewContainer.leadingAnchor),
             uView1.trailingAnchor.constraint(equalTo: viewContainer.trailingAnchor),
-            uView1.heightAnchor.constraint(equalToConstant: 150),
+            uView1.heightAnchor.constraint(equalToConstant: 100),
             
             labelOrg.centerXAnchor.constraint(equalTo: uView1.centerXAnchor),
             labelOrg.topAnchor.constraint(equalTo: uView1.topAnchor,constant: 20),

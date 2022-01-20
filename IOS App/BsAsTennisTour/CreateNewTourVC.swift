@@ -89,11 +89,14 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         datepicker.datePickerMode = .dateAndTime
         if #available(iOS 13.4, *) {
             datepicker.preferredDatePickerStyle = .compact
+            
         }
+        datepicker.subviews[0].subviews[0].subviews[0].alpha = 0
         datepicker.locale = Locale(identifier: "es")
         datepicker.tintColor = .colorPop
-        datepicker.backgroundColor = .clear
+        datepicker.backgroundColor = .colorCoal
         datepicker.translatesAutoresizingMaskIntoConstraints = false
+//        UILabel.appearance(whenContainedInInstancesOf: [UIDatePicker.self]).textColor = .white
        return datepicker
     }()
     
@@ -101,6 +104,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
     let viewDatePicker : UIView = {
         let uview = UIView()
         uview.clipsToBounds = true
+        uview.tintColor = .white
         uview.backgroundColor = UIColor.colorCoal
         uview.translatesAutoresizingMaskIntoConstraints = false
         return uview
@@ -484,6 +488,8 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         setupBarItem()
         setupLayout()
         
+        overrideUserInterfaceStyle = .dark
+        
     }
     
     
@@ -499,9 +505,13 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         menuBarItemRight.customView?.widthAnchor.constraint(equalToConstant: 40).isActive = true
         self.navigationItem.rightBarButtonItem = menuBarItemRight
         
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for:.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.layoutIfNeeded()
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .colorCoal
+        appearance.shadowColor = .colorCoal
+    
+        self.navigationController?.navigationBar.standardAppearance = appearance;
+        self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
         
         buttonMenu.addTarget(self, action: #selector(backPressed), for: .touchUpInside)
         buttonConfirm.addTarget(self, action: #selector(confirmAction), for: .touchUpInside)
@@ -587,8 +597,8 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
             titleTorneo.topAnchor.constraint(equalTo: viewContainer.topAnchor, constant: 10),
             
             viewDatePicker.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
-            viewDatePicker.topAnchor.constraint(equalTo: titleTorneo.bottomAnchor,constant: 5),
-            viewDatePicker.heightAnchor.constraint(equalToConstant: 40),
+            viewDatePicker.topAnchor.constraint(equalTo: titleTorneo.bottomAnchor,constant: 15),
+            viewDatePicker.heightAnchor.constraint(equalToConstant: 60),
             viewDatePicker.widthAnchor.constraint(equalToConstant: 200),
             datePicker.centerXAnchor.constraint(equalTo: viewDatePicker.centerXAnchor),
             datePicker.centerYAnchor.constraint(equalTo: viewDatePicker.centerYAnchor),
@@ -1198,6 +1208,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
                 .setSize(height: 150)
                 .setFontColor(.colorCoal)
                 .appear(originView: textModelo, baseViewController: self)
+                
         
     }
     

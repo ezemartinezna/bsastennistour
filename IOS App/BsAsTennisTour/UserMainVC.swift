@@ -12,10 +12,10 @@ import FirebaseDatabase
 class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource {
     
     
-    var profesorsImage = ["professor-tennis-1","professor-tennis-2"]
-    var profesorsTitle = ["Agustin Louys","Francisco Louys"]
-
-    var allNews = ["news1","news2","news3"]
+    var profesorsImage : [String] = []
+    var profesorsTitle : [String] = []
+    var allNews : [String] = []
+    
     var allRankings = Ranking()
 
     var isLive : Bool = true
@@ -280,7 +280,6 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
     private lazy var pageControl2: UIPageControl = {
          let pc = UIPageControl()
          pc.currentPage = 0
-         pc.numberOfPages = allNews.count
          pc.currentPageIndicatorTintColor = .black
          pc.pageIndicatorTintColor = .white
          pc.translatesAutoresizingMaskIntoConstraints = false
@@ -349,7 +348,9 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
         navBarItemLoad()
         setupScrollView()
         loadMatchLive()
+        loadProfessors()
         loadRanking()
+        loadAllNews()
         
     }
 
@@ -670,6 +671,68 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
         
     }
     
+    func loadProfessors() {
+        
+        ref = Database.database().reference().child("Profesors/")
+        ref.observeSingleEvent(of: .value, with: { [self] (snapshot) in
+            
+            if snapshot.exists() {
+                
+                if let allUIDS = snapshot.children.allObjects as? [DataSnapshot] {
+                    for uid in allUIDS {
+                        if let allData = uid.children.allObjects as? [DataSnapshot] {
+                            var firstname = "-"
+                            var lastname = "-"
+                            var picture = "-"
+                            for data in allData {
+                                switch data.key {
+                                case "firstName":
+                                    firstname = data.value as? String ?? "-"
+                                case "lastName":
+                                    lastname = data.value as? String ?? "-"
+                                case "picture":
+                                    picture = data.value as? String ?? "-"
+                                default:
+                                    print("Not handled")
+                                }
+                            }
+                            self.profesorsTitle.append("\(firstname) \(lastname)")
+                            self.profesorsImage.append(picture)
+                        }
+                    }
+                }
+                self.snapCollectionView.reloadData()
+            }
+        })
+                               
+        
+    }
+    
+    func loadAllNews() {
+        
+        ref = Database.database().reference().child("News/")
+        ref.observeSingleEvent(of: .value, with: { [self] (snapshot) in
+            
+            if snapshot.exists() {
+                
+                if let allUrls = snapshot.children.allObjects as? [DataSnapshot] {
+                    for url in allUrls {
+                        if let paths = url.children.allObjects as? [DataSnapshot] {
+                            for path in paths {
+                                if path.key == "path" {
+                                    allNews.append(path.value as? String ?? "-")
+                                }
+                            }
+                        }
+                    }
+                }
+                self.pageControl2.numberOfPages = allNews.count
+                self.snapCollectionNews.reloadData()
+            }
+        })
+        
+    }
+    
     func loadRanking() {
         
         ref = Database.database().reference().child("Ranking/")
@@ -907,13 +970,17 @@ extension UserMainVC: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! ProfesorCollectionCell
         let data = self.profesorsTitle[indexPath.item]
             cell.labelTitle.text = String(data).uppercased()
-        cell.imageType.image = UIImage(named: profesorsImage[indexPath.row])
+            
+        let imageUrl = URL(string:profesorsImage[indexPath.row])
+        cell.imageType.sd_setImage(with: imageUrl, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+     
         returnCell = cell
         }
         
         if collectionView == snapCollectionNews {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! NewsCollectionCell
-            cell.imageType.image = UIImage(named: allNews[indexPath.row])
+            let imageUrl = URL(string:allNews[indexPath.row])
+            cell.imageType.sd_setImage(with: imageUrl, placeholderImage: #imageLiteral(resourceName: "logo-app"))
             returnCell = cell
             
         }
