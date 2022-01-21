@@ -34,7 +34,27 @@ class ZonesTVCell: UITableViewCell {
            imageView.layer.cornerRadius = 30 / 2
            imageView.layer.masksToBounds = true
            imageView.contentMode = .scaleAspectFill
-           imageView.isUserInteractionEnabled = true
+           return imageView
+       }()
+    
+    let containerPhotoHeader1 : UIView = {
+           let view = UIView()
+           view.translatesAutoresizingMaskIntoConstraints = false
+           view.layer.cornerRadius = 50 / 2
+           view.layer.masksToBounds = false
+           view.layer.shadowColor = UIColor.black.withAlphaComponent(0.6).cgColor
+           view.layer.shadowOffset = CGSize(width: 0, height: 0)
+           view.layer.shadowOpacity = 0.9
+           view.backgroundColor = .clear
+           return view
+       }()
+    
+    let imagePhotoHeader1: UIImageView = {
+           let imageView = UIImageView()
+           imageView.translatesAutoresizingMaskIntoConstraints = false
+           imageView.layer.cornerRadius = 30 / 2
+           imageView.layer.masksToBounds = true
+           imageView.contentMode = .scaleAspectFill
            return imageView
        }()
     
@@ -112,6 +132,8 @@ class ZonesTVCell: UITableViewCell {
         addSubview(containerView)
         containerView.addSubview(containerPhotoHeader)
         containerPhotoHeader.addSubview(imagePhotoHeader)
+        containerView.addSubview(containerPhotoHeader1)
+        containerPhotoHeader1.addSubview(imagePhotoHeader1)
         containerView.addSubview(labelName)
         containerView.addSubview(labelLastname)
         containerView.addSubview(stackview)
@@ -135,6 +157,16 @@ class ZonesTVCell: UITableViewCell {
             imagePhotoHeader.centerXAnchor.constraint(equalTo: containerPhotoHeader.centerXAnchor),
             imagePhotoHeader.heightAnchor.constraint(equalTo: containerPhotoHeader.heightAnchor),
             imagePhotoHeader.widthAnchor.constraint(equalTo: containerPhotoHeader.widthAnchor),
+            
+            containerPhotoHeader1.topAnchor.constraint(equalTo: topAnchor,constant: 20),
+            containerPhotoHeader1.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            containerPhotoHeader1.widthAnchor.constraint(equalToConstant: 30),
+            containerPhotoHeader1.heightAnchor.constraint(equalToConstant: 30),
+            
+            imagePhotoHeader1.centerYAnchor.constraint(equalTo: containerPhotoHeader1.centerYAnchor),
+            imagePhotoHeader1.centerXAnchor.constraint(equalTo: containerPhotoHeader1.centerXAnchor),
+            imagePhotoHeader1.heightAnchor.constraint(equalTo: containerPhotoHeader1.heightAnchor),
+            imagePhotoHeader1.widthAnchor.constraint(equalTo: containerPhotoHeader1.widthAnchor),
             
             labelName.topAnchor.constraint(equalTo: containerPhotoHeader.topAnchor, constant: 5),
             labelName.leadingAnchor.constraint(equalTo: containerPhotoHeader.trailingAnchor, constant: 15),

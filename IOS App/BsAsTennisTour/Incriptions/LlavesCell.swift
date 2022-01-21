@@ -83,6 +83,8 @@ class LlavesCell: UICollectionViewCell, UITableViewDataSource, UITableViewDelega
         cell.labelFullName.text = llaves.types[indexPath.row].player1.fullName
         cell.labelPosition.text = llaves.types[indexPath.row].player1.match
         cell.imagePhotoHeader.image = UIImage(named: llaves.types[indexPath.row].player1.picture)
+        let imageUrl1 = URL(string:llaves.types[indexPath.row].player1.picture)
+        cell.imagePhotoHeader.sd_setImage(with: imageUrl1, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
         
         if llaves.types[indexPath.row].player1.win {
             cell.imageBallPlayer1.isHidden = false
@@ -95,7 +97,8 @@ class LlavesCell: UICollectionViewCell, UITableViewDataSource, UITableViewDelega
         
         cell.labelFullName1.text = llaves.types[indexPath.row].player2.fullName
         cell.labelPosition1.text = llaves.types[indexPath.row].player2.match
-        cell.imagePhotoHeader1.image = UIImage(named: llaves.types[indexPath.row].player2.picture)
+        let imageUrl2 = URL(string:llaves.types[indexPath.row].player2.picture)
+        cell.imagePhotoHeader1.sd_setImage(with: imageUrl2, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
         
         if llaves.types[indexPath.row].player2.win {
             cell.imageBallPlayer2.isHidden = false

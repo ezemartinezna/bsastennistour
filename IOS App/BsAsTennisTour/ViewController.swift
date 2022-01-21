@@ -889,18 +889,16 @@ class ViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegat
 
                         UserDefaults.standard.set(uid, forKey: "uid")
                         UserDefaults.standard.set(provider, forKey: "Provider")
+                        UserDefaults.standard.set("NO-1", forKey: "ADMIN")
                         UserDefaults.standard.synchronize()
-
+                           
+                           let vc = UserMainTabBar()
+                           let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                           appDelegate.window?.rootViewController = vc
+                           vc.modalPresentationStyle = .fullScreen
+                           self.present(vc, animated: true, completion: nil)
                        }
                     }
-     
-            UserDefaults.standard.set("NO-1", forKey: "ADMIN")
-            let vc = UserMainTabBar()
-            UserDefaults.standard.synchronize()
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            appDelegate.window?.rootViewController = vc
-            vc.modalPresentationStyle = .fullScreen
-            self.present(vc, animated: true, completion: nil)
 
         }
           }) { (error) in

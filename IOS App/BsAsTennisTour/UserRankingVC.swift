@@ -40,7 +40,9 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
         let label = UILabel()
         label.textColor = .white
         label.isHighlighted = false
-        label.textAlignment = .center
+        label.textAlignment = .left
+        label.lineBreakMode = .byTruncatingTail
+        label.numberOfLines = 1
         label.font = UIFont.boldSystemFont(ofSize: 25)
         label.layer.masksToBounds = false
         label.layer.shadowColor = UIColor.white.withAlphaComponent(0.6).cgColor
@@ -54,7 +56,9 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
         let label = UILabel()
         label.textColor = .white
         label.isHighlighted = false
-        label.textAlignment = .center
+        label.textAlignment = .left
+        label.lineBreakMode = .byTruncatingTail
+        label.numberOfLines = 1
         label.font = UIFont.boldSystemFont(ofSize: 25)
         label.layer.masksToBounds = false
         label.layer.shadowColor = UIColor.white.withAlphaComponent(0.6).cgColor
@@ -873,7 +877,7 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
             buttonEdit.centerYAnchor.constraint(equalTo: titleLastName.topAnchor),
             buttonEdit.widthAnchor.constraint(equalToConstant: 20),
             buttonEdit.heightAnchor.constraint(equalToConstant: 20),
-            buttonEdit.centerXAnchor.constraint(equalTo: uViewRight.centerXAnchor,constant: -20),
+            buttonEdit.centerXAnchor.constraint(equalTo: uViewRight.centerXAnchor,constant: 15),
             
             lineButton1.leadingAnchor.constraint(equalTo: uViewLeft.leadingAnchor, constant: 30),
             lineButton1.trailingAnchor.constraint(equalTo: uViewLeft.trailingAnchor, constant: -30),
@@ -906,9 +910,15 @@ class UserRankingVC: UIViewController, UITableViewDelegate, UITextFieldDelegate,
             imagePhotoHeader.widthAnchor.constraint(equalTo: containerPhotoHeader.widthAnchor),
             
             titleName.topAnchor.constraint(equalTo: containerPhotoHeader.topAnchor,constant: 15),
-            titleName.centerXAnchor.constraint(equalTo: uView1.centerXAnchor),
+//            titleName.centerXAnchor.constraint(equalTo: uView1.centerXAnchor),
+            titleName.leadingAnchor.constraint(equalTo: containerPhotoHeader.trailingAnchor,constant: 10),
+            titleName.trailingAnchor.constraint(equalTo: uViewRight.centerXAnchor),
+//            titleName.heightAnchor.constraint(equalToConstant: 40),
             titleLastName.topAnchor.constraint(equalTo: titleName.bottomAnchor,constant: 5),
-            titleLastName.centerXAnchor.constraint(equalTo: uView1.centerXAnchor),
+//            titleLastName.centerXAnchor.constraint(equalTo: uView1.centerXAnchor),
+            titleLastName.leadingAnchor.constraint(equalTo: containerPhotoHeader.trailingAnchor,constant: 10),
+            titleLastName.trailingAnchor.constraint(equalTo: uViewRight.centerXAnchor),
+//            titleLastName.heightAnchor.constraint(equalToConstant: 40),
             
             imageCameraView.widthAnchor.constraint(equalTo: imagePhotoHeader.widthAnchor,multiplier: 0.25),
             imageCameraView.heightAnchor.constraint(equalTo: imagePhotoHeader.heightAnchor,multiplier: 0.25),

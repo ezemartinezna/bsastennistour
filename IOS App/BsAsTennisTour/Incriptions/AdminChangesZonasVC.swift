@@ -14,6 +14,8 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
     let pathPlayer = UserDefaults.standard.string(forKey: "pathPlayers") ?? "-"
     var uid : String = ""
     var picture : String = ""
+    var arrayPictures : [String] = []
+    var arrayUIDS : [String] = []
     
     let containerView: UIView = {
            let view = UIView()
@@ -259,7 +261,7 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
         
         NSLayoutConstraint.activate([
             
-            blackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.60),
+            blackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.45),
             blackView.topAnchor.constraint(equalTo: view.topAnchor),
             blackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             blackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -385,6 +387,24 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         
+        if textField == textWin {
+            labelWin.textColor = .colorMint
+            lineWin.backgroundColor = .colorMint
+            picknumber(textFieldChanged: textWin)
+        }
+        
+        if textField == textLose {
+            labelLose.textColor = .colorMint
+            lineLose.backgroundColor = .colorMint
+            picknumber(textFieldChanged: textLose)
+        }
+        
+        if textField == textPoints {
+            labelPoints.textColor = .colorMint
+            linePoints.backgroundColor = .colorMint
+            picknumber(textFieldChanged: textPoints)
+        }
+        
         if textField == textNamePlayer {
             labelNamePlayer.textColor = .colorMint
             lineNamePlayer.backgroundColor = .colorMint
@@ -394,6 +414,21 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        
+        if textField == textWin {
+            labelWin.textColor = .gray
+            lineWin.backgroundColor = .colorCoal
+        }
+        
+        if textField == textLose {
+            labelLose.textColor = .gray
+            lineLose.backgroundColor = .colorCoal
+        }
+        
+        if textField == textPoints {
+            labelPoints.textColor = .gray
+            linePoints.backgroundColor = .colorCoal
+        }
         
         if textField == textNamePlayer {
             labelNamePlayer.textColor = .gray
@@ -413,6 +448,7 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
 
             if snapshot.exists() {
                 var arrayPlayers : [String] = []
+                
                 if let allPlayers = snapshot.children.allObjects as? [DataSnapshot] {
                     for player in allPlayers {
                         if let allData = player.children.allObjects as? [DataSnapshot] {
@@ -420,7 +456,11 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
                                 if data.key == "fullName" {
                                     arrayPlayers.append(data.value as? String ?? "-")
                                 }
+                                if data.key == "picture" {
+                                    self.arrayPictures.append(data.value as? String ?? "-")
+                                }
                             }
+                            self.arrayUIDS.append(player.key)
                         }
                     }
                 }
@@ -433,6 +473,8 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
                         .setDoneButton(title: "OK", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (popover, selectedRow, selectedString) in
 
                             self.textNamePlayer.text = selectedString
+                            self.uid = self.arrayUIDS[selectedRow]
+                            self.picture = self.arrayPictures[selectedRow]
                             self.textNamePlayer.endEditing(true)
                         })
                         .setCancelButton(title: "Cancel", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (_, _, _) in self.textNamePlayer.endEditing(true)}
@@ -443,6 +485,34 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
                     .appear(originView: self.textNamePlayer, baseViewController: self)
             }
         })
+    }
+    
+    func picknumber(textFieldChanged : UITextField) {
+        
+        var arrayNumber : [String] = []
+        for i in 0...100 {
+            arrayNumber.append("\(i)")
+        }
+        
+        textFieldChanged.resignFirstResponder()
+        
+        StringPickerPopover(title: "Ingrese el numero:", choices: arrayNumber)
+                .setSelectedRow(0)
+            .setValueChange(action: { _, selectedDate,argData  in
+                    print("current date \(selectedDate)")
+                })
+                .setDoneButton(title: "OK", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (popover, selectedRow, selectedString) in
+
+                    textFieldChanged.text = selectedString
+                    textFieldChanged.endEditing(true)
+                })
+                .setCancelButton(title: "Cancel", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (_, _, _) in self.textNamePlayer.endEditing(true)}
+
+                )
+                .setSize(height: 150)
+                .setFontColor(.colorCoal)
+            .appear(originView: textFieldChanged, baseViewController: self)
+        
     }
     
     @objc func editAction() {

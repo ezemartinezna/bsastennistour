@@ -355,6 +355,23 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         return button
     }()
     
+    private let buttonAdminTour : UIButton = {
+        let button = UIButton()
+        button.setTitle("CERRAR INSCRIPCION", for: .normal)
+        button.setTitleColor(.black, for: .selected)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont(name: "Helvetica", size: 14)
+        button.layer.backgroundColor = UIColor.colorPop.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
+        button.layer.shadowColor = UIColor.black.withAlphaComponent(0.6).cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 0)
+        button.layer.shadowOpacity = 0.9
+        button.isUserInteractionEnabled = true
+        button.addTarget(self, action: #selector(closeTour), for: .touchUpInside)
+        return button
+    }()
+    
     private let buttonFilterName : UIButton = {
         let button = UIButton()
         button.setTitle("NOMBRE", for: .normal)
@@ -534,6 +551,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         
         uViewScrollView.addSubview(trophyImage)
         uViewScrollView.addSubview(buttonRegister)
+        uViewScrollView.addSubview(buttonAdminTour)
         
         //CUADRO
         containerViewCuadro.addSubview(uView3)
@@ -756,6 +774,12 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         buttonRegister.heightAnchor.constraint(equalToConstant: 40).isActive = true
         buttonRegister.widthAnchor.constraint(equalToConstant: 200).isActive = true
         
+        buttonAdminTour.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        buttonAdminTour.topAnchor.constraint(equalTo: trophyImage.bottomAnchor,constant: 20).isActive = true
+        buttonAdminTour.bottomAnchor.constraint(equalTo: uViewScrollView.bottomAnchor,constant: -20).isActive = true
+        buttonAdminTour.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        buttonAdminTour.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        
         //CUADRO
         topView4Llaves = uView4.topAnchor.constraint(equalTo: uView3.bottomAnchor,constant: 20)
         topView4Llaves?.isActive = true
@@ -767,6 +791,9 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             trophyImage.isHidden = true
             buttonRegister.isHidden = true
             buttonRegister.isEnabled = false
+        }else{
+            buttonAdminTour.isHidden = true
+            buttonAdminTour.isEnabled = false
         }
     }
 
@@ -803,8 +830,8 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             myCell.labelName.text = firstname
             myCell.labelLastname.text = lastname
             myCell.labelPosition.text = "\(tourament[0].players[indexPath.row].rank)"
-            myCell.imagePhotoHeader.image = UIImage(named: tourament[0].players[indexPath.row].picture)
-
+            let imageUrl = URL(string:tourament[0].players[indexPath.row].picture)
+            myCell.imagePhotoHeader.sd_setImage(with: imageUrl, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
 
             returnCell = myCell
         }
@@ -1017,6 +1044,23 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         allLlaves.reloadData()
     }
     
+    @objc func closeTour() {
+        
+        ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Info/Status")
+        ref.setValue("Closed"){
+            (error:Error?, ref:DatabaseReference) in
+            if let error = error {
+              self.showAlert(title: "Error", message: error.localizedDescription)
+              return
+            } else {
+              self.buttonAdminTour.alpha = 0.5
+              self.buttonAdminTour.isEnabled = false
+              self.showAlert(title: "\(self.nameTour)", message: "Se cierra la inscripción correctamente.")
+            }
+        }
+        
+    }
+    
     @objc func registerTour() {
         
         ref = Database.database().reference().child("Users/\(uid)/")
@@ -1028,6 +1072,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                 var fullName = "-"
                 var rank = 0
                 var points = 0
+                var picture = "-"
                 
                 if let firstName = snapshot.childSnapshot(forPath: "firstName").value {
                     if let lastName = snapshot.childSnapshot(forPath: "lastName").value {
@@ -1043,20 +1088,24 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                     points = pointValue
                 }
                 
+                if let pictureValue = snapshot.childSnapshot(forPath: "picture").value as? String {
+                    picture = pictureValue
+                }
+                
                 if fullName == "- -" {
                     self.showAlertWithOkAction(title: "Configure su Perfil", message: "Modifique su nombre y apellido.",index: 3)
                 }else{
                 
-                let savePlayer = [self.uid : ["fullName" : fullName,"picture" : "person3","rank" : rank, "points" : points]]
+                    let savePlayer = ["fullName" : fullName,"picture" : picture,"rank" : rank, "points" : points] as [String : Any]
                 
-                self.ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Players/")
+                    self.ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Players/\(self.uid)")
                 self.ref.setValue(savePlayer){
                     (error:Error?, ref:DatabaseReference) in
                     if let error = error {
                       self.showAlert(title: "Error", message: error.localizedDescription)
                       return
                     } else {
-                        self.tourament[0].players.append(PlayerStat(id: self.uid, fullName: "Ezequiel Martinez", points: 100, rank: 3, picture: "person3"))
+                        self.tourament[0].players.append(PlayerStat(id: self.uid, fullName: fullName, points: points, rank: rank, picture: picture))
                         self.showAlert(title: "Torneo Inscripto", message: "Se registró correctamente.")
                         self.allUsersTable.reloadData()
                     }
@@ -1448,6 +1497,14 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                                     if stat.key == "Max" {
                                         let valueString = stat.value as? String ?? "0"
                                         self.maxPlayers = Int(valueString) ?? 0
+                                    }
+                                    if stat.key == "Status" {
+                                        if stat.value as? String == "Closed" {
+                                            self.buttonRegister.alpha = 0.5
+                                            self.buttonRegister.isEnabled = false
+                                            self.buttonAdminTour.isEnabled = false
+                                            self.buttonAdminTour.alpha = 0.5
+                                        }
                                     }
                                     stats.append(TourStats(title: stat.key, value: stat.value ?? ""))
                                 }

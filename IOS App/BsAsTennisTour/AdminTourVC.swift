@@ -398,10 +398,11 @@ class AdminTourVC: UIViewController,UIScrollViewDelegate, UITextFieldDelegate {
                     for date in allDates {
                         if let allTours = date.children.allObjects as? [DataSnapshot] {
                             for tour in allTours {
-                                self.myTorneos.append(tour.key)
-                                self.dayMyTorneos.append(date.key)
                                 var maxPlayers = ""
                                 var currentPlayers = ""
+                                self.myTorneos.append(tour.key)
+                                self.dayMyTorneos.append(date.key)
+                      
                                 if let allInfo = tour.children.allObjects as? [DataSnapshot] {
                                     for info in allInfo {
                                         if info.key == "Info" {
@@ -427,12 +428,15 @@ class AdminTourVC: UIViewController,UIScrollViewDelegate, UITextFieldDelegate {
                                 }
                                 self.cantPlayers.append(currentPlayers)
                             }
+                            
                         }
                     }
+                    self.myTorneosTable.reloadData()
                 }
+                
+            }else{
                 self.myTorneosTable.reloadData()
             }
-            
         })
         
     }
@@ -534,6 +538,37 @@ extension AdminTourVC : UITableViewDataSource,UITableViewDelegate {
             self.navigationController?.pushViewController(vc, animated: true)
         }
         
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let cancelTurn = UIContextualAction(style: .normal, title: "Eliminar") { (contextualAction, view, boolvalue) in
+  
+                   let dialogMessage = UIAlertController(title: "Eliminar Torneo", message: "Desea Remover el torneo seleccionado?", preferredStyle: .alert)
+
+                   let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
+                    
+                    let tourRemove = self.myTorneos[indexPath.row]
+                    let tourDayRem = self.dayMyTorneos[indexPath.row]
+                    
+                    self.ref = Database.database().reference().child("Torneos/\(tourDayRem)/\(tourRemove)")
+                    self.ref.removeValue()
+                    self.loadListTours()
+                    
+                       
+                   })
+                   let cancel = UIAlertAction(title: "¡Mejor No!", style: .cancel, handler: {(action) -> Void in
+                       print("Cancel Button Tapped!")
+                   })
+                   dialogMessage.addAction(ok)
+                   dialogMessage.addAction(cancel)
+                   self.present(dialogMessage, animated: true, completion: nil)
+
+        }
+        
+        let swipeActiones = UISwipeActionsConfiguration(actions: [cancelTurn])
+        cancelTurn.backgroundColor = UIColor.colorPop
+        return swipeActiones
     }
     
     

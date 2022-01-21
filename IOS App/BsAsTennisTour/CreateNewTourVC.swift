@@ -809,7 +809,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         
     }
     
-    func verifyModel() -> Bool {
+    func verifyModel() {
         
         let cantZonas = Int(textZonas.text!) ?? 1
         let maxClasi = Int(textMaxClasi.text!) ?? 1
@@ -817,19 +817,14 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         switch resultado {
         case 2:
             textLlaves.text = "Final"
-            return true
         case 4:
             textLlaves.text = "Semifinal"
-            return true
         case 8:
             textLlaves.text = "Cuartos"
-            return true
         case 16:
             textLlaves.text = "Octavos"
-            return true
         default:
             textLlaves.text = "Sin llave"
-            return false
         }
     }
     
@@ -1243,6 +1238,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         if textField == textZonas {
             labelZonas.textColor = .colorMint
             lineZonas.backgroundColor = .colorMint
+            textMaxClasi.text = ""
             cantZonas()
         }
         if textField == textMaxClasi {
@@ -1288,9 +1284,7 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         if textField == textMaxClasi {
             labelMaxClasi.textColor = .gray
             lineMaxClasi.backgroundColor = .colorCoal
-            if verifyModel() {
-                
-            }
+            verifyModel()
         }
         
         if textField == textModelo {

@@ -142,8 +142,8 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
         cell.labelWins.text = "\(allPlayers[indexPath.row].win)"
         cell.labelLosts.text = "\(allPlayers[indexPath.row].lose)"
         cell.labelPositionPoints.text = "\(allPlayers[indexPath.row].points)"
-        cell.imagePhotoHeader.image = UIImage(named: allPlayers[indexPath.row].picture)
-
+        let imageUrl = URL(string:allPlayers[indexPath.row].picture)
+        cell.imagePhotoHeader.sd_setImage(with: imageUrl, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
         
         return cell
     }

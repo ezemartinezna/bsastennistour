@@ -32,6 +32,17 @@ class UserChangeName: UIViewController,UITextFieldDelegate {
           return label
       }()
     
+    private let buttonEdit : UIButton  = {
+       let button = UIButton()
+        button.setImage(#imageLiteral(resourceName: "pencil_icon_white"), for: .normal)
+        button.tintColor = .colorCoal
+        button.contentMode = .scaleAspectFit
+        button.isUserInteractionEnabled = true
+        button.addTarget(self, action: #selector(DismissVW), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     private let labelNamePlayer : UILabel = {
         let label = UILabel()
          label.font = UIFont(name: "Helvetica", size: 16)
@@ -119,6 +130,7 @@ class UserChangeName: UIViewController,UITextFieldDelegate {
         view.addSubview(containerView)
         
         view.addSubview(labelTitle)
+        view.addSubview(buttonEdit)
         view.addSubview(labelNamePlayer)
         view.addSubview(textNamePlayer)
         textNamePlayer.delegate = self
@@ -130,7 +142,7 @@ class UserChangeName: UIViewController,UITextFieldDelegate {
         
         NSLayoutConstraint.activate([
             
-            blackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.70),
+            blackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.40),
             blackView.topAnchor.constraint(equalTo: view.topAnchor),
             blackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             blackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -147,6 +159,11 @@ class UserChangeName: UIViewController,UITextFieldDelegate {
 
             labelTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             labelTitle.topAnchor.constraint(equalTo: containerView.topAnchor,constant: 20),
+            
+            buttonEdit.centerYAnchor.constraint(equalTo: labelTitle.centerYAnchor),
+            buttonEdit.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -25),
+            buttonEdit.widthAnchor.constraint(equalToConstant: 20),
+            buttonEdit.heightAnchor.constraint(equalToConstant: 20),
             
             labelNamePlayer.topAnchor.constraint(equalTo: labelTitle.bottomAnchor,constant: 20),
             labelNamePlayer.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 40),
@@ -222,6 +239,32 @@ class UserChangeName: UIViewController,UITextFieldDelegate {
         
         NotificationCenter.default.post(name: Notification.Name("LoadUserData"), object: nil)
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        
+        if textField == textNamePlayer {
+            labelNamePlayer.textColor = .colorMint
+            lineNamePlayer.backgroundColor = .colorMint
+        }
+        
+        if textField == textLastNamePlayer {
+            labelLastNamePlayer.textColor = .colorMint
+            lineLastNamePlayer.backgroundColor = .colorMint
+        }
+        
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+        if textField == textNamePlayer {
+            labelNamePlayer.textColor = .colorCoal
+            lineNamePlayer.backgroundColor = .colorCoal
+        }
+        if textField == textLastNamePlayer {
+            labelLastNamePlayer.textColor = .colorCoal
+            lineLastNamePlayer.backgroundColor = .colorCoal
+        }
     }
 
 }
