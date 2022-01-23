@@ -71,8 +71,9 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
         return stack
     }()
     
-    var allPlayers : [PlayerZona] = []
+    var allNumberZonas : [NumberZona] = []
     var maxCant : Int = 0
+    var double : Bool = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -124,7 +125,7 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return allPlayers.count
+        return allNumberZonas.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -136,22 +137,37 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
         }else{
             cell.containerView.backgroundColor = .white
         }
-        let (firstname,lastname) = NameDivisor(fullName: allPlayers[indexPath.row].fullName)
-        cell.labelName.text = firstname
-        cell.labelLastname.text = lastname
-        cell.labelWins.text = "\(allPlayers[indexPath.row].win)"
-        cell.labelLosts.text = "\(allPlayers[indexPath.row].lose)"
-        cell.labelPositionPoints.text = "\(allPlayers[indexPath.row].points)"
-        let imageUrl = URL(string:allPlayers[indexPath.row].picture)
+        if double {
+            let imageUrl = URL(string:allNumberZonas[indexPath.row].allPlayers[1].player.picture)
+            cell.imagePhotoHeader1.sd_setImage(with: imageUrl, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+            let (firstname,lastname) = NameDivisor(fullName: allNumberZonas[indexPath.row].allPlayers[0].player.fullName)
+            let (firstname1,lastname1) = NameDivisor(fullName: allNumberZonas[indexPath.row].allPlayers[1].player.fullName)
+            cell.labelName.text = firstname + " " + firstname1
+            cell.labelLastname.text = lastname + " " + lastname1
+        }else{
+            let (firstname,lastname) = NameDivisor(fullName: allNumberZonas[indexPath.row].allPlayers[0].player.fullName)
+            cell.labelName.text = firstname
+            cell.labelLastname.text = lastname
+        }
+        cell.labelWins.text = "\(allNumberZonas[indexPath.row].allPlayers[0].player.win)"
+        cell.labelLosts.text = "\(allNumberZonas[indexPath.row].allPlayers[0].player.lose)"
+        cell.labelPositionPoints.text = "\(allNumberZonas[indexPath.row].allPlayers[0].player.points)"
+        let imageUrl = URL(string:allNumberZonas[indexPath.row].allPlayers[0].player.picture)
         cell.imagePhotoHeader.sd_setImage(with: imageUrl, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+        
+        
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-
-        delegate?.ZonasCellTapped(position: allPlayers[indexPath.row].key, index: indexPath.row)
+        if double {
+            delegate?.ZonasCellTapped(position: allNumberZonas[indexPath.row].number, index: indexPath.row,uid1: allNumberZonas[indexPath.row].allPlayers[0].uid, uid2: allNumberZonas[indexPath.row].allPlayers[1].uid)
+        }else{
+            delegate?.ZonasCellTapped(position: allNumberZonas[indexPath.row].number, index: indexPath.row,uid1: allNumberZonas[indexPath.row].allPlayers[0].uid, uid2: "")
+        }
+   
 
 
     }
@@ -161,9 +177,10 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
 
 
 extension ZonesCVCell {
-    func updateCellWith(row: [PlayerZona], max : Int) {
-        self.allPlayers = row
+    func updateCellWith(row: [NumberZona], max : Int, double : Bool) {
+        self.allNumberZonas = row
         self.maxCant = max
+        self.double = double
         self.allParticipants.reloadData()
     }
     

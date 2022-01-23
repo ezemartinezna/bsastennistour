@@ -845,20 +845,27 @@ class CreateNewTourVC: UIViewController, UIScrollViewDelegate, UITextFieldDelega
         
         tourament.updateValue(winwin, forKey: "WinPoints")
         
-        let infoZona : [String : Any] = ["fullName" : "-","lose" : 0,"picture" : "perfilIcon","win" : 0,"points":0,"uid":randomString(length: 7)]
-      
+        let playerStats : [String : Any] = ["fullName" : "-","lose" : 0,"picture" : "perfilIcon","win" : 0,"points":0]
         var zonas : [String :
-                        [String : [String : Any]]] = [:]
-        
+                          [String : [String : Any]]] = [:]
+        var playersZonas : [String : [String : Any]] = [:]
+    
         if let cantZona = Int(textZonas.text!) {
-            let total = (Int(textMax.text!) ?? 0) / cantZona
-            for i in 1...cantZona {
-                var allPlayers : [String : [String : Any]] = [:]
-                for f in 1...total {
-                    allPlayers.updateValue(infoZona, forKey: "\(f)")
-                }
-                zonas.updateValue(allPlayers, forKey: "Zona \(i)")
+            var total = (Int(textMax.text!) ?? 0) / cantZona
+            if textModelo.text?.contains("Double") == true {
+                total = total / 2
             }
+            for i in 1...cantZona {
+                for f in 1...total {
+                    if textModelo.text?.contains("Double") == true {
+                        playersZonas.updateValue([randomString(length: 7):playerStats,randomString(length: 7):playerStats], forKey: "\(f)")
+                    }else{
+                        playersZonas.updateValue([randomString(length: 7):playerStats], forKey: "\(f)")
+                    }
+                }
+                zonas.updateValue(playersZonas, forKey: "Zona \(i)")
+            }
+            
         }
 
         var SET : [String : String] = [:]

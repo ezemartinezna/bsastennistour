@@ -168,7 +168,7 @@ class ZonesTVCell: UITableViewCell {
             imagePhotoHeader1.heightAnchor.constraint(equalTo: containerPhotoHeader1.heightAnchor),
             imagePhotoHeader1.widthAnchor.constraint(equalTo: containerPhotoHeader1.widthAnchor),
             
-            labelName.topAnchor.constraint(equalTo: containerPhotoHeader.topAnchor, constant: 5),
+            labelName.topAnchor.constraint(equalTo: containerPhotoHeader.topAnchor),
             labelName.leadingAnchor.constraint(equalTo: containerPhotoHeader.trailingAnchor, constant: 15),
             
             labelLastname.topAnchor.constraint(equalTo: labelName.bottomAnchor, constant: 5),

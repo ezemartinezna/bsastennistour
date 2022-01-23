@@ -192,27 +192,6 @@ public struct Match {
     }
 }
 
-public struct PlayerZona {
-    
-    var id : String
-    var fullName : String
-    var picture : String
-    var win : Int
-    var lose : Int
-    var points : Int
-    var key : String
-    
-    public init(id : String,fullName : String,picture:String,win:Int,lose:Int,points:Int,key:String) {
-        self.id = id
-        self.fullName = fullName
-        self.picture = picture
-        self.win = win
-        self.lose = lose
-        self.points = points
-        self.key = key
-    }
-}
-
 public struct Llaves {
     var name : String
     var types : [Match]
@@ -222,17 +201,57 @@ public struct Llaves {
         self.types = types
     }
 }
+
+///MARK: ZONAS TORNEOS
+///
 public struct Zonas {
     var name : String
-    var types : [PlayerZona]
+    var numberZona : [NumberZona]
     
-    public init(name:String,types:[PlayerZona]) {
+    public init(name:String,numberZona:[NumberZona]) {
         self.name = name
-        self.types = types
+        self.numberZona = numberZona
+    }
+}
+
+public struct NumberZona {
+    var number : String
+    var allPlayers : [ZonaUID]
+    
+    public init(number:String,allPlayers:[ZonaUID]) {
+        self.number = number
+        self.allPlayers = allPlayers
+    }
+}
+
+public struct ZonaUID {
+    var uid : String
+    var player : PlayerZona
+    
+    public init(uid : String, player : PlayerZona) {
+        self.uid = uid
+        self.player = player
+    }
+}
+
+public struct PlayerZona {
+    
+    var fullName : String
+    var picture : String
+    var win : Int
+    var lose : Int
+    var points : Int
+    
+    public init(fullName : String,picture:String,win:Int,lose:Int,points:Int) {
+        self.fullName = fullName
+        self.picture = picture
+        self.win = win
+        self.lose = lose
+        self.points = points
     }
 }
 
 protocol ZonasLlavesDelegate:AnyObject {
-    func ZonasCellTapped(position : String, index : Int)
+    func ZonasCellTapped(position : String, index : Int,uid1:String,uid2:String)
     func LlavesCellTapped(match : String)
 }

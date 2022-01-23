@@ -276,8 +276,14 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
                                         
                                         let llaves = [Llaves(name: "CUARTOS", types: [Match(name: "Match1", player1: player1, player2: player1)])]
                                         
-                                        let player2 = PlayerZona(id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0, key: "0")
-                                        let zonas = [Zonas(name: "ZONA 1", types: [player2,player2,player2,player2])]
+                                        
+                                        
+                                        let player2 = PlayerZona(fullName: "John Doe", picture: "perfilIcon", win: 0, lose: 0, points: 0)
+                                        
+                                        let zonaPlayer = ZonaUID(uid: "1q2w3e4r", player: player2)
+                                        let numberZone = NumberZona(number: "1", allPlayers: [zonaPlayer,zonaPlayer])
+       
+                                        let zonas = [Zonas(name: "ZONA 1", numberZona: [numberZone])]
                                         
                                         self.allTorneos.append( Tourament(name: tour.key, stats: stats, players: allPlayers, winPoints: winPoints, llave: llaves, zone: zonas) )
                                     }

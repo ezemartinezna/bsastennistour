@@ -26,6 +26,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
     let uid = UserDefaults.standard.string(forKey: "uid") ?? "-"
     
     var maxPlayers : Int = 0
+    var modelo : String = ""
     
     var ref: DatabaseReference!
     
@@ -1213,20 +1214,28 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
          
          if cantZona.text != "" && maxClasi.text != "" && cantSETS.text != ""{
             
-            let infoZona : [String : Any] = ["fullName" : "-","lose" : 0,"picture" : "perfilIcon","win" : 0,"points":0,"uid":self.randomString(length: 7)]
+             let playerStats : [String : Any] = ["fullName" : "-","lose" : 0,"picture" : "perfilIcon","win" : 0,"points":0]
             
-            var zonas : [String :
-                            [String : [String : Any]]] = [:]
+             var zonas : [String :
+                               [String : [String : Any]]] = [:]
+             var playersZonas : [String : [String : Any]] = [:]
+             
             if let iCantZona = Int(cantZona.text!) {
                 if let iMaxClasi = Int(maxClasi.text!) {
                     
-                let total = self.maxPlayers / iCantZona
-                for i in 1...iCantZona {
-                    var allPlayers : [String : [String : Any]] = [:]
-                    for f in 1...total {
-                        allPlayers.updateValue(infoZona, forKey: "\(f)")
+                var total = self.maxPlayers / iCantZona
+                    if self.modelo.contains("Double") == true {
+                        total = total / 2
                     }
-                    zonas.updateValue(allPlayers, forKey: "Zona \(i)")
+                for i in 1...iCantZona {
+                    for f in 1...total {
+                        if self.modelo.contains("Double") == true {
+                            playersZonas.updateValue([self.randomString(length: 7):playerStats,self.randomString(length: 7):playerStats], forKey: "\(f)")
+                        }else{
+                            playersZonas.updateValue([self.randomString(length: 7):playerStats], forKey: "\(f)")
+                        }
+                    }
+                    zonas.updateValue(playersZonas, forKey: "Zona \(i)")
                 }
                 var savellave : [String :
                                     [String :
@@ -1506,6 +1515,9 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                                             self.buttonAdminTour.alpha = 0.5
                                         }
                                     }
+                                    if stat.key == "Modelo" {
+                                        self.modelo = stat.value as? String ?? "Single Mixto"
+                                    }
                                     stats.append(TourStats(title: stat.key, value: stat.value ?? ""))
                                 }
                             }
@@ -1551,48 +1563,49 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                         case "Zonas":
                             if let allZonas = tour.children.allObjects as? [DataSnapshot] {
                                 for zona in allZonas {
-                                    var arrayPlayers : [PlayerZona] = []
-                                    if let allPlayers = zona.children.allObjects as? [DataSnapshot]{
-                                        for player in allPlayers {
-                                            if let allInfoPlayer = player.children.allObjects as? [DataSnapshot] {
-                                                
-                                                var fullName : String = ""
-                                                var points : Int = 0
-                                                var lose : Int = 0
-                                                var win : Int = 0
-                                                var picture : String = ""
-                                                var uid : String = ""
+                                    var numberZonas : [NumberZona] = []
+                                    if let allNumbers = zona.children.allObjects as? [DataSnapshot]{
+                                        var allPlayers : [ZonaUID] = []
+                                        for numbers in allNumbers {
+                                            if let allInfoPlayer = numbers.children.allObjects as? [DataSnapshot] {
                                                 
                                                 for info in allInfoPlayer {
-                                                    if info.key == "fullName" {
-                                                        fullName = info.value as? String ?? "-"
+                                                    var fullName : String = ""
+                                                    var points : Int = 0
+                                                    var lose : Int = 0
+                                                    var win : Int = 0
+                                                    var picture : String = ""
+                                                    if let allData = info.children.allObjects as? [DataSnapshot] {
+                                                        for data in allData {
+                                                            if data.key == "fullName" {
+                                                                fullName = data.value as? String ?? "-"
+                                                            }
+                                                            if data.key == "points" {
+                                                                points = data.value as? Int ?? 0
+                                                            }
+                                                            if data.key == "lose" {
+                                                                lose = data.value as? Int ?? 0
+                                                            }
+                                                            if data.key == "win" {
+                                                                win = data.value as? Int ?? 0
+                                                            }
+                                                            if data.key == "picture" {
+                                                                picture = data.value as? String ?? "-"
+                                                            }
+                                                        }
                                                     }
-                                                    if info.key == "points" {
-                                                        points = info.value as? Int ?? 0
-                                                    }
-                                                    if info.key == "lose" {
-                                                        lose = info.value as? Int ?? 0
-                                                    }
-                                                    if info.key == "win" {
-                                                        win = info.value as? Int ?? 0
-                                                    }
-                                                    if info.key == "picture" {
-                                                        picture = info.value as? String ?? "-"
-                                                    }
-                                                    if info.key == "uid" {
-                                                        uid = info.value as? String ?? "-"
-                                                    }
+                                                    allPlayers.append(ZonaUID(uid: info.key, player: PlayerZona(fullName: fullName, picture: picture, win: win, lose: lose, points: points)))
                                                 }
-                                                arrayPlayers.append(PlayerZona(id: uid, fullName: fullName, picture: picture, win: win, lose: lose, points: points,key: player.key))
                                             }
+                                            numberZonas.append(NumberZona(number: numbers.key, allPlayers: allPlayers))
+                                            allPlayers.removeAll()
                                         }
                                     }
-                                    
-                                    let sortedPlayers = arrayPlayers.sorted(by: {
-                                        $0.points > $1.points
+                                    let sortedZonas = numberZonas.sorted(by: {
+                                        $0.allPlayers[0].player.points > $1.allPlayers[0].player.points
                                     })
-                                    
-                                    zonas.append(Zonas(name: zona.key, types: sortedPlayers))
+                                    zonas.append(Zonas(name: zona.key, numberZona: sortedZonas))
+                                    numberZonas.removeAll()
                                 }
                             }
                         case "Llaves":
@@ -1689,62 +1702,59 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                     for tour in allTour {
                         
                         if tour.key == "Zonas" {
-  
+                            
                             if let allZonas = tour.children.allObjects as? [DataSnapshot] {
                                 for zona in allZonas {
-                                    var arrayPlayers : [PlayerZona] = []
-                                    if let allPlayers = zona.children.allObjects as? [DataSnapshot]{
-                                        for player in allPlayers {
-                                            if let allInfoPlayer = player.children.allObjects as? [DataSnapshot] {
-                                                
-                                                var fullName : String = ""
-                                                var points : Int = 0
-                                                var lose : Int = 0
-                                                var win : Int = 0
-                                                var picture : String = ""
-                                                var uid : String = ""
+                                    var numberZonas : [NumberZona] = []
+                                    if let allNumbers = zona.children.allObjects as? [DataSnapshot]{
+                                        var allPlayers : [ZonaUID] = []
+                                        for numbers in allNumbers {
+                                            if let allInfoPlayer = numbers.children.allObjects as? [DataSnapshot] {
                                                 
                                                 for info in allInfoPlayer {
-                                                    if info.key == "fullName" {
-                                                        fullName = info.value as? String ?? "-"
+                                                    var fullName : String = ""
+                                                    var points : Int = 0
+                                                    var lose : Int = 0
+                                                    var win : Int = 0
+                                                    var picture : String = ""
+                                                    if let allData = info.children.allObjects as? [DataSnapshot] {
+                                                        for data in allData {
+                                                            if data.key == "fullName" {
+                                                                fullName = data.value as? String ?? "-"
+                                                            }
+                                                            if data.key == "points" {
+                                                                points = data.value as? Int ?? 0
+                                                            }
+                                                            if data.key == "lose" {
+                                                                lose = data.value as? Int ?? 0
+                                                            }
+                                                            if data.key == "win" {
+                                                                win = data.value as? Int ?? 0
+                                                            }
+                                                            if data.key == "picture" {
+                                                                picture = data.value as? String ?? "-"
+                                                            }
+                                                        }
                                                     }
-                                                    if info.key == "points" {
-                                                        points = info.value as? Int ?? 0
-                                                    }
-                                                    if info.key == "lose" {
-                                                        lose = info.value as? Int ?? 0
-                                                    }
-                                                    if info.key == "win" {
-                                                        win = info.value as? Int ?? 0
-                                                    }
-                                                    if info.key == "picture" {
-                                                        picture = info.value as? String ?? "-"
-                                                    }
-                                                    if info.key == "uid" {
-                                                        uid = info.value as? String ?? "-"
-                                                    }
+                                                    allPlayers.append(ZonaUID(uid: info.key, player: PlayerZona(fullName: fullName, picture: picture, win: win, lose: lose, points: points)))
                                                 }
-                                                arrayPlayers.append(PlayerZona(id: uid, fullName: fullName, picture: picture, win: win, lose: lose, points: points,key: player.key))
                                             }
+                                            numberZonas.append(NumberZona(number: numbers.key, allPlayers: allPlayers))
+                                            allPlayers.removeAll()
                                         }
                                     }
-                                    
-                                    let sortedPlayers = arrayPlayers.sorted(by: {
-                                        $0.points > $1.points
+                                    let sortedZonas = numberZonas.sorted(by: {
+                                        $0.allPlayers[0].player.points > $1.allPlayers[0].player.points
                                     })
-                                    
-                                    zonas.append(Zonas(name: zona.key, types: sortedPlayers))
+                                    zonas.append(Zonas(name: zona.key, numberZona: sortedZonas))
+                                    numberZonas.removeAll()
                                 }
                             }
-
                         }
-
                     }
                     self.tourament[0].zone.append(contentsOf: zonas)
                 }
-
                 self.allZones.reloadData()
-    
             }
         })
         
@@ -1836,12 +1846,14 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         
     }
     
-    func ZonasCellTapped(position : String,index : Int) {
+    func ZonasCellTapped(position : String,index : Int,uid1: String, uid2: String) {
         
-        let path = "Torneos/\(dayTour)/\(nameTour)/Zonas/\(tourament[0].zone[pageControlZones.currentPage].name)/\(position)"
+        let path = "Torneos/\(dayTour)/\(nameTour)/Zonas/\(tourament[0].zone[pageControlZones.currentPage].name)/\(position)/"
         let pathPlayers = "Torneos/\(dayTour)/\(nameTour)/Players/"
         
         UserDefaults.standard.set(path, forKey: "pathModified")
+        UserDefaults.standard.set(uid1, forKey: "UID1Pass")
+        UserDefaults.standard.set(uid2, forKey: "UID2Pass")
         UserDefaults.standard.set(index, forKey: "indexZone")
         UserDefaults.standard.set(pathPlayers,forKey: "pathPlayers")
         UserDefaults.standard.synchronize()
@@ -1958,7 +1970,8 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! ZonesCVCell
 
             cell.labelTitle.text = tourament[0].zone[indexPath.row].name
-            cell.updateCellWith(row: tourament[0].zone[indexPath.row].types, max: (tourament[0].llave.count * tourament[0].llave.count) / tourament[0].zone.count)
+            cell.updateCellWith(row: tourament[0].zone[indexPath.row].numberZona, max: tourament[0].llave.count * tourament[0].llave.count, double: modelo.contains("Double"))
+            
             cell.delegate = self
             returnCell = cell
         }
