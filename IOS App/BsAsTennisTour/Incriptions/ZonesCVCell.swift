@@ -165,7 +165,7 @@ class ZonesCVCell: UICollectionViewCell, UITableViewDataSource, UITableViewDeleg
         if double {
             delegate?.ZonasCellTapped(position: allNumberZonas[indexPath.row].number, index: indexPath.row,uid1: allNumberZonas[indexPath.row].allPlayers[0].uid, uid2: allNumberZonas[indexPath.row].allPlayers[1].uid)
         }else{
-            delegate?.ZonasCellTapped(position: allNumberZonas[indexPath.row].number, index: indexPath.row,uid1: allNumberZonas[indexPath.row].allPlayers[0].uid, uid2: "")
+            delegate?.ZonasCellTapped(position: allNumberZonas[indexPath.row].number, index: indexPath.row,uid1: allNumberZonas[indexPath.row].allPlayers[0].uid, uid2: "-")
         }
    
 

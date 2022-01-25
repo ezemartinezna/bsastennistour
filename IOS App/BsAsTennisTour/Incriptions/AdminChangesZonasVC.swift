@@ -250,13 +250,10 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
     
     var ref: DatabaseReference!
 
-    var traiTextNamePlayerCenter : NSLayoutConstraint?
+
     var traiLabelNamePlayerCenter : NSLayoutConstraint?
-    var traiLineNamePlayerCenter : NSLayoutConstraint?
-    
-    var traiTextNamePlayerView : NSLayoutConstraint?
     var traiLabelNamePlayerView : NSLayoutConstraint?
-    var traiLineNamePlayerView : NSLayoutConstraint?
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -303,14 +300,11 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
         textWin.delegate = self
         textLose.delegate = self
         textPoints.delegate = self
-        
-//        traiTextNamePlayerCenter = textNamePlayer.trailingAnchor.constraint(equalTo: view.centerXAnchor,constant: -10)
+
         traiLabelNamePlayerCenter = labelNamePlayer.trailingAnchor.constraint(equalTo: view.centerXAnchor,constant: -10)
-//        traiLineNamePlayerCenter = lineNamePlayer.trailingAnchor.constraint(equalTo: view.centerXAnchor,constant: -10)
         traiLabelNamePlayerCenter?.isActive = false
                                             
         traiLabelNamePlayerView = labelNamePlayer.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -40)
-//        traiTextNamePlayerView = textNamePlayer.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20)
         traiLabelNamePlayerView?.isActive = true
         
         NSLayoutConstraint.activate([
@@ -551,12 +545,18 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
     
     func pickPlayer() {
         
+        arrayUIDS.removeAll()
+        arrayPictures.removeAll()
+        arrayUIDS.append(randomString(length: 7))
+        arrayPictures.append("perfilIcon")
+        
         ref = Database.database().reference().child(pathPlayer)
         
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
 
             if snapshot.exists() {
                 var arrayPlayers : [String] = []
+                arrayPlayers.append("Ingreso Manual")
                 
                 if let allPlayers = snapshot.children.allObjects as? [DataSnapshot] {
                     for player in allPlayers {
@@ -580,11 +580,14 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
                             print("current date \(selectedDate)")
                         })
                         .setDoneButton(title: "OK", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (popover, selectedRow, selectedString) in
-
-                            self.textNamePlayer.text = selectedString
                             self.uid = self.arrayUIDS[selectedRow]
                             self.picture = self.arrayPictures[selectedRow]
-                            self.textNamePlayer.endEditing(true)
+                            if selectedRow == 0 {
+                                self.textNamePlayer.text = ""
+                            }else{
+                                self.textNamePlayer.text = selectedString
+                                self.textNamePlayer.endEditing(true)
+                            }
                         })
                         .setCancelButton(title: "Cancel", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (_, _, _) in self.textNamePlayer.endEditing(true)}
 
@@ -598,12 +601,18 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
     
     func pickPlayer1() {
         
+        arrayUIDS.removeAll()
+        arrayPictures.removeAll()
+        arrayUIDS.append(randomString(length: 7))
+        arrayPictures.append("perfilIcon")
+        
         ref = Database.database().reference().child(pathPlayer)
         
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
 
             if snapshot.exists() {
                 var arrayPlayers : [String] = []
+                arrayPlayers.append("Ingreso Manual")
                 
                 if let allPlayers = snapshot.children.allObjects as? [DataSnapshot] {
                     for player in allPlayers {
@@ -627,11 +636,14 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
                             print("current date \(selectedDate)")
                         })
                         .setDoneButton(title: "OK", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (popover, selectedRow, selectedString) in
-
-                            self.textNamePlayer1.text = selectedString
                             self.uid1 = self.arrayUIDS[selectedRow]
                             self.picture1 = self.arrayPictures[selectedRow]
-                            self.textNamePlayer1.endEditing(true)
+                            if selectedRow == 0 {
+                                self.textNamePlayer1.text = ""
+                            }else{
+                                self.textNamePlayer1.text = selectedString
+                                self.textNamePlayer1.endEditing(true)
+                            }
                         })
                         .setCancelButton(title: "Cancel", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (_, _, _) in self.textNamePlayer1.endEditing(true)}
 

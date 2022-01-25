@@ -1970,7 +1970,7 @@ extension InscriptionsVC : UICollectionViewDelegateFlowLayout, UICollectionViewD
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! ZonesCVCell
 
             cell.labelTitle.text = tourament[0].zone[indexPath.row].name
-            cell.updateCellWith(row: tourament[0].zone[indexPath.row].numberZona, max: tourament[0].llave.count * tourament[0].llave.count, double: modelo.contains("Double"))
+            cell.updateCellWith(row: tourament[0].zone[indexPath.row].numberZona, max: tourament[0].llave.count, double: modelo.contains("Double"))
             
             cell.delegate = self
             returnCell = cell
