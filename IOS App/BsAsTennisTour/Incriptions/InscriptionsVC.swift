@@ -299,6 +299,17 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
           return label
       }()
     
+    private let buttonPlus : UIButton  = {
+       let button = UIButton()
+        button.setImage(#imageLiteral(resourceName: "Icono - Más (Verde)"), for: .normal)
+        button.tintColor = .white
+        button.contentMode = .scaleAspectFit
+        button.isUserInteractionEnabled = true
+        button.addTarget(self, action: #selector(addPlayer), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     let buttonPlusMinus : UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "downArrowWhite"), for: .normal)
@@ -866,6 +877,14 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
 
         containerVw.addSubview(buttonFilterName)
         containerVw.addSubview(buttonFilterRank)
+            
+            if admin == "YES-1" {
+                containerVw.addSubview(buttonPlus)
+                buttonPlus.widthAnchor.constraint(equalToConstant: 30).isActive = true
+                buttonPlus.heightAnchor.constraint(equalToConstant: 30).isActive = true
+                buttonPlus.centerXAnchor.constraint(equalTo: containerVw.centerXAnchor).isActive = true
+                buttonPlus.centerYAnchor.constraint(equalTo: containerVw.centerYAnchor).isActive = true
+            }
         
         buttonFilterName.widthAnchor.constraint(equalToConstant: 100).isActive = true
         buttonFilterName.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -1045,21 +1064,115 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         allLlaves.reloadData()
     }
     
+    func filterMatches(filter : [String], max : Int) -> [String] {
+        var newFilter : [String] = filter
+        var maxCant = newFilter.count
+        for i in 0..<maxCant {
+            if i == maxCant {
+                break
+            }
+            let arrayF = newFilter[i].components(separatedBy: "-")
+            let first = arrayF[0]
+            let second = arrayF[1]
+            newFilter = newFilter.filter { $0 != "\(second)-\(first)" }
+            maxCant-=1
+           
+        }
+
+        return newFilter
+    }
+    
     @objc func closeTour() {
         
-        ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Info/Status")
-        ref.setValue("Closed"){
-            (error:Error?, ref:DatabaseReference) in
+        //ARMO TODA LA CANTIDAD DE PARTIDOS
+        var matchesPlayers : [String : [String]] = [:]
+        let max = tourament[0].players.count / tourament[0].zone.count
+        
+        for allZonas in tourament[0].zone {
+            var matchZonas : [String] = []
+            for i in 0..<allZonas.numberZona.count {
+                if allZonas.numberZona[i].allPlayers[0].player.fullName != "-" {
+                    for playerMatch in allZonas.numberZona {
+                        if (playerMatch.allPlayers[0].player.fullName != allZonas.numberZona[i].allPlayers[0].player.fullName) && (playerMatch.allPlayers[0].player.fullName != "-"){
+                            matchZonas.append("\(allZonas.numberZona[i].number)-\(playerMatch.number)")
+                        }
+                    }
+                }
+            }
+            let newFilter = filterMatches(filter: matchZonas, max: max)
+            matchesPlayers.updateValue(newFilter, forKey: allZonas.name)
+            
+        }
+        
+        //BUSCO LA CANTIDAD DE SETS
+        var SET : [String : String] = [:]
+        var cantSet = 1
+        for titleTourStat in tourament[0].stats {
+            if titleTourStat.title == "SETS" {
+                cantSet = Int(titleTourStat.value as? String ?? "1") ?? 1
+            }
+        }
+        for i in 1...cantSet {
+            SET.updateValue("-", forKey: "\(i)")
+        }
+        
+        var arrayMatch : [String : [String: [String:Any]]] = [:]
+        
+        for matches in matchesPlayers {
+            var co = 1
+            var arrayTwoMatch : [String : [String : Any]] = [:]
+            for partido in matches.value {
+                let i = partido.prefix(1)
+                let f = partido.suffix(1)
+                for tourZone in tourament[0].zone {
+                    if tourZone.name == matches.key {
+                        var appendPlayer : [String : Any] = [:]
+                        for playersZona in tourZone.numberZona {
+                            if playersZona.number == i || playersZona.number == f{
+                                var infoPlayer : [String : Any] = [:]
+                                infoPlayer.updateValue(SET, forKey: "SET")
+                                infoPlayer.updateValue(playersZona.allPlayers[0].player.fullName, forKey: "fullName")
+                                infoPlayer.updateValue(playersZona.allPlayers[0].player.picture, forKey: "picture")
+                                infoPlayer.updateValue(false, forKey: "win")
+                                appendPlayer.updateValue(infoPlayer, forKey: playersZona.allPlayers[0].uid)
+                            }
+                        }
+                        if !appendPlayer.isEmpty {
+                            arrayTwoMatch.updateValue(appendPlayer, forKey: "\(co)")
+                            co+=1
+                        }
+                    }
+                }
+            }
+            if !arrayTwoMatch.isEmpty {
+            arrayMatch.updateValue(arrayTwoMatch, forKey: matches.key)
+            }
+        }
+                
+        
+        ref = Database.database().reference().child("Matchs/\(self.dayTour)/\(self.nameTour)")
+        ref.setValue(arrayMatch){ (error:Error?, ref:DatabaseReference) in
             if let error = error {
               self.showAlert(title: "Error", message: error.localizedDescription)
               return
             } else {
-              self.buttonAdminTour.alpha = 0.5
-              self.buttonAdminTour.isEnabled = false
-              self.showAlert(title: "\(self.nameTour)", message: "Se cierra la inscripción correctamente.")
+                
+                self.ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Info/Status")
+                self.ref.setValue("Closed"){
+                    (error:Error?, ref:DatabaseReference) in
+                    if let error = error {
+                      self.showAlert(title: "Error", message: error.localizedDescription)
+                      return
+                    } else {
+                      self.buttonAdminTour.alpha = 0.5
+                      self.buttonAdminTour.isEnabled = false
+                      self.showAlert(title: "\(self.nameTour)", message: "Se cierra la inscripción correctamente.")
+                    }
+                }
+                
             }
         }
-        
+ 
     }
     
     @objc func registerTour() {
@@ -1189,6 +1302,39 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         tourament[0].players.append(contentsOf: sortedUsers2)
         
         allUsersTable.reloadData()
+        
+    }
+    
+    @objc func addPlayer() {
+        
+        let dialogMessage = UIAlertController(title: NSLocalizedString("Inscripción en \(nameTour)", comment: ""), message: NSLocalizedString("Ingrese el jugador", comment: ""), preferredStyle: .alert)
+        dialogMessage.addTextField(configurationHandler: {(textField) in
+                               textField.placeholder = NSLocalizedString("Nombre del jugador", comment: "")
+        })
+        let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
+        
+        let namePlayer = dialogMessage.textFields![0]
+        
+        if namePlayer.text != "" {
+            let savePlayer = ["fullName" : namePlayer.text ?? "-","picture" : "perfilIcon","rank" : 0, "points" : 0] as [String : Any]
+            let randomUID = self.randomString(length: 7)
+            
+            self.ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Players/\(randomUID)")
+            self.ref.setValue(savePlayer){ (error:Error?, ref:DatabaseReference) in
+                if let error = error {
+                  self.showAlert(title: "Error", message: error.localizedDescription)
+                  return
+                } else {
+                    self.tourament[0].players.append(PlayerStat(id: randomUID, fullName: namePlayer.text ?? "-", points: 0, rank: 0, picture: "perfilIcon"))
+                    self.showAlert(title: "Jugador Inscripto", message: "Se registró correctamente.")
+                    self.allUsersTable.reloadData()
+                }
+            }
+        }
+        
+        })
+        dialogMessage.addAction(ok)
+        self.present(dialogMessage, animated: true, completion: nil)
         
     }
     

@@ -556,7 +556,7 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
 
             if snapshot.exists() {
                 var arrayPlayers : [String] = []
-                arrayPlayers.append("Ingreso Manual")
+                arrayPlayers.append("-REMOVER-")
                 
                 if let allPlayers = snapshot.children.allObjects as? [DataSnapshot] {
                     for player in allPlayers {
@@ -583,11 +583,11 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
                             self.uid = self.arrayUIDS[selectedRow]
                             self.picture = self.arrayPictures[selectedRow]
                             if selectedRow == 0 {
-                                self.textNamePlayer.text = ""
+                                self.textNamePlayer.text = "-"
                             }else{
                                 self.textNamePlayer.text = selectedString
-                                self.textNamePlayer.endEditing(true)
                             }
+                            self.textNamePlayer.endEditing(true)
                         })
                         .setCancelButton(title: "Cancel", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (_, _, _) in self.textNamePlayer.endEditing(true)}
 
@@ -612,7 +612,7 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
 
             if snapshot.exists() {
                 var arrayPlayers : [String] = []
-                arrayPlayers.append("Ingreso Manual")
+                arrayPlayers.append("-REMOVER-")
                 
                 if let allPlayers = snapshot.children.allObjects as? [DataSnapshot] {
                     for player in allPlayers {
@@ -642,8 +642,8 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
                                 self.textNamePlayer1.text = ""
                             }else{
                                 self.textNamePlayer1.text = selectedString
-                                self.textNamePlayer1.endEditing(true)
                             }
+                            self.textNamePlayer1.endEditing(true)
                         })
                         .setCancelButton(title: "Cancel", font: UIFont(name: "Helvetica Bold", size: 15), color: .white,action: { (_, _, _) in self.textNamePlayer1.endEditing(true)}
 
@@ -689,12 +689,27 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
         
         if self.uid1 == "-" {
     
-        dataChanged = [self.uid : ["fullName" : textNamePlayer.text ?? "-",
-                                            "lose" : Int(textLose.text!) ?? 0,
-                                            "win" : Int(textWin.text!) ?? 0,
-                                            "points" : Int(textPoints.text!) ?? 0,
-                                            "picture" : picture,
-        ]]
+            dataChanged = [self.uid : [ "fullName" : textNamePlayer.text ?? "-",
+                                        "lose" : Int(textLose.text!) ?? 0,
+                                        "win" : Int(textWin.text!) ?? 0,
+                                        "points" : Int(textPoints.text!) ?? 0,
+                                        "picture" : picture,
+            ]]
+            
+        }else{
+            dataChanged = [self.uid1 : ["fullName" : self.textNamePlayer1.text ?? "-",
+                                        "lose" : Int(self.textLose.text!) ?? 0,
+                                        "win" : Int(self.textWin.text!) ?? 0,
+                                        "points" : Int(self.textPoints.text!) ?? 0,
+                                        "picture" : self.picture1,
+            ],
+                            self.uid : ["fullName" : textNamePlayer.text ?? "-",
+                                        "lose" : Int(textLose.text!) ?? 0,
+                                        "win" : Int(textWin.text!) ?? 0,
+                                        "points" : Int(textPoints.text!) ?? 0,
+                                        "picture" : picture,
+            ]]
+        }
         
         ref = Database.database().reference().child(path)
         
@@ -706,32 +721,6 @@ class AdminChangesZonasVC: UIViewController, UITextFieldDelegate {
             } else {
               self.showAlert(title: "Posicion Cambiada", message: "Se modificó con exito")
             }
-        }
-        }else{
-            
-            dataChanged = [self.uid1 : ["fullName" : self.textNamePlayer1.text ?? "-",
-                           "lose" : Int(self.textLose.text!) ?? 0,
-                           "win" : Int(self.textWin.text!) ?? 0,
-                           "points" : Int(self.textPoints.text!) ?? 0,
-                           "picture" : self.picture1,
-            ],
-                               self.uid : ["fullName" : textNamePlayer.text ?? "-",
-                                                                   "lose" : Int(textLose.text!) ?? 0,
-                                                                   "win" : Int(textWin.text!) ?? 0,
-                                                                   "points" : Int(textPoints.text!) ?? 0,
-                                                                   "picture" : picture,
-            ]]
-            self.ref = Database.database().reference().child(self.path)
-            self.ref.setValue(dataChanged) {
-                (error:Error?, ref:DatabaseReference) in
-                if let error = error {
-                  self.showAlert(title: "Error", message: error.localizedDescription)
-                  return
-                } else {
-                    self.showAlert(title: "Posicion Cambiada", message: "Se modificó con exito")
-                }
-            }
-            
         }
     }
     
