@@ -32,7 +32,7 @@ class LlavesCell: UICollectionViewCell, UITableViewDataSource, UITableViewDelega
     }()
 
     
-    var llaves = Llaves(name: "", types: [Match(name: "", player1: PlayerLlave(match: "", id: "", fullName: "", picture: "", win: false, set: ["0"]), player2: PlayerLlave(match: "", id: "", fullName: "", picture: "", win: false, set: ["0"]))])
+    var llaves = Llaves(name: "", types: [Match(name: "", day: "", player1: PlayerLlave(match: "", id: "", fullName: "", picture: "", win: false, set: ["0"]), player2: PlayerLlave(match: "", id: "", fullName: "", picture: "", win: false, set: ["0"]))])
     
     override init(frame: CGRect) {
         super.init(frame: frame)

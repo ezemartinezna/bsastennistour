@@ -1804,7 +1804,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                                                     }
                                                 }
                                             }
-                                            arrayMatch.append(Match(name: match.key, player1: arrayPlayer[0], player2: arrayPlayer[1]))
+                                            arrayMatch.append(Match(name: match.key, day: self.dayTour, player1: arrayPlayer[0], player2: arrayPlayer[1]))
                                 
                                         }
                                     }
@@ -1972,7 +1972,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                                                     }
                                                 }
                                             }
-                                            arrayMatch.append(Match(name: match.key, player1: arrayPlayer[0], player2: arrayPlayer[1]))
+                                            arrayMatch.append(Match(name: match.key, day: self.dayTour, player1: arrayPlayer[0], player2: arrayPlayer[1]))
                                 
                                         }
                                     }

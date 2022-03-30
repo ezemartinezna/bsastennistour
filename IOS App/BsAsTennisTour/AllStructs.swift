@@ -48,25 +48,6 @@ public struct AllParticipants {
     }
 }
 
-public struct MatchParticipant {
-    
-    var firstName : String
-    var lastName : String
-    var profilePicture : String
-    var points : [String]
-    var win : Bool
-    
-}
-
-public struct AllMatches {
-    
-    var nameTour : String
-    var dateTour : String
-    var detailTour : String
-    var participant : [MatchParticipant]
-    
-}
-
 public struct Tourament {
     var name : String
     var stats : [TourStats]
@@ -182,11 +163,13 @@ public struct PlayerLlave {
 public struct Match {
     
     var name : String
+    var day : String
     var player1 : PlayerLlave
     var player2 : PlayerLlave
     
-    public init(name : String, player1 : PlayerLlave, player2: PlayerLlave) {
+    public init(name : String, day : String, player1 : PlayerLlave, player2: PlayerLlave) {
         self.name = name
+        self.day = day
         self.player1 = player1
         self.player2 = player2
     }

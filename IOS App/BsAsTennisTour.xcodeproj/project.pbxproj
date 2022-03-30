@@ -17,6 +17,7 @@
 		A5535F5A257321AA00C68F16 /* UserRankingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5535F59257321AA00C68F16 /* UserRankingVC.swift */; };
 		A55F475B257BEE7900F80B82 /* MyTrophysCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55F475A257BEE7900F80B82 /* MyTrophysCell.swift */; };
 		A55F4760257E917C00F80B82 /* MyExpCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55F475F257E917C00F80B82 /* MyExpCell.swift */; };
+		A5668D0F27F4220F002AC488 /* AdminChangesMatchsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5668D0E27F4220F002AC488 /* AdminChangesMatchsVC.swift */; };
 		A56A224526AA6A39003017A1 /* ZonesTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56A224426AA6A39003017A1 /* ZonesTVCell.swift */; };
 		A56A224726AA6C85003017A1 /* LlavesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56A224626AA6C85003017A1 /* LlavesCell.swift */; };
 		A56A224926AA75D3003017A1 /* LlavesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56A224826AA75D3003017A1 /* LlavesTableViewCell.swift */; };
@@ -83,6 +84,7 @@
 		A5535F59257321AA00C68F16 /* UserRankingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRankingVC.swift; sourceTree = "<group>"; };
 		A55F475A257BEE7900F80B82 /* MyTrophysCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTrophysCell.swift; sourceTree = "<group>"; };
 		A55F475F257E917C00F80B82 /* MyExpCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyExpCell.swift; sourceTree = "<group>"; };
+		A5668D0E27F4220F002AC488 /* AdminChangesMatchsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminChangesMatchsVC.swift; sourceTree = "<group>"; };
 		A56A224426AA6A39003017A1 /* ZonesTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZonesTVCell.swift; sourceTree = "<group>"; };
 		A56A224626AA6C85003017A1 /* LlavesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlavesCell.swift; sourceTree = "<group>"; };
 		A56A224826AA75D3003017A1 /* LlavesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlavesTableViewCell.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 			children = (
 				A5A47D0126C342C50069ED25 /* AdminChangesZonasVC.swift */,
 				A5A47D0326C62F8B0069ED25 /* AdminChangesLlavesVC.swift */,
+				A5668D0E27F4220F002AC488 /* AdminChangesMatchsVC.swift */,
 			);
 			name = AdminChanges;
 			sourceTree = "<group>";
@@ -503,6 +506,7 @@
 				A5703D7D26B3A09500EFB502 /* Extensions.swift in Sources */,
 				A5501536260EB99F00E3040F /* TouramentVC.swift in Sources */,
 				A5A47D0426C62F8B0069ED25 /* AdminChangesLlavesVC.swift in Sources */,
+				A5668D0F27F4220F002AC488 /* AdminChangesMatchsVC.swift in Sources */,
 				A5B4F22A256EB23D008D0095 /* UserMainVC.swift in Sources */,
 				A5EE08AE26A770970055BEFD /* LiveTableViewCell.swift in Sources */,
 				A5EFF600265B248C00C89BDA /* RankCollectionCell.swift in Sources */,

@@ -274,7 +274,7 @@ class TouramentVC: UIViewController,UITableViewDelegate,UITableViewDataSource  {
                                         
                                         let player1 = PlayerLlave(match: "Match1", id: "1q2w3e4r", fullName: "John Doe", picture: "perfilIcon", win: false, set: ["-","-","-"])
                                         
-                                        let llaves = [Llaves(name: "CUARTOS", types: [Match(name: "Match1", player1: player1, player2: player1)])]
+                                        let llaves = [Llaves(name: "CUARTOS", types: [Match(name: "Match1", day: tourDay.key, player1: player1, player2: player1)])]
                                         
                                         
                                         

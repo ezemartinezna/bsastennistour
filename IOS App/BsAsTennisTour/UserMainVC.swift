@@ -19,7 +19,7 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
     var allRankings = Ranking()
 
     var isLive : Bool = true
-    var matchesLive : [AllMatches] = []
+    var matchesLive : [Match] = []
     var ref: DatabaseReference!
    
     var co : Int = 0
@@ -662,10 +662,10 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
     
     func loadMatchLive() {
         
-        let participant1 = MatchParticipant(firstName: "Mariano", lastName: "Balarino", profilePicture: "person1", points: ["4","-","-"], win: false)
-        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["2","-","-"],win: false)
-        
-        matchesLive.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "En vivo", detailTour: "Zona de Grupos - Grupo A - Jornada 1 de 3", participant: [participant1,participant2]))
+//        let participant1 = MatchParticipant(firstName: "Mariano", lastName: "Balarino", profilePicture: "person1", points: ["4","-","-"], win: false)
+//        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["2","-","-"],win: false)
+//        
+//        matchesLive.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "En vivo", detailTour: "Zona de Grupos - Grupo A - Jornada 1 de 3", participant: [participant1,participant2]))
         
         liveTableView.reloadData()
         
@@ -873,32 +873,34 @@ class UserMainVC: UIViewController,UINavigationControllerDelegate,UIScrollViewDe
         if tableView == liveTableView {
             let myCell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as! LiveTableViewCell
 
-            myCell.labelTorneo.text = matchesLive[indexPath.row].nameTour
-            myCell.labelDate.text = matchesLive[indexPath.row].dateTour
-            myCell.labelDatails.text = matchesLive[indexPath.row].detailTour
-            myCell.labelName.text = matchesLive[indexPath.row].participant[0].firstName
-            myCell.labelLastname.text = matchesLive[indexPath.row].participant[0].lastName
-            myCell.labelName1.text = matchesLive[indexPath.row].participant[1].firstName
-            myCell.labelLastname1.text = matchesLive[indexPath.row].participant[1].lastName
-            myCell.imagePhotoHeader.image = UIImage(named: matchesLive[indexPath.row].participant[0].profilePicture)
-            myCell.imagePhotoHeader1.image = UIImage(named: matchesLive[indexPath.row].participant[1].profilePicture)
-            
-            if matchesLive[indexPath.row].participant[0].win {
-                myCell.imageBallPlayer1.isHidden = false
+            var detail : String = ""
+            let zonaOrLlave = matchesLive[indexPath.row].player1.match
+            if zonaOrLlave.contains("ZONA") {
+                detail = "Zona de Grupos - \(zonaOrLlave)"
             }else{
-                myCell.imageBallPlayer1.isHidden = true
+                detail = "Llaves - \(zonaOrLlave)"
             }
             
-            if matchesLive[indexPath.row].participant[1].win {
-                myCell.imageBallPlayer2.isHidden = false
-            }else{
-                myCell.imageBallPlayer2.isHidden = true
-            }
+            let (firstname1,lastname1) = NameDivisor(fullName: matchesLive[indexPath.row].player1.fullName)
+            let (firstname2,lastname2) = NameDivisor(fullName: matchesLive[indexPath.row].player2.fullName)
             
-            let dataArray = matchesLive[indexPath.row].participant[0].points
+            let imageUrl1 = URL(string:matchesLive[indexPath.row].player1.picture)
+            let imageUrl2 = URL(string:matchesLive[indexPath.row].player2.picture)
+
+            myCell.labelTorneo.text = matchesLive[indexPath.row].name
+            myCell.labelDate.text = matchesLive[indexPath.row].day
+            myCell.labelDatails.text = detail
+            myCell.labelName.text = firstname1
+            myCell.labelLastname.text = lastname1
+            myCell.labelName1.text = firstname2
+            myCell.labelLastname1.text = lastname2
+            myCell.imagePhotoHeader.sd_setImage(with: imageUrl1, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+            myCell.imagePhotoHeader1.sd_setImage(with: imageUrl2, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+            
+            let dataArray = matchesLive[indexPath.row].player1.set
             myCell.updateCellWith(row: dataArray)
             
-            let dataArray1 = matchesLive[indexPath.row].participant[1].points
+            let dataArray1 = matchesLive[indexPath.row].player2.set
             myCell.updateCellWith1(row: dataArray1)
             
             returnCell = myCell

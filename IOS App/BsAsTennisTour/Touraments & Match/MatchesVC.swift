@@ -6,11 +6,15 @@
 //
 
 import UIKit
+import FirebaseDatabase
 
 class MatchesVC: UIViewController {
-
-    var matchesNext : [AllMatches] = []
-    var matchesPrev : [AllMatches] = []
+    
+    var nextMatches : [Match] = []
+    var myMatches : [Match] = []
+    let admin = UserDefaults.standard.string(forKey: "ADMIN")
+    
+    var ref: DatabaseReference!
     
     let titleTorneo : UILabel = {
         let label = UILabel()
@@ -179,27 +183,6 @@ class MatchesVC: UIViewController {
        return table
     }()
     
-    private let buttonShowMorePrev : UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "arrow-down.png"), for: .normal)
-        button.semanticContentAttribute = UIApplication.shared
-            .userInterfaceLayoutDirection == .rightToLeft ? .forceLeftToRight : .forceRightToLeft
-        button.setTitle("VER MAS PARTIDOS", for: .normal)
-        button.setTitleColor(.black, for: .selected)
-        button.setTitleColor(.colorGray, for: .normal)
-        button.titleLabel?.font = UIFont(name: "Helvetica", size: 12)
-        button.layer.backgroundColor = UIColor.white.cgColor
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 10
-        button.layer.shadowColor = UIColor.black.withAlphaComponent(0.6).cgColor
-        button.layer.shadowOffset = CGSize(width: 0, height: 0)
-        button.layer.shadowOpacity = 0.9
-        button.isUserInteractionEnabled = true
-        button.addTarget(self, action: #selector(moreGamesPrev), for: .touchUpInside)
-        return button
-    }()
-    
-    
     private let buttonShowMoreNext : UIButton = {
         let button = UIButton()
         let image = UIImage(named: "arrow-down.png")
@@ -207,7 +190,7 @@ class MatchesVC: UIViewController {
         button.setImage(UIImage(named: "arrow-down.png"), for: .normal)
         button.semanticContentAttribute = UIApplication.shared
             .userInterfaceLayoutDirection == .rightToLeft ? .forceLeftToRight : .forceRightToLeft
-        button.setTitle("VER MAS PARTIDOS", for: .normal)
+        button.setTitle("AGREGAR MAS PARTIDOS", for: .normal)
         button.setTitleColor(.black, for: .selected)
         button.setTitleColor(.colorGray, for: .normal)
         button.titleLabel?.font = UIFont(name: "Helvetica", size: 12)
@@ -274,8 +257,6 @@ class MatchesVC: UIViewController {
         uViewScrollView1.addSubview(imageBackground1)
         uViewScrollView1.addSubview(labelTitle2)
         uViewScrollView1.addSubview(allMatchesPrevTB)
-        uViewScrollView1.addSubview(buttonShowMorePrev)
-        buttonShowMorePrev.imageEdgeInsets = UIEdgeInsets(top: 0, left: 35, bottom: 0, right: 0)
         allMatchesPrevTB.dataSource = self
         allMatchesPrevTB.delegate = self
 
@@ -342,12 +323,6 @@ class MatchesVC: UIViewController {
             allMatchesNextTB.trailingAnchor.constraint(equalTo: uViewScrollView.trailingAnchor),
             allMatchesNextTB.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -70),
             
-            buttonShowMorePrev.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -25),
-            buttonShowMorePrev.leadingAnchor.constraint(equalTo: uViewScrollView.leadingAnchor, constant: 20),
-            buttonShowMorePrev.trailingAnchor.constraint(equalTo: uViewScrollView.trailingAnchor, constant: -20),
-            buttonShowMorePrev.heightAnchor.constraint(equalToConstant: 40),
-
-            
             //PARTIDOS JUGADOS
             uViewScrollView1.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             uViewScrollView1.widthAnchor.constraint(equalTo: view.widthAnchor),
@@ -380,26 +355,84 @@ class MatchesVC: UIViewController {
     
     func loadMatchesNext() {
         
-        let participant1 = MatchParticipant(firstName: "Mariano", lastName: "Balarino", profilePicture: "person1", points: ["-","-","-"],win: false)
-        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["-","-","-"],win: false)
-        
-        matchesNext.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "21-09-2021", detailTour: "Zona de Grupos - Grupo A - Jornada 1 de 5", participant: [participant2,participant1]))
-        
-        allMatchesNextTB.reloadData()
-        
+        ref = Database.database().reference().child("Matchs/")
+        ref.observeSingleEvent(of: .value, with: { [self] (snapshot) in
+            
+            if snapshot.exists() {
+                let today = Date()
+                if let allData = snapshot.children.allObjects as? [DataSnapshot] {
+                    for data in allData {
+                        let dateTour = self.convertStringToDate(dateString: data.key)
+                        let dateArg = self.changeDateToArg(dateString: data.key)
+                        if dateTour <= today {
+                            if let allNames = data.children.allObjects as? [DataSnapshot] {
+                                for names in allNames {
+                                    if let allZonas = names.children.allObjects as? [DataSnapshot] {
+                                        for zona in allZonas {
+                                            if let allMatches = zona.children.allObjects as? [DataSnapshot] {
+                                                for match in allMatches {
+                                                    var addPlayer : [PlayerLlave] = []
+                                                    if let allPlayers = match.children.allObjects as? [DataSnapshot] {
+                                                        for player in allPlayers {
+                                                            var fullName : String = "-"
+                                                            var win : Bool = false
+                                                            var picture : String = "perfilIcon"
+                                                            var SETS : [String] = []
+                                                            if let allInfo = player.children.allObjects as? [DataSnapshot] {
+                                                                for info in allInfo {
+                                                                    
+                                                                    if info.key == "fullName" {
+                                                                        fullName = info.value as? String ?? "-"
+                                                                    }
+                                                                    
+                                                                    if info.key == "win" {
+                                                                        win = info.value as? Bool ?? false
+                                                                    }
+                                                                    
+                                                                    if info.key == "picture" {
+                                                                        picture = info.value as? String ?? "-"
+                                                                    }
+                                                                    
+                                                                    if info.key == "SET" {
+                                                                        if let allSETS = info.children.allObjects as? [DataSnapshot] {
+                                                                            for set in allSETS {
+                                                                                SETS.append(set.value as? String ?? "0")
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            addPlayer.append(PlayerLlave(match: zona.key, id: match.key, fullName: fullName, picture: picture, win: win, set: SETS))
+                                                        }
+                                                    }
+                                                    if !addPlayer.isEmpty {
+                                                        nextMatches.append(Match(name: names.key, day: dateArg, player1: addPlayer[0], player2: addPlayer[1]))
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            self.allMatchesNextTB.reloadData()
+        })
     }
     
     func loadMatchesPrev() {
         
-        let participant1 = MatchParticipant(firstName: "Javier", lastName: "Belvedere", profilePicture: "person3", points: ["3","6","4"],win: false)
-        
-        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["6","2","6"],win: true)
-        
-        let participant3 = MatchParticipant(firstName: "Jonatan", lastName: "Dalinger", profilePicture: "person4", points: ["3","6","3"],win: false)
-        
-        matchesPrev.append(AllMatches(nameTour: "Torneo Club Devoto", dateTour: "20-05-2021", detailTour: "Zona de Grupos - Grupo B - Jornada 1 de 3", participant: [participant1,participant2]))
-        
-        matchesPrev.append(AllMatches(nameTour: "Torneo Club Agronomia", dateTour: "21-05-2021", detailTour: "Zona de Grupos - Grupo B - Jornada 2 de 3", participant: [participant2,participant3]))
+//        let participant1 = MatchParticipant(firstName: "Javier", lastName: "Belvedere", profilePicture: "person3", points: ["3","6","4"],win: false)
+//
+//        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["6","2","6"],win: true)
+//
+//        let participant3 = MatchParticipant(firstName: "Jonatan", lastName: "Dalinger", profilePicture: "person4", points: ["3","6","3"],win: false)
+//
+//        matchesPrev.append(AllMatches(nameTour: "Torneo Club Devoto", dateTour: "20-05-2021", detailTour: "Zona de Grupos - Grupo B - Jornada 1 de 3", participant: [participant1,participant2]))
+//
+//        matchesPrev.append(AllMatches(nameTour: "Torneo Club Agronomia", dateTour: "21-05-2021", detailTour: "Zona de Grupos - Grupo B - Jornada 2 de 3", participant: [participant2,participant3]))
         
         allMatchesPrevTB.reloadData()
         
@@ -430,34 +463,10 @@ class MatchesVC: UIViewController {
         
     }
     
-    @objc func moreGamesPrev() {
-        
-        buttonShowMorePrev.isHidden = true
-        
-    }
     
     @objc func moreGamesNext() {
         
         buttonShowMoreNext.isHidden = true
-        
-        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["-","-","-"],win: false)
-        
-        let participant3 = MatchParticipant(firstName: "Gonzalo Alonso", lastName: "Balarino", profilePicture: "perfilIcon", points: ["-","-","-"],win: false)
-        let participant4 = MatchParticipant(firstName: "Jonatan", lastName: "Dalinger", profilePicture: "person3", points: ["-","-","-"],win: false)
-        
-        
-        let participant5 = MatchParticipant(firstName: "Javier", lastName: "Belvedere", profilePicture: "person4", points: ["-","-","-"],win: false)
-        let participant6 = MatchParticipant(firstName: "Martin", lastName: "Rioseco", profilePicture: "perfilIcon", points: ["-","-","-"],win: false)
-        
-        matchesNext.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "21-09-2021", detailTour: "Zona de Grupos - Grupo A - Jornada 2 de 5", participant: [participant2,participant3]))
-        
-        matchesNext.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "21-09-2021", detailTour: "Zona de Grupos - Grupo A - Jornada 3 de 5", participant: [participant2,participant4]))
-        
-        matchesNext.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "21-09-2021", detailTour: "Zona de Grupos - Grupo A - Jornada 4 de 5", participant: [participant2,participant5]))
-        
-        matchesNext.append(AllMatches(nameTour: "Torneo Club Mitre", dateTour: "21-09-2021", detailTour: "Zona de Grupos - Grupo A - Jornada 5 de 5", participant: [participant2,participant6]))
-        
-        
         allMatchesNextTB.reloadData()
     }
 
@@ -469,11 +478,11 @@ extension MatchesVC : UITableViewDataSource, UITableViewDelegate {
         var countTable = 0
         
         if tableView == allMatchesNextTB {
-            countTable = matchesNext.count
+            countTable = nextMatches.count
         }
 
         if tableView == allMatchesPrevTB {
-            countTable = matchesPrev.count
+            countTable = myMatches.count
         }
         return countTable
     }
@@ -484,20 +493,34 @@ extension MatchesVC : UITableViewDataSource, UITableViewDelegate {
         if tableView == allMatchesNextTB {
             let myCell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as! MatchesTableCell
 
-            myCell.labelTorneo.text = matchesNext[indexPath.row].nameTour
-            myCell.labelDate.text = matchesNext[indexPath.row].dateTour
-            myCell.labelDatails.text = matchesNext[indexPath.row].detailTour
-            myCell.labelName.text = matchesNext[indexPath.row].participant[0].firstName
-            myCell.labelLastname.text = matchesNext[indexPath.row].participant[0].lastName
-            myCell.labelName1.text = matchesNext[indexPath.row].participant[1].firstName
-            myCell.labelLastname1.text = matchesNext[indexPath.row].participant[1].lastName
-            myCell.imagePhotoHeader.image = UIImage(named: matchesNext[indexPath.row].participant[0].profilePicture)
-            myCell.imagePhotoHeader1.image = UIImage(named: matchesNext[indexPath.row].participant[1].profilePicture)
+            var detail : String = ""
+            let zonaOrLlave = nextMatches[indexPath.row].player1.match
+            if zonaOrLlave.contains("Zona") {
+                detail = "Zona de Grupos - \(zonaOrLlave)"
+            }else{
+                detail = "Llaves - \(zonaOrLlave)"
+            }
             
-            let dataArray = matchesNext[indexPath.row].participant[0].points
+            let (firstname1,lastname1) = NameDivisor(fullName: nextMatches[indexPath.row].player1.fullName)
+            let (firstname2,lastname2) = NameDivisor(fullName: nextMatches[indexPath.row].player2.fullName)
+            
+            let imageUrl1 = URL(string:nextMatches[indexPath.row].player1.picture)
+            let imageUrl2 = URL(string:nextMatches[indexPath.row].player2.picture)
+
+            myCell.labelTorneo.text = nextMatches[indexPath.row].name
+            myCell.labelDate.text = nextMatches[indexPath.row].day
+            myCell.labelDatails.text = detail
+            myCell.labelName.text = firstname1
+            myCell.labelLastname.text = lastname1
+            myCell.labelName1.text = firstname2
+            myCell.labelLastname1.text = lastname2
+            myCell.imagePhotoHeader.sd_setImage(with: imageUrl1, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+            myCell.imagePhotoHeader1.sd_setImage(with: imageUrl2, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+            
+            let dataArray = nextMatches[indexPath.row].player1.set
             myCell.updateCellWith(row: dataArray)
             
-            let dataArray1 = matchesNext[indexPath.row].participant[1].points
+            let dataArray1 = nextMatches[indexPath.row].player2.set
             myCell.updateCellWith1(row: dataArray1)
             
             returnCell = myCell
@@ -506,32 +529,34 @@ extension MatchesVC : UITableViewDataSource, UITableViewDelegate {
         if tableView == allMatchesPrevTB {
             let myCell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath) as! MatchesTableCell
 
-            myCell.labelTorneo.text = matchesPrev[indexPath.row].nameTour
-            myCell.labelDate.text = matchesPrev[indexPath.row].dateTour
-            myCell.labelDatails.text = matchesPrev[indexPath.row].detailTour
-            myCell.labelName.text = matchesPrev[indexPath.row].participant[0].firstName
-            myCell.labelLastname.text = matchesPrev[indexPath.row].participant[0].lastName
-            myCell.labelName1.text = matchesPrev[indexPath.row].participant[1].firstName
-            myCell.labelLastname1.text = matchesPrev[indexPath.row].participant[1].lastName
-            myCell.imagePhotoHeader.image = UIImage(named: matchesPrev[indexPath.row].participant[0].profilePicture)
-            myCell.imagePhotoHeader1.image = UIImage(named: matchesPrev[indexPath.row].participant[1].profilePicture)
-            
-            if matchesPrev[indexPath.row].participant[0].win {
-                myCell.imageBallPlayer1.isHidden = false
+            var detail : String = ""
+            let zonaOrLlave = myMatches[indexPath.row].player1.match
+            if zonaOrLlave.contains("ZONA") {
+                detail = "Zona de Grupos - \(zonaOrLlave)"
             }else{
-                myCell.imageBallPlayer1.isHidden = true
+                detail = "Llaves - \(zonaOrLlave)"
             }
             
-            if matchesPrev[indexPath.row].participant[1].win {
-                myCell.imageBallPlayer2.isHidden = false
-            }else{
-                myCell.imageBallPlayer2.isHidden = true
-            }
+            let (firstname1,lastname1) = NameDivisor(fullName: myMatches[indexPath.row].player1.fullName)
+            let (firstname2,lastname2) = NameDivisor(fullName: myMatches[indexPath.row].player2.fullName)
             
-            let dataArray = matchesPrev[indexPath.row].participant[0].points
+            let imageUrl1 = URL(string:myMatches[indexPath.row].player1.picture)
+            let imageUrl2 = URL(string:myMatches[indexPath.row].player2.picture)
+
+            myCell.labelTorneo.text = myMatches[indexPath.row].name
+            myCell.labelDate.text = myMatches[indexPath.row].day
+            myCell.labelDatails.text = detail
+            myCell.labelName.text = firstname1
+            myCell.labelLastname.text = lastname1
+            myCell.labelName1.text = firstname2
+            myCell.labelLastname1.text = lastname2
+            myCell.imagePhotoHeader.sd_setImage(with: imageUrl1, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+            myCell.imagePhotoHeader1.sd_setImage(with: imageUrl2, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+            
+            let dataArray = myMatches[indexPath.row].player1.set
             myCell.updateCellWith(row: dataArray)
             
-            let dataArray1 = matchesPrev[indexPath.row].participant[1].points
+            let dataArray1 = myMatches[indexPath.row].player2.set
             myCell.updateCellWith1(row: dataArray1)
             
             returnCell = myCell
@@ -539,6 +564,29 @@ extension MatchesVC : UITableViewDataSource, UITableViewDelegate {
         
 
         return returnCell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if admin == "YES-1" {
+            if tableView == allMatchesNextTB {
+                
+                let dayUS = changeDateToUS(dateString: nextMatches[indexPath.row].day)
+                
+                let path = "Matchs/\(dayUS)/\(nextMatches[indexPath.row].name)/\(nextMatches[indexPath.row].player1.match)/"
+                let pathPlayers = "Torneos/\(dayUS)/\(nextMatches[indexPath.row].name)/Players/"
+                
+                UserDefaults.standard.set(path, forKey: "pathMatch")
+                UserDefaults.standard.set(nextMatches[indexPath.row].player1.match,forKey: "nameLlave")
+                UserDefaults.standard.set(pathPlayers,forKey: "pathPlayers")
+                UserDefaults.standard.synchronize()
+                
+                
+                let vc = AdminChangesLlavesVC()
+                vc.modalPresentationStyle = .pageSheet
+                self.present(vc, animated: true, completion: nil)
+                
+            }
+        }
     }
     
     

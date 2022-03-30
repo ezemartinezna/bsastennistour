@@ -7,23 +7,6 @@
 
 import UIKit
 
-extension InscriptionsVC {
-    
-    func NameDivisor(fullName : String) -> (firstName: String,lastname : String) {
-        
-        var firstname = ""
-        var lastname = ""
-        
-        var components = fullName.components(separatedBy: " ")
-        if components.count > 0 {
-            firstname = components.removeFirst()
-            lastname = components.joined(separator: " ")
-        }
-    return(firstname,lastname)
-    }
-    
-}
-
 extension String {
 
     func indexes(of character: String,str : String) -> Int {
@@ -79,6 +62,19 @@ extension UITabBarController {
 
 extension UIViewController
 {
+    
+    func NameDivisor(fullName : String) -> (firstName: String,lastname : String) {
+        
+        var firstname = ""
+        var lastname = ""
+        
+        var components = fullName.components(separatedBy: " ")
+        if components.count > 0 {
+            firstname = components.removeFirst()
+            lastname = components.joined(separator: " ")
+        }
+    return(firstname,lastname)
+    }
     
     func randomString(length: Int) -> String {
       let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
