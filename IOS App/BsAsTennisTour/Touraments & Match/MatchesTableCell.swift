@@ -15,7 +15,6 @@ class MatchesTableCell: UITableViewCell {
     
     var dataArray: [String] = []
     var dataArray1: [String] = []
-//    var delegate: AlertShower?
     
     let viewContainer : UIView = {
         let view = UIView()
@@ -41,7 +40,6 @@ class MatchesTableCell: UITableViewCell {
            imageView.translatesAutoresizingMaskIntoConstraints = false
            imageView.layer.cornerRadius = 28 / 2
            imageView.layer.masksToBounds = true
-//           imageView.image = #imageLiteral(resourceName: "perfilIcon")
            imageView.contentMode = .scaleAspectFill
            imageView.isUserInteractionEnabled = true
            return imageView
@@ -51,7 +49,6 @@ class MatchesTableCell: UITableViewCell {
           let label = UILabel()
           label.font = UIFont(name: "Helvetica", size: 14)!
           label.textColor = .colorPaper
-//          label.text = "Mariano"
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
@@ -60,7 +57,6 @@ class MatchesTableCell: UITableViewCell {
           let label = UILabel()
           label.font = UIFont(name: "Helvetica Bold", size: 14)!
           label.textColor = .colorPaper
-//          label.text = "BALARINO"
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
@@ -82,7 +78,6 @@ class MatchesTableCell: UITableViewCell {
            imageView.translatesAutoresizingMaskIntoConstraints = false
            imageView.layer.cornerRadius = 28 / 2
            imageView.layer.masksToBounds = true
-//           imageView.image = #imageLiteral(resourceName: "perfilIcon")
            imageView.contentMode = .scaleAspectFill
            imageView.isUserInteractionEnabled = true
            return imageView
@@ -92,7 +87,6 @@ class MatchesTableCell: UITableViewCell {
           let label = UILabel()
           label.font = UIFont(name: "Helvetica", size: 14)!
           label.textColor = .colorPaper
-//          label.text = "Ezequiel"
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
@@ -101,7 +95,6 @@ class MatchesTableCell: UITableViewCell {
           let label = UILabel()
           label.font = UIFont(name: "Helvetica Bold", size: 14)!
           label.textColor = .colorPaper
-//          label.text = "MARTINEZ"
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
@@ -110,7 +103,6 @@ class MatchesTableCell: UITableViewCell {
           let label = UILabel()
           label.font = UIFont(name: "Helvetica", size: 14)!
           label.textColor = .colorMint
-//          label.text = "Torneo Club Mitre"
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
@@ -129,7 +121,6 @@ class MatchesTableCell: UITableViewCell {
           let label = UILabel()
           label.font = UIFont(name: "Helvetica", size: 12)!
           label.textColor = .colorGray
-//          label.text = "Zona de Grupos - Grupo A - Jornada 1 de 3"
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }()
@@ -208,7 +199,6 @@ class MatchesTableCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
     }
     
     

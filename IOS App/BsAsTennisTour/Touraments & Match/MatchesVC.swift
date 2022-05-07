@@ -211,9 +211,15 @@ class MatchesVC: UIViewController {
         super.viewDidLoad()
         navBarItemLoad()
         setupLayout()
-        loadMatchesNext()
         loadMatchesPrev()
+        NotificationCenter.default.addObserver(self, selector: #selector(loadMatchesNext), name: NSNotification.Name(rawValue: "LoadMatchTour"), object: nil)
+        
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        NotificationCenter.default.post(name: Notification.Name("LoadMatchTour"), object: nil)
     }
     
     func navBarItemLoad(){
@@ -353,7 +359,9 @@ class MatchesVC: UIViewController {
         
     }
     
-    func loadMatchesNext() {
+    @objc func loadMatchesNext() {
+        
+        nextMatches.removeAll()
         
         ref = Database.database().reference().child("Matchs/")
         ref.observeSingleEvent(of: .value, with: { [self] (snapshot) in
@@ -423,16 +431,6 @@ class MatchesVC: UIViewController {
     }
     
     func loadMatchesPrev() {
-        
-//        let participant1 = MatchParticipant(firstName: "Javier", lastName: "Belvedere", profilePicture: "person3", points: ["3","6","4"],win: false)
-//
-//        let participant2 = MatchParticipant(firstName: "Ezequiel", lastName: "Martinez", profilePicture: "person2", points: ["6","2","6"],win: true)
-//
-//        let participant3 = MatchParticipant(firstName: "Jonatan", lastName: "Dalinger", profilePicture: "person4", points: ["3","6","3"],win: false)
-//
-//        matchesPrev.append(AllMatches(nameTour: "Torneo Club Devoto", dateTour: "20-05-2021", detailTour: "Zona de Grupos - Grupo B - Jornada 1 de 3", participant: [participant1,participant2]))
-//
-//        matchesPrev.append(AllMatches(nameTour: "Torneo Club Agronomia", dateTour: "21-05-2021", detailTour: "Zona de Grupos - Grupo B - Jornada 2 de 3", participant: [participant2,participant3]))
         
         allMatchesPrevTB.reloadData()
         
@@ -516,6 +514,8 @@ extension MatchesVC : UITableViewDataSource, UITableViewDelegate {
             myCell.labelLastname1.text = lastname2
             myCell.imagePhotoHeader.sd_setImage(with: imageUrl1, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
             myCell.imagePhotoHeader1.sd_setImage(with: imageUrl2, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+            myCell.imageBallPlayer1.isHidden = !nextMatches[indexPath.row].player1.win
+            myCell.imageBallPlayer2.isHidden = !nextMatches[indexPath.row].player2.win
             
             let dataArray = nextMatches[indexPath.row].player1.set
             myCell.updateCellWith(row: dataArray)
@@ -552,6 +552,8 @@ extension MatchesVC : UITableViewDataSource, UITableViewDelegate {
             myCell.labelLastname1.text = lastname2
             myCell.imagePhotoHeader.sd_setImage(with: imageUrl1, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
             myCell.imagePhotoHeader1.sd_setImage(with: imageUrl2, placeholderImage: #imageLiteral(resourceName: "perfilIcon"))
+            myCell.imageBallPlayer1.isHidden = !myMatches[indexPath.row].player1.win
+            myCell.imageBallPlayer2.isHidden = !myMatches[indexPath.row].player2.win
             
             let dataArray = myMatches[indexPath.row].player1.set
             myCell.updateCellWith(row: dataArray)
@@ -572,7 +574,7 @@ extension MatchesVC : UITableViewDataSource, UITableViewDelegate {
                 
                 let dayUS = changeDateToUS(dateString: nextMatches[indexPath.row].day)
                 
-                let path = "Matchs/\(dayUS)/\(nextMatches[indexPath.row].name)/\(nextMatches[indexPath.row].player1.match)/"
+                let path = "Matchs/\(dayUS)/\(nextMatches[indexPath.row].name)/\(nextMatches[indexPath.row].player1.match)/\(nextMatches[indexPath.row].player1.id)"
                 let pathPlayers = "Torneos/\(dayUS)/\(nextMatches[indexPath.row].name)/Players/"
                 
                 UserDefaults.standard.set(path, forKey: "pathMatch")
@@ -581,7 +583,7 @@ extension MatchesVC : UITableViewDataSource, UITableViewDelegate {
                 UserDefaults.standard.synchronize()
                 
                 
-                let vc = AdminChangesLlavesVC()
+                let vc = AdminChangesMatchsVC()
                 vc.modalPresentationStyle = .pageSheet
                 self.present(vc, animated: true, completion: nil)
                 

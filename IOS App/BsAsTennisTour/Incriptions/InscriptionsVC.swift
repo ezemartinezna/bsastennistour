@@ -384,6 +384,23 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         return button
     }()
     
+    private let buttonAdminTourFinal : UIButton = {
+        let button = UIButton()
+        button.setTitle("CERRAR ZONAS", for: .normal)
+        button.setTitleColor(.black, for: .selected)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont(name: "Helvetica", size: 14)
+        button.layer.backgroundColor = UIColor.colorPop.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
+        button.layer.shadowColor = UIColor.black.withAlphaComponent(0.6).cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 0)
+        button.layer.shadowOpacity = 0.9
+        button.isUserInteractionEnabled = true
+//        button.addTarget(self, action: #selector(closeTour), for: .touchUpInside)
+        return button
+    }()
+    
     private let buttonFilterName : UIButton = {
         let button = UIButton()
         button.setTitle("NOMBRE", for: .normal)
@@ -564,6 +581,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         uViewScrollView.addSubview(trophyImage)
         uViewScrollView.addSubview(buttonRegister)
         uViewScrollView.addSubview(buttonAdminTour)
+        uViewScrollView.addSubview(buttonAdminTourFinal)
         
         //CUADRO
         containerViewCuadro.addSubview(uView3)
@@ -788,9 +806,13 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         
         buttonAdminTour.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         buttonAdminTour.topAnchor.constraint(equalTo: trophyImage.bottomAnchor,constant: 20).isActive = true
-        buttonAdminTour.bottomAnchor.constraint(equalTo: uViewScrollView.bottomAnchor,constant: -20).isActive = true
         buttonAdminTour.heightAnchor.constraint(equalToConstant: 40).isActive = true
         buttonAdminTour.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        
+        buttonAdminTourFinal.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        buttonAdminTourFinal.topAnchor.constraint(equalTo: buttonAdminTour.bottomAnchor,constant: 20).isActive = true
+        buttonAdminTourFinal.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        buttonAdminTourFinal.widthAnchor.constraint(equalToConstant: 200).isActive = true
         
         //CUADRO
         topView4Llaves = uView4.topAnchor.constraint(equalTo: uView3.bottomAnchor,constant: 20)
@@ -806,6 +828,8 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
         }else{
             buttonAdminTour.isHidden = true
             buttonAdminTour.isEnabled = false
+            buttonAdminTourFinal.isHidden = true
+            buttonAdminTourFinal.isEnabled = false
         }
     }
 
@@ -957,7 +981,6 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             
         }, completion: nil)
 
-//        allUsersTable.reloadData()
     }
     
     @objc func handleExpandClose2() {
@@ -981,7 +1004,6 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
 
         }, completion: nil)
 
-//        torneoInfoTable.reloadData()
     }
     
     @objc func handleExpandClose1() {
@@ -1007,8 +1029,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             self.view.layoutIfNeeded()
             
         }, completion: nil)
-//        allPointsTable.reloadData()
-        
+
     }
     
     @objc func openCloseZonas() {
@@ -1158,7 +1179,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
             } else {
                 
                 self.ref = Database.database().reference().child("Torneos/\(self.dayTour)/\(self.nameTour)/Info/Status")
-                self.ref.setValue("Closed"){
+                self.ref.setValue("Cerrado"){
                     (error:Error?, ref:DatabaseReference) in
                     if let error = error {
                       self.showAlert(title: "Error", message: error.localizedDescription)
@@ -1654,7 +1675,7 @@ class InscriptionsVC: UIViewController,UITableViewDelegate,UITableViewDataSource
                                         self.maxPlayers = Int(valueString) ?? 0
                                     }
                                     if stat.key == "Status" {
-                                        if stat.value as? String == "Closed" {
+                                        if stat.value as? String == "Cerrado" {
                                             self.buttonRegister.alpha = 0.5
                                             self.buttonRegister.isEnabled = false
                                             self.buttonAdminTour.isEnabled = false

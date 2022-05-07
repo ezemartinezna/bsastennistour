@@ -332,62 +332,51 @@ class AdminChangesMatchsVC: UIViewController, UITextFieldDelegate {
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
 
             if snapshot.exists() {
-                if let allPosition = snapshot.children.allObjects as? [DataSnapshot] {
+               if let allPlayers = snapshot.children.allObjects as? [DataSnapshot] {
                     var i = 0
-                    for position in allPosition {
+                    for player in allPlayers {
                         if i == 0 {
-                            self.position1 = position.key
-                            self.labelNamePlayer1.text = "Jugador - \(self.position1)"
+                            self.uid1 = player.key
                         }else{
-                            self.position2 = position.key
-                            self.labelNamePlayer2.text = "Jugador - \(self.position2)"
+                            self.uid2 = player.key
                         }
-                        if let allPlayers = position.children.allObjects as? [DataSnapshot] {
-                            for player in allPlayers {
-                                if i == 0 {
-                                    self.uid1 = player.key
-                                }else{
-                                    self.uid2 = player.key
+                        if let allInfo = player.children.allObjects as? [DataSnapshot] {
+                            for info in allInfo {
+                                if info.key == "fullName" {
+                                    if i == 0 {
+                                        self.textNamePlayer1.text = info.value as? String ?? "-"
+                                    }else{
+                                        self.textNamePlayer2.text = info.value as? String ?? "-"
+                                    }
                                 }
-                                if let allInfo = player.children.allObjects as? [DataSnapshot] {
-                                    for info in allInfo {
-                                        if info.key == "fullName" {
+                                if info.key == "picture" {
+                                    if i == 0 {
+                                        self.picture1 = info.value as? String ?? "-"
+                                    }else{
+                                        self.picture2 = info.value as? String ?? "-"
+                                    }
+                                }
+                                
+                                if info.key == "win" {
+                                    if info.value as? Bool ?? false {
+                                        if i == 0 {
+                                            self.imageBallPlayer1.setImage(#imageLiteral(resourceName: "Pelota Top Ten"), for: .normal)
+                                            self.winnerPlayer1 = true
+                                        }else{
+                                            self.imageBallPlayer2.setImage(#imageLiteral(resourceName: "Pelota Top Ten"), for: .normal)
+                                            self.winnerPlayer2 = true
+                                        }
+                                    }
+                                   
+                                }
+                                
+                                if info.key == "SET" {
+                                    if let allSETS = info.children.allObjects as? [DataSnapshot] {
+                                        for set in allSETS {
                                             if i == 0 {
-                                                self.textNamePlayer1.text = info.value as? String ?? "-"
+                                            self.SETsPlayer1.append(set.value as? String ?? "0")
                                             }else{
-                                                self.textNamePlayer2.text = info.value as? String ?? "-"
-                                            }
-                                        }
-                                        if info.key == "picture" {
-                                            if i == 0 {
-                                                self.picture1 = info.value as? String ?? "-"
-                                            }else{
-                                                self.picture2 = info.value as? String ?? "-"
-                                            }
-                                        }
-                                        
-                                        if info.key == "win" {
-                                            if info.value as? Bool ?? false {
-                                                if i == 0 {
-                                                    self.imageBallPlayer1.setImage(#imageLiteral(resourceName: "Pelota Top Ten"), for: .normal)
-                                                    self.winnerPlayer1 = true
-                                                }else{
-                                                    self.imageBallPlayer2.setImage(#imageLiteral(resourceName: "Pelota Top Ten"), for: .normal)
-                                                    self.winnerPlayer2 = true
-                                                }
-                                            }
-                                           
-                                        }
-                                        
-                                        if info.key == "SET" {
-                                            if let allSETS = info.children.allObjects as? [DataSnapshot] {
-                                                for set in allSETS {
-                                                    if i == 0 {
-                                                    self.SETsPlayer1.append(set.value as? String ?? "0")
-                                                    }else{
-                                                    self.SETsPlayer2.append(set.value as? String ?? "0")
-                                                    }
-                                                }
+                                            self.SETsPlayer2.append(set.value as? String ?? "0")
                                             }
                                         }
                                     }
@@ -573,7 +562,7 @@ class AdminChangesMatchsVC: UIViewController, UITextFieldDelegate {
     }
     
     @objc func DismissVW(){
-        NotificationCenter.default.post(name: Notification.Name("LoadLlaveTour"), object: nil)
+        NotificationCenter.default.post(name: Notification.Name("LoadMatchTour"), object: nil)
         self.dismiss(animated: true, completion: nil)
     }
 
